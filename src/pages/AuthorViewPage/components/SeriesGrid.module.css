@@ -1,0 +1,51 @@
+.bookList {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.bookItem {
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  color: rgb(241, 241, 244);
+  position: relative;
+  z-index: 0;
+}
+
+.bookItem::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.5;
+  z-index: -1;
+  border-radius: 8px;
+}
+
+.bookImage {
+  width: 150px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.bookDetails {
+  text-align: center;
+}
+
+.bookTitle {
+  font-size: 1.2em;
+  margin: 10px 0;
+}
+
+.bookInfo {
+  margin: 5px 0;
+}

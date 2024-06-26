@@ -1,0 +1,25 @@
+.card {
+  padding: 15px;
+  background-color: #436da7;
+  height: 60px;
+  width: 140px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  margin: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+   flex-direction: column;
+}
+
+.card:hover {
+  background-color: #6781a5;
+}
+
+.count {
+  padding-top: 5px
+}

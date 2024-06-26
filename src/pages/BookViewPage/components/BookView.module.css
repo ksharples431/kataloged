@@ -1,0 +1,71 @@
+.content {
+  margin: 40px 140px 40px 140px ;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 0 auto; 
+  margin-bottom: 0px
+}
+
+.imageContainer {
+  flex: 1;
+  padding: 10px;
+}
+
+.image {
+  width: auto;
+  height: 420px;
+}
+
+.detailsCard {
+  flex: 2; 
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+}
+
+.detailsContainer {
+  flex: 1; 
+  width: 300px;
+  height: 400px;
+}
+
+.detailsContainer:first-child {
+  margin-right: 20px;
+}
+
+.title {
+  margin-top: 0;
+  font-size: 24px;
+    color: #666;
+}
+
+.description {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+
+}
+
+.radioGroup {
+  display: flex;
+  align-items: center;
+}
+
+.radioLabel {
+  margin-right: 10px;
+}

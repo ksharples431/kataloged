@@ -1,0 +1,39 @@
+.navbar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+
+
+.navLink {
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease;
+}
+.navLinkHome {
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease;
+  /* text-decoration: underline; */
+  /* background-color: white; */
+}
+
+.navLink:hover {
+  background-color: #6781a5;
+  border-radius: 4px;
+  color: white
+}
+
+.navLinkHome:hover {
+  /* background-color: #436da7; */
+  background-color: white;
+  border-radius: 4px;
+  /* color: white; */
+  color: #436da7;
+}

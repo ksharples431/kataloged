@@ -1,0 +1,40 @@
+.drawerContainer {
+  background-image: url('../../assets/plywood-horizontal-light.jpeg');
+  height: 250px;
+  width: 350px;
+  border-radius: 10px;
+  border: 2px solid rgb(136, 99, 35);
+  box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.2);
+  
+}
+
+.headerBorder {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px;
+  padding: 10px;
+  color: white;
+  border: 20px solid rgb(185, 183, 183);
+  border-radius: 5px;
+  background-color: #f4f4f4; /* Light gray background */
+  box-shadow: 
+    0 0 5px rgba(0, 0, 0, 0.5), /* Dark shadow */
+    0 0 10px rgba(0, 0, 0, 0.3) inset; /* Inner shadow */
+}
+
+.drawerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(119, 118, 118);
+  font-family: 'Courier New', Courier, monospace;
+
+}
+
+.drawerContent {
+  padding: 20px;
+  justify-content: center;
+  align-items: center;
+}
+

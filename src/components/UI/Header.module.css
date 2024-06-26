@@ -1,0 +1,62 @@
+header {
+  top: 0;
+  left: 0;
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  color: white;
+  padding: 20px; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 0;
+  position: relative;
+
+    border-radius: 10px;
+  box-sizing: border-box; /* Include padding and border in the element's total width */
+}
+
+header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('@/assets/plywood-horizontal-darker.jpeg');
+    /* background-color: rgb(48, 51, 112); */
+  background-size: cover;
+  background-position: center;
+  opacity: 0.9; /* Adjust opacity as needed */
+  z-index: -1; /* Place the background behind the content */
+  border-radius: 8px; /* Optional: rounded corners */
+}
+
+.title {
+  margin: 0; /* Remove margin */
+
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+}
+
+.link {
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+}
+
+:visited {
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+}
+
+.searchBar {
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: none;
+  margin-left: 20px;
+}

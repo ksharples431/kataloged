@@ -1,0 +1,40 @@
+.form {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 20px 250px 20px 250px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  font-size: larger;
+}
+
+.formGroup input[type="text"],
+.formGroup input[type="file"],
+.formGroup select,
+.formGroup textarea {
+  width: 600px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* So the width includes padding */
+  background-color: #7f8fbb;
+  font-size: large;
+}
+
+.formGroup input[type="checkbox"] {
+  margin-top: 5px;
+}
+
+.formGroup textarea {
+  height: 100px;
+}
+

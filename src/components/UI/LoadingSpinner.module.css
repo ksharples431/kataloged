@@ -1,0 +1,14 @@
+.spinner {
+  border: 5px solid #f3f3f3; /* Border color */
+  border-top-color: #3498db; /* Color for the spinning part */
+  border-radius: 50%; /* Make it a circle */
+  width: 50px; /* Adjust size */
+  height: 50px; /* Adjust size */
+  animation: spin 1s linear infinite; /* Animation details */
+  margin: 0 auto; /* Center the spinner horizontally */
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
