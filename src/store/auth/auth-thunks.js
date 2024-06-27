@@ -8,7 +8,7 @@ import {
 
 export const signup = createAsyncThunk(
   'auth/signup',
-  async ({ email, password }, { rejectWithValue }) => {
+  async ({ username, email, password }, { rejectWithValue }) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -17,11 +17,26 @@ export const signup = createAsyncThunk(
       );
       const user = userCredential.user;
 
-      // Extract serializable user data
+      const response = await fetch('http://localhost:8080/api/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          uid: user.uid,
+          username: username,
+          email: user.email,
+        }),
+      });
+      console.log(response)
+      if (!response.ok) {
+        throw new Error('Failed to store user data in Firestore');
+      }
+
       const serializableUser = {
         uid: user.uid,
         email: user.email,
-        displayName: user.displayName,
+        username: username,
       };
 
       return serializableUser;

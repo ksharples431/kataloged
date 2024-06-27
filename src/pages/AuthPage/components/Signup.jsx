@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { signup } from '@/store/auth/auth-thunks';
 
 import Button from '@/components/UI/Button';
@@ -8,9 +9,11 @@ import styles from './Signup.module.css';
 
 export default function SignupForm() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { loading, error } = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({
+    username: '',
     email: '',
     password: '',
   });
@@ -26,10 +29,23 @@ export default function SignupForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(signup(formData));
+    navigate('/books');
   };
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
+      <div className={styles.formGroup}>
+        <label htmlFor="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          value={formData.username}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
       <div className={styles.formGroup}>
         <label htmlFor="email">Email</label>
         <input
