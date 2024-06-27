@@ -25,12 +25,6 @@ export default function LoginForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (formData.password !== formData.verifyPassword) {
-      alert('Passwords do not match');
-      return;
-    }
-
     dispatch(login(formData));
   };
 

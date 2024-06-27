@@ -1,26 +1,30 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { auth } from '../../../firebaseConfig.jsx';
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+} from 'firebase/auth';
 
 export const signup = createAsyncThunk(
   'auth/signup',
-  async (userData, { rejectWithValue }) => {
+  async ({ email, password }, { rejectWithValue }) => {
     try {
-      const response = await fetch(
-        'https://backendbooks-9697c5937ad6.herokuapp.com/auth/signup',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(userData),
-        }
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
       );
+      const user = userCredential.user;
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+      // Extract serializable user data
+      const serializableUser = {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+      };
 
-      const data = await response.json();
-      return data;
+      return serializableUser;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -29,25 +33,23 @@ export const signup = createAsyncThunk(
 
 export const login = createAsyncThunk(
   'auth/login',
-  async (userData, { rejectWithValue }) => {
+  async ({ email, password }, { rejectWithValue }) => {
     try {
-      const response = await fetch(
-        'https://backendbooks-9697c5937ad6.herokuapp.com/auth/login',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(userData),
-        }
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
       );
+      const user = userCredential.user;
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+      // Extract serializable user data
+      const serializableUser = {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+      };
 
-      const data = await response.json();
-      return data;
+      return serializableUser;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -58,20 +60,7 @@ export const logout = createAsyncThunk(
   'auth/logout',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch(
-        'https://backendbooks-9697c5937ad6.herokuapp.com/auth/logout',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
+      await signOut(auth);
       return;
     } catch (error) {
       return rejectWithValue(error.message);

@@ -11,10 +11,8 @@ export default function SignupForm() {
   const { loading, error } = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({
-    username: '',
     email: '',
     password: '',
-    verifyPassword: '',
   });
 
   const handleChange = (e) => {
@@ -27,29 +25,11 @@ export default function SignupForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (formData.password !== formData.verifyPassword) {
-      alert('Passwords do not match');
-      return;
-    }
-
     dispatch(signup(formData));
   };
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
-      <div className={styles.formGroup}>
-        <label htmlFor="username">Username</label>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          value={formData.username}
-          onChange={handleChange}
-          required
-        />
-      </div>
-
       <div className={styles.formGroup}>
         <label htmlFor="email">Email</label>
         <input
@@ -74,22 +54,10 @@ export default function SignupForm() {
         />
       </div>
 
-      <div className={styles.formGroup}>
-        <label htmlFor="verifyPassword">Verify Password</label>
-        <input
-          type="password"
-          id="verifyPassword"
-          name="verifyPassword"
-          value={formData.verifyPassword}
-          onChange={handleChange}
-          required
-        />
-      </div>
-
       {loading && <p>Loading...</p>}
       {error && <p className={styles.error}>{error}</p>}
 
-      <Button type="submit">Sign Up</Button>
+      <Button type="submit">Signup</Button>
     </form>
   );
 }

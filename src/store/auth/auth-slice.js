@@ -1,71 +1,63 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { signup, login, logout } from './auth-thunks.js';
+import { signup, login, logout } from './auth-thunks';
 
-const initialState = {
-  user: null,
-  loading: false,
-  error: null,
-  isLoggedIn: false,
-};
-
-const userSlice = createSlice({
+const authSlice = createSlice({
   name: 'auth',
-  initialState,
+  initialState: {
+    user: null,
+    loading: false,
+    error: null,
+    isLoggedIn: false,
+  },
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // signup
       .addCase(signup.pending, (state) => {
         state.loading = true;
-        state.isLoggedIn = false;
         state.error = null;
+        state.isLoggedIn = false;
       })
       .addCase(signup.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
-        localStorage.setItem('user', JSON.stringify(action.payload));
         state.isLoggedIn = true;
       })
       .addCase(signup.rejected, (state, action) => {
         state.loading = false;
-        state.isLoggedIn = false;
         state.error = action.payload;
+        state.isLoggedIn = false;
       })
-      // login
       .addCase(login.pending, (state) => {
         state.loading = true;
-        state.isLoggedIn = false;
         state.error = null;
+        state.isLoggedIn = false;
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
-        localStorage.setItem('user', JSON.stringify(action.payload));
         state.isLoggedIn = true;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
-        state.isLoggedIn = false;
         state.error = action.payload;
+        state.isLoggedIn = false;
       })
-      // logout
       .addCase(logout.pending, (state) => {
         state.loading = true;
-        state.isLoggedIn = true;
         state.error = null;
+        state.isLoggedIn = true;
       })
       .addCase(logout.fulfilled, (state) => {
         state.loading = false;
         state.user = null;
-        localStorage.removeItem('user');
         state.isLoggedIn = false;
       })
       .addCase(logout.rejected, (state, action) => {
         state.loading = false;
-        state.isLoggedIn = true;
         state.error = action.payload;
+        state.isLoggedIn = true;
       });
   },
 });
 
-export default userSlice.reducer;
+export default authSlice.reducer;
