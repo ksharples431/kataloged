@@ -19,7 +19,7 @@ const authSlice = createSlice({
       })
       .addCase(signup.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = action.payload.uid;
         state.isLoggedIn = true;
       })
       .addCase(signup.rejected, (state, action) => {
@@ -34,7 +34,7 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = action.payload.uid;
         state.isLoggedIn = true;
       })
       .addCase(login.rejected, (state, action) => {
