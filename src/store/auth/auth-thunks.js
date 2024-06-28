@@ -20,17 +20,20 @@ export const signup = createAsyncThunk(
 
       const idToken = await getIdToken(user);
 
-      const response = await fetch('http://localhost:8080/api/users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          uid: user.uid,
-          username: username,
-          email: user.email,
-        }),
-      });
+      const response = await fetch(
+        'https://kataloged-server-test-npcxvkrrnq-uc.a.run.app/api/users',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            uid: user.uid,
+            username: username,
+            email: user.email,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error('Failed to store user data in Firestore');
