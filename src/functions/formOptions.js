@@ -11,6 +11,7 @@ export const genre = [
   'Mystery & Thriller',
   'Romance',
   'Science Fiction',
+  'Thriller',
   'Non-Fiction',
   'Art & Photography',
   'Biography & Memoir',

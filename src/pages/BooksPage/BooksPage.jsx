@@ -20,6 +20,7 @@ export default function BooksPage() {
     }
 
     setFilteredBooks(books);
+    console.log(books);
   }, [books, dispatch]);
 
   const handleSearch = (searchTerm) => {

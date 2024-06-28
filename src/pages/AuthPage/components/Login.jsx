@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { login } from '@/store/auth/auth-thunks';
 
 import Button from '@/components/UI/Button';
@@ -8,6 +9,7 @@ import styles from './Login.module.css';
 
 export default function LoginForm() {
   const dispatch = useDispatch();
+    const navigate = useNavigate();
   const { loading, error } = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({
@@ -26,6 +28,7 @@ export default function LoginForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(login(formData));
+    navigate('/');
   };
 
   return (

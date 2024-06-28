@@ -12,6 +12,7 @@ import Footer from '@/components/UI/Footer.jsx';
 import GenresPage from './pages/GenresPage/GenresPage.jsx';
 import GenreViewPage from './pages/GenreViewPage/GenreViewPage.jsx';
 
+
 import './App.css';
 
 function App() {

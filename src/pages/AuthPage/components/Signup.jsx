@@ -29,7 +29,7 @@ export default function SignupForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(signup(formData));
-    navigate('/books');
+    navigate('/');
   };
 
   return (

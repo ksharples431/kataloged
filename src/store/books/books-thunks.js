@@ -26,9 +26,10 @@ export const fetchBooks = createAsyncThunk(
       }
 
       const data = await response.json();
+      console.log('Data:', data);
 
       return data.map((book) => ({
-        id: book._id,
+        id: book.id,
         title: book.title,
         author: book.author,
         description: book.description,
@@ -44,6 +45,7 @@ export const fetchBooks = createAsyncThunk(
         owned: book.owned,
         updatedAt: book.updatedAt,
       }));
+
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -71,8 +73,9 @@ export const addBook = createAsyncThunk(
       }
 
       const data = await response.json();
-      console.log(`${data.title} added to the database`);
-      return { ...data, id: data._id };
+      console.log(`Book added successfully: ${data.book.title}`);
+      console.log(data)
+      return data.book ;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -100,8 +103,9 @@ export const updateBook = createAsyncThunk(
       }
 
       const data = await response.json();
-      console.log(`${data.title} edited in the database`);
-      return { ...data, id: data._id };
+      console.log(`Book edited successfully: ${data.book.title}`);
+      console.log(data);
+      return data.book;
     } catch (error) {
       return rejectWithValue(error.message);
     }
