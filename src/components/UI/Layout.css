@@ -1,0 +1,23 @@
+.wrapper {
+  /* Apply styles for your background image */
+  background-image: url('path/to/your/background-image.jpg');
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh; /* Ensure the wrapper covers the entire viewport height */
+}
+
+/* Additional styles as needed */
+.row {
+  /* Example Foundation grid styles */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.column {
+  /* Example Foundation column styles */
+  max-width: 800px; /* Adjust as per your layout needs */
+  padding: 20px;
+  margin: 0 auto;
+}
