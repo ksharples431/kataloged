@@ -10,7 +10,8 @@ export default function SeriesGrid({ items }) {
         <div className={styles.bookList}>
           {items.map((item, index) => (
             <div key={index} className={styles.bookItem}>
-              <Link to={`/books/${encodeURIComponent(item.seriesName)}`}>
+              {/* <Link to={`/books/${encodeURIComponent(item.seriesName)}`}> */}
+              <Link to={`/books`}>
                 <img
                   src={item.seriesImage}
                   alt={item.seriesName}

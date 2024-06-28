@@ -50,6 +50,11 @@
   font-size: 16px;
   color: #666;
   margin-bottom: 10px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 9; /* Number of lines to show */
+  -webkit-box-orient: vertical;
+  max-width: 100%; /* Adjust to the desired width */
 }
 
 .input {
@@ -61,11 +66,3 @@
 
 }
 
-.radioGroup {
-  display: flex;
-  align-items: center;
-}
-
-.radioLabel {
-  margin-right: 10px;
-}
