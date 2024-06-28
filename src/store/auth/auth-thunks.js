@@ -4,7 +4,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
-  getIdToken,
+  // getIdToken,
 } from 'firebase/auth';
 
 export const signup = createAsyncThunk(
@@ -18,7 +18,7 @@ export const signup = createAsyncThunk(
       );
       const user = userCredential.user;
 
-      const idToken = await getIdToken(user);
+      // const idToken = await getIdToken(user);
 
       const response = await fetch(
         'https://kataloged-server-test-npcxvkrrnq-uc.a.run.app/api/users',
@@ -41,9 +41,9 @@ export const signup = createAsyncThunk(
 
       const serializableUser = {
         uid: user.uid,
-        email: user.email,
-        username: username,
-        idToken: idToken,
+        // email: user.email,
+        // username: username,
+        // idToken: idToken,
       };
 
       return serializableUser;
@@ -64,13 +64,13 @@ export const login = createAsyncThunk(
       );
       const user = userCredential.user;
 
-      const idToken = await getIdToken(user);
+      // const idToken = await getIdToken(user);
 
       // Extract serializable user data
       const serializableUser = {
         uid: user.uid,
-        email: user.email,
-        idToken: idToken,
+        // email: user.email,
+        // idToken: idToken,
       };
 
       return serializableUser;
