@@ -4,6 +4,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
+  getIdToken,
 } from 'firebase/auth';
 
 export const signup = createAsyncThunk(
@@ -17,6 +18,8 @@ export const signup = createAsyncThunk(
       );
       const user = userCredential.user;
 
+      const idToken = await getIdToken(user);
+
       const response = await fetch('http://localhost:8080/api/users', {
         method: 'POST',
         headers: {
@@ -28,7 +31,7 @@ export const signup = createAsyncThunk(
           email: user.email,
         }),
       });
-      console.log(response)
+
       if (!response.ok) {
         throw new Error('Failed to store user data in Firestore');
       }
@@ -37,6 +40,7 @@ export const signup = createAsyncThunk(
         uid: user.uid,
         email: user.email,
         username: username,
+        idToken: idToken,
       };
 
       return serializableUser;
@@ -57,11 +61,13 @@ export const login = createAsyncThunk(
       );
       const user = userCredential.user;
 
+      const idToken = await getIdToken(user);
+
       // Extract serializable user data
       const serializableUser = {
         uid: user.uid,
         email: user.email,
-        displayName: user.displayName,
+        idToken: idToken,
       };
 
       return serializableUser;
