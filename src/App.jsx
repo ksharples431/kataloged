@@ -1,15 +1,17 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import LayoutWrapper from './components/UI/LayoutWrapper.jsx';
 import HomePage from './pages/HomePage.jsx';
-import BooksPage from './pages/BooksPage.jsx';
+import BookList from './components/Books/BookList.jsx';
 import './App.css';
 
 function App() {
   return (
     <BrowserRouter>
+      <LayoutWrapper>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/books">
-          <Route index element={<BooksPage />} />
+          <Route index element={<BookList />} />
         </Route>
         {/* <Route path="/add-book" element={<AddBookPage />} />
         <Route path="/auth">
@@ -26,6 +28,7 @@ function App() {
           <Route path=":genre" element={<GenreViewPage />} />
         </Route> */}
       </Routes>
+      </LayoutWrapper>
       {/* <Footer /> */}
     </BrowserRouter>
   );
