@@ -5,7 +5,7 @@ export const fetchBooks = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await fetch(
-        'https://kataloged-server-test-npcxvkrrnq-uc.a.run.app/api/books',
+        'https://kataloged-server-npcxvkrrnq-uc.a.run.app/api/books',
         // 'http://localhost:8080/api/books',
         {
           credentials: 'include',
@@ -87,7 +87,7 @@ export const updateBook = createAsyncThunk(
   async (book, { rejectWithValue }) => {
     try {
       const response = await fetch(
-        `https://kataloged-server-test-npcxvkrrnq-uc.a.run.app/api/books/${book.id}`,
+        `https://kataloged-server-npcxvkrrnq-uc.a.run.app/api/books/${book.id}`,
         // `http://localhost:8080/api/books/${book.id}`,
         {
           method: 'PATCH',
@@ -117,7 +117,7 @@ export const deleteBook = createAsyncThunk(
   async (book, { rejectWithValue }) => {
     try {
       const response = await fetch(
-        `https://kataloged-server-test-npcxvkrrnq-uc.a.run.app/api/books/${book.id}`,
+        `https://kataloged-server-npcxvkrrnq-uc.a.run.app/api/books/${book.id}`,
         // `http://localhost:8080/api/books/${book.id}`,
         {
           method: 'DELETE',
