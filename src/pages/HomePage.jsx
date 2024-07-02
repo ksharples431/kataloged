@@ -11,7 +11,7 @@ import {
   Drawer,
   DrawerLabel,
   CircularButton,
-} from './HomePage.styles';
+} from './HomePage.styles.jsx';
 
 const HomePage = () => {
   const dispatch = useDispatch();
