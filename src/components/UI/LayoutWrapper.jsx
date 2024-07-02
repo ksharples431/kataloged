@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { Container, Grid, Box } from '@mui/material';
-import Header from './Header'; // Import your header component
+import Header from './Header'; 
 
 const LayoutWrapper = ({ children }) => {
   return (
@@ -8,7 +8,6 @@ const LayoutWrapper = ({ children }) => {
       <Grid container spacing={3}>
         {/* Header */}
         <Grid item xs={12}>
-          {/* Replace placeholder with your Header component */}
           <Header />
         </Grid>
 

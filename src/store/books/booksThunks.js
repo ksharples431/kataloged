@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../../services/api';
 
+// FIXED DATA STRUCTURE HERE NEED TO DO REST OF THUNKS
 export const fetchBooks = createAsyncThunk(
   'books/fetchBooks',
   async (_, { rejectWithValue }) => {
@@ -8,8 +9,8 @@ export const fetchBooks = createAsyncThunk(
       const response = await api.get('/books');
       console.log('API Response:', response.data);
 
-      if (Array.isArray(response.data)) {
-        return response.data;
+      if (Array.isArray(response.data.data.books)) {
+        return response.data.data.books;
       } else {
         console.error('Unexpected API response structure:', response.data);
         return rejectWithValue('Unexpected API response structure');
@@ -22,7 +23,6 @@ export const fetchBooks = createAsyncThunk(
     }
   }
 );
-
 export const fetchBookById = createAsyncThunk(
   'books/fetchBookById',
   async (id, { rejectWithValue }) => {

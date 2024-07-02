@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import LoadingSpinner from '../UI/LoadingSpinner';
-import ErrorMessage from '../UI/ErrorMessage';
-import BookGrid from './BookGrid';
+import { Box, Grid, Typography } from '@mui/material';
+import LoadingSpinner from '../../components/UI/LoadingSpinner';
+import ErrorMessage from '../../components/UI/ErrorMessage';
 import { fetchBooks } from '../../store/books/booksThunks';
-import { BookListWrapper, BookListTitle } from './BookList.styles';
+import BookCard from './BookCard';
 
-const BookList = () => {
+const BooksList = () => {
   const dispatch = useDispatch();
   const { books, status, error } = useSelector((state) => state.books);
 
@@ -25,13 +25,20 @@ const BookList = () => {
   }
 
   return (
-    <BookListWrapper>
-      <BookListTitle variant="h4" component="h1" gutterBottom>
+    <Box sx={{ flexGrow: 1, padding: 2 }}>
+      <Typography variant="h4" component="h1" gutterBottom>
         Books
-      </BookListTitle>
-      <BookGrid books={books} />
-    </BookListWrapper>
+      </Typography>
+      <Grid container spacing={2}>
+        {books.map((book) => (
+          <Grid item xs={12} sm={4} md={3} lg={2.4} key={book.id}>
+            <BookCard book={book} />
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
   );
 };
 
-export default BookList;
+export default BooksList;
+
