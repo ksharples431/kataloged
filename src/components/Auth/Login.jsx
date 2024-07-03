@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   Container,
   Typography,
@@ -10,12 +12,15 @@ import {
   useTheme,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Link as RouterLink } from 'react-router-dom';
+
+import { loginUser } from '../../store/users/usersThunks';
+import LoadingSpinner from '../UI/LoadingSpinner.jsx';
+import ErrorMessage from '../UI/ErrorMessage.jsx';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(8),
   [theme.breakpoints.down('sm')]: {
-    marginTop: '0', 
+    marginTop: '0',
   },
   display: 'flex',
   flexDirection: 'column',
@@ -34,15 +39,31 @@ const SubmitButton = styled(Button)(({ theme }) => ({
 }));
 
 const Login = () => {
-    const theme = useTheme();
+  const theme = useTheme();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { status, error } = useSelector((state) => state.users);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Here you would typically call a Firebase function to log in the user
-    console.log('Login with:', email, password);
+    const resultAction = await dispatch(
+      loginUser({ email, password })
+    );
+    if (loginUser.fulfilled.match(resultAction)) {
+      // Signup was successful, navigate to login or dashboard
+      navigate('/');
+    }
   };
+
+  if (status === 'loading') {
+    return <LoadingSpinner />;
+  }
+
+  if (status === 'failed') {
+    return <ErrorMessage message={error} />;
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -84,8 +105,9 @@ const Login = () => {
             type="submit"
             fullWidth
             variant="contained"
-            color="primary">
-            Log In
+            color="primary"
+            disabled={status === 'loading'}>
+           Log In
           </SubmitButton>
           <Box mt={2}>
             <Typography

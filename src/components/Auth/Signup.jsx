@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { styled } from '@mui/material/styles';
 import {
   Container,
   Typography,
@@ -9,8 +12,10 @@ import {
   Link,
   useTheme,
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { Link as RouterLink } from 'react-router-dom';
+
+import { signupUser } from '../../store/users/usersThunks'; 
+import LoadingSpinner from '../UI/LoadingSpinner.jsx';
+import ErrorMessage from '../UI/ErrorMessage.jsx';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(8),
@@ -32,14 +37,29 @@ const SubmitButton = styled(Button)(({ theme }) => ({
 
 const SignUp = () => {
   const theme = useTheme();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { status, error } = useSelector((state) => state.users);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Here you would typically call a Firebase function to create a new user
-    console.log('Sign up with:', email, password);
+    const resultAction = await dispatch(signupUser({ username, email, password }));
+    if (signupUser.fulfilled.match(resultAction)) {
+      // Signup was successful, navigate to login or dashboard
+      navigate('/');
+    }
   };
+
+  if (status === 'loading') {
+    return <LoadingSpinner />;
+  }
+
+  if (status === 'failed') {
+    return <ErrorMessage message={error} />;
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -51,37 +71,50 @@ const SignUp = () => {
           Sign Up
         </Typography>
         <Form onSubmit={handleSubmit}>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="new-password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="username"
+            label="Username"
+            name="username"
+            autoComplete="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="new-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
           <SubmitButton
             type="submit"
             fullWidth
             variant="contained"
-            color="primary">
+            color="primary"
+            disabled={status === 'loading'}>
             Sign Up
           </SubmitButton>
           <Box mt={2}>
