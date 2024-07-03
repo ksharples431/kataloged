@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-// Import other Firebase products you want to use, e.g., Auth
+import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FB_API_KEY,
@@ -9,9 +9,12 @@ const firebaseConfig = {
   messagingSenderId: import.meta.env.VITE_FB_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_FB_APP_ID,
   measurementId: import.meta.env.VITE_FB_MEASUREMENT_ID,
+  clientId: import.meta.env.VITE_OAUTH_CLIENT_ID,
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-// Export the app or any services you need
-export default app;
+const auth = getAuth(app);
+
+export default auth;
+
