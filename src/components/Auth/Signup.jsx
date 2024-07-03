@@ -133,7 +133,7 @@ const SignUp = () => {
             variant="outlined"
             color="primary"
             onClick={handleGoogleSignIn}>
-            Sign Up with Google
+            Sign up with Google
           </SubmitButton>
           <Box mt={2}>
             <Typography

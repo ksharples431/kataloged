@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { styled } from '@mui/material/styles';
 import {
   Container,
   Typography,
@@ -10,10 +11,13 @@ import {
   Paper,
   Link,
   useTheme,
+  Divider,
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
 
-import { loginUser } from '../../store/users/usersThunks';
+import {
+  loginUser,
+  signInWithGoogle,
+} from '../../store/users/usersThunks';
 import LoadingSpinner from '../UI/LoadingSpinner.jsx';
 import ErrorMessage from '../UI/ErrorMessage.jsx';
 
@@ -53,6 +57,14 @@ const Login = () => {
     );
     if (loginUser.fulfilled.match(resultAction)) {
       // Signup was successful, navigate to login or dashboard
+      navigate('/');
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    const resultAction = await dispatch(signInWithGoogle());
+    if (signInWithGoogle.fulfilled.match(resultAction)) {
+      // Google Sign-In was successful, navigate to home or dashboard
       navigate('/');
     }
   };
@@ -107,7 +119,15 @@ const Login = () => {
             variant="contained"
             color="primary"
             disabled={status === 'loading'}>
-           Log In
+            Log In
+          </SubmitButton>
+          <Divider style={{ margin: theme.spacing(3, 0) }}>Or</Divider>
+          <SubmitButton
+            fullWidth
+            variant="outlined"
+            color="primary"
+            onClick={handleGoogleSignIn}>
+            Log in with Google
           </SubmitButton>
           <Box mt={2}>
             <Typography
