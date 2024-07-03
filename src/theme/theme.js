@@ -1,13 +1,9 @@
 import { createTheme } from '@mui/material/styles';
 
-const baseTheme = {
+export default createTheme({
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
   },
-};
-
-export const lightTheme = createTheme({
-  ...baseTheme,
   components: {
     MuiCssBaseline: {
       styleOverrides: {
@@ -47,40 +43,5 @@ export const lightTheme = createTheme({
   },
   customBackgrounds: {
     wood: 'url("/src/assets/wood.jpeg")',
-  },
-});
-
-export const darkTheme = createTheme({
-  ...baseTheme,
-  components: {
-    MuiCssBaseline: {
-      styleOverrides: {
-        body: {
-          backgroundColor: '#0D1b2A',
-          minHeight: '100vh',
-        },
-        html: {
-          backgroundColor: '#0D1b2A',
-          minHeight: '100vh',
-        },
-      },
-    },
-  },
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: '#415A77',
-    },
-    secondary: {
-      main: '#284B63',
-    },
-    background: {
-      default: '#1B263B',
-      paper: '#FFFFFF',
-    },
-    text: {
-      primary: '#E0E1DD',
-      secondary: '#778DA9',
-    },
   },
 });

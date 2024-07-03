@@ -1,5 +1,8 @@
+import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
+import MenuIcon from '@mui/icons-material/Menu';
 import {
   AppBar,
   Toolbar,
@@ -10,71 +13,28 @@ import {
   Menu,
   MenuItem,
 } from '@mui/material';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
-import InputBase from '@mui/material/InputBase';
-import Box from '@mui/material/Box';
-import { useTheme as useCustomTheme } from '../../theme/themeUtils.js';
-import SearchIcon from '@mui/icons-material/Search';
-import MenuIcon from '@mui/icons-material/Menu';
-import { alpha, useTheme } from '@mui/material/styles';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
   padding: theme.spacing(1),
 }));
 
-const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+const StyledToolbar = styled(Toolbar)(() => ({
   display: 'flex',
   alignItems: 'center',
 }));
 
-const Logo = styled(Typography)(({ theme }) => ({
+const Logo = styled(Typography)(() => ({
   fontSize: '1.5rem',
   fontWeight: 'bold',
   textAlign: 'center',
   marginRight: 'auto',
 }));
 
-const ToolbarContent = styled(Box)(({ theme }) => ({
+const ToolbarContent = styled('div')(() => ({
   display: 'flex',
   alignItems: 'center',
   marginLeft: 'auto',
-}));
-
-const SearchWrapper = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginLeft: theme.spacing(1),
-  marginRight: theme.spacing(2),
-  width: 'auto',
-  [theme.breakpoints.up('sm')]: {
-    width: 'auto',
-  },
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '.MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '20ch',
-  },
 }));
 
 const ButtonGroup = styled('div')(({ theme }) => ({
@@ -82,16 +42,9 @@ const ButtonGroup = styled('div')(({ theme }) => ({
   gap: theme.spacing(1),
 }));
 
-const Header = () => {
-  const { isDarkMode, toggleTheme } = useCustomTheme();
-  const theme = useTheme();
+const Header = ({ theme }) => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-
-  const toggleSearch = () => {
-    setIsSearchVisible(!isSearchVisible);
-  };
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -105,77 +58,77 @@ const Header = () => {
     <StyledAppBar position="static">
       <StyledToolbar>
         <Logo variant="h6" noWrap>
-          Kataloged
+          <Link
+            to="/"
+            style={{ textDecoration: 'none', color: 'inherit' }}>
+            Kataloged
+          </Link>
         </Logo>
         <ToolbarContent>
-          {isSmallScreen ? (
+          {isSmallScreen && (
+            <IconButton
+              edge="end"
+              color="inherit"
+              aria-label="menu"
+              onClick={handleMenu}>
+              <MenuIcon />
+            </IconButton>
+          )}
+          {!isSmallScreen && (
             <>
-              <IconButton color="inherit" onClick={toggleSearch}>
-                <SearchIcon />
-              </IconButton>
-              {isSearchVisible && (
-                <SearchWrapper>
-                  <SearchIconWrapper>
-                    <SearchIcon />
-                  </SearchIconWrapper>
-                  <StyledInputBase
-                    placeholder="Search…"
-                    inputProps={{ 'aria-label': 'search' }}
-                  />
-                </SearchWrapper>
-              )}
-              <IconButton
-                edge="end"
-                color="inherit"
-                aria-label="menu"
-                onClick={handleMenu}>
-                <MenuIcon />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}>
-                <MenuItem onClick={handleClose}>Login</MenuItem>
-                <MenuItem onClick={handleClose}>Sign Up</MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    toggleTheme();
-                    handleClose();
-                  }}>
-                  {isDarkMode ? 'Light Mode' : 'Dark Mode'}
-                </MenuItem>
-              </Menu>
-            </>
-          ) : (
-            <>
-              <SearchWrapper>
-                <SearchIconWrapper>
-                  <SearchIcon />
-                </SearchIconWrapper>
-                <StyledInputBase
-                  placeholder="Search…"
-                  inputProps={{ 'aria-label': 'search' }}
-                />
-              </SearchWrapper>
               <ButtonGroup>
-                <Button color="inherit">Login</Button>
-                <Button color="inherit">Sign Up</Button>
+                <Button color="inherit">
+                  <Link
+                    to="/auth/login"
+                    style={{ textDecoration: 'none', color: 'inherit' }}>
+                    Log In
+                  </Link>
+                </Button>
+                <Button color="inherit">
+                  <Link
+                    to="/auth/signup"
+                    style={{ textDecoration: 'none', color: 'inherit' }}>
+                    Sign Up
+                  </Link>
+                </Button>
               </ButtonGroup>
-              <IconButton onClick={toggleTheme} color="inherit">
-                {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
-              </IconButton>
             </>
           )}
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}>
+            <MenuItem onClick={handleClose}>
+              <Link
+                to="/auth/login"
+                style={{
+                  textDecoration: 'none',
+                  color: theme.palette.text.secondary,
+                }}>
+                Login
+              </Link>
+            </MenuItem>
+            <MenuItem onClick={handleClose}>
+              <Link
+                to="/auth/signup"
+                style={{
+                  textDecoration: 'none',
+                  color: theme.palette.text.secondary,
+                }}>
+                Sign Up
+              </Link>
+            </MenuItem>
+          </Menu>
         </ToolbarContent>
       </StyledToolbar>
     </StyledAppBar>
@@ -183,3 +136,7 @@ const Header = () => {
 };
 
 export default Header;
+
+Header.propTypes = {
+  theme: PropTypes.object.isRequired,
+};

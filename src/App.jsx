@@ -1,7 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LayoutWrapper from './components/UI/LayoutWrapper.jsx';
-import HomePage from './pages/HomePage.jsx';
-import BookList from './components/Books/BookList.jsx';
+import Signup from './components/Auth/Signup.jsx';
+import Login from './components/Auth/Login.jsx'
+import HomePage from './pages/HomePage/HomePage.jsx';
+import BookList from './pages/BooksPage/BookList.jsx';
 import './App.css';
 
 function App() {
@@ -12,6 +14,10 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/books">
           <Route index element={<BookList />} />
+        </Route>
+        <Route path="/auth">
+          <Route path="signup" element={<Signup/>} />
+          <Route path="login" element={<Login/>} />
         </Route>
         {/* <Route path="/add-book" element={<AddBookPage />} />
         <Route path="/auth">

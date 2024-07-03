@@ -1,26 +1,28 @@
 import PropTypes from 'prop-types';
-import { Container, Grid, Box } from '@mui/material';
-import Header from './Header'; 
+import { Container, Grid, Box, useTheme } from '@mui/material';
+import Header from './Header';
+import Footer from './Footer';
 
 const LayoutWrapper = ({ children }) => {
+  const theme = useTheme();
   return (
-    <Container>
-      <Grid container spacing={3}>
-        {/* Header */}
+    <Container maxWidth="lg">
+      <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Header />
+          <Header theme={theme} />
         </Grid>
-
-        {/* Main content */}
         <Grid item xs={12}>
-          <Box sx={{ bgcolor: 'background.default', p: 8 }}>{children}</Box>
-        </Grid>
-
-        {/* Footer */}
-        <Grid item xs={12}>
-          <Box sx={{ bgcolor: 'primary.main', p: 3, color: 'white' }}>
-            © 2024 KSharpCreations
+          <Box
+            component="main"
+            p={2}
+            bgcolor={theme.palette.background.default}
+            minHeight="calc(100vh - 230px)" // Adjust based on your header/footer height
+          >
+            {children}
           </Box>
+        </Grid>
+        <Grid item xs={12}>
+          <Footer/>
         </Grid>
       </Grid>
     </Container>

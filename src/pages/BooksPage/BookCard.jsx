@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { CardContent } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { CardContent } from '@mui/material';
 import { Card, CardMedia, Typography } from '@mui/material';
 
 const BookCardWrapper = styled(Card)(({ theme }) => ({
