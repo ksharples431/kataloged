@@ -5,6 +5,7 @@ import { visualizer } from 'rollup-plugin-visualizer';
 export default defineConfig({
   plugins: [react(), visualizer()],
   build: {
+    assetsDir: 'assets',
     rollupOptions: {
       output: {
         manualChunks: {
