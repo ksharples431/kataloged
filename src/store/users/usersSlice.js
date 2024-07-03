@@ -9,7 +9,6 @@ import {
 } from './usersThunks';
 
 const initialState = {
-  uid: null,
   username: null,
   isAuthenticated: false,
   status: 'idle',
@@ -21,7 +20,6 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     clearUserData: (state) => {
-      state.uid = null;
       state.username = null;
       state.isAuthenticated = false;
       state.status = 'idle';
@@ -35,7 +33,9 @@ const userSlice = createSlice({
       })
       .addCase(signInWithGoogle.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.currentUser = action.payload;
+        state.username = action.payload.username;
+        state.isAuthenticated = true;
+        state.error = null;
       })
       .addCase(signInWithGoogle.rejected, (state, action) => {
         state.status = 'failed';
@@ -46,7 +46,6 @@ const userSlice = createSlice({
       })
       .addCase(signupUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.uid = action.payload.id;
         state.username = action.payload.username;
         state.isAuthenticated = true;
         state.error = null;
@@ -60,7 +59,6 @@ const userSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.uid = action.payload.id;
         state.username = action.payload.username;
         state.isAuthenticated = true;
         state.error = null;
@@ -70,10 +68,9 @@ const userSlice = createSlice({
         state.error = action.payload || 'Unknown error occurred';
       })
       .addCase(logoutUser.fulfilled, (state) => {
-        state.uid = null;
+        state.status = 'idle';
         state.username = null;
         state.isAuthenticated = false;
-        state.status = 'idle';
         state.error = null;
       })
       .addCase(fetchUserProfile.pending, (state) => {

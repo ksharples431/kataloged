@@ -44,12 +44,11 @@ export const signInWithGoogle = createAsyncThunk(
 
       if (response.data && response.data.data && response.data.data.user) {
         localStorage.setItem('token', idToken);
+        localStorage.setItem('uid', response.data.data.user.id);
 
         const user = response.data.data.user;
 
         return {
-          id: user.id,
-          uid: firebaseUser.uid,
           username: user.username,
         };
       } else {
@@ -96,17 +95,16 @@ export const signupUser = createAsyncThunk(
       );
 
       console.log('Signup API Response:', response.data);
+      console.log(response.data.data.user.id)
 
       if (response.data && response.data.data && response.data.data.user) {
         // Signup was successful, now we can store the token
         localStorage.setItem('token', idToken);
+        localStorage.setItem('uid', response.data.data.user.id);
 
         const user = response.data.data.user;
 
-        // LOOK INTO WHICH I NEED TO SEND
         return {
-          id: user.id, 
-          uid: firebaseUser.uid,
           username: user.username,
         };
       } else {
@@ -152,11 +150,10 @@ export const loginUser = createAsyncThunk(
       if (response.data && response.data.data && response.data.data.user) {
         // Login was successful, now we can store the token
         localStorage.setItem('token', idToken);
+        localStorage.setItem('uid', response.data.data.user.id);
 
         const user = response.data.data.user;
         return {
-          id: user.id,
-          uid: firebaseUser.uid,
           username: user.username,
         };
       } else {
@@ -176,13 +173,14 @@ export const loginUser = createAsyncThunk(
 
 export const logoutUser = createAsyncThunk(
   'user/logout',
-  async (_, {dispatch, rejectWithValue }) => {
+  async (_, { dispatch, rejectWithValue }) => {
     try {
       // Sign out from Firebase
       await auth.signOut();
 
       // Remove the token from localStorage
       localStorage.removeItem('token');
+      localStorage.removeItem('uid');
 
       dispatch(clearUserData());
       console.log('Logout successful');
@@ -193,6 +191,7 @@ export const logoutUser = createAsyncThunk(
       // Even if there's an error with Firebase signOut, we should still remove the token
       // to ensure the user is logged out on the client side
       localStorage.removeItem('token');
+      localStorage.removeItem('uid');
       dispatch(clearUserData());
       return rejectWithValue(
         error.message || 'An error occurred during logout'
