@@ -45,6 +45,7 @@ export const signInWithGoogle = createAsyncThunk(
       if (response.data && response.data.data && response.data.data.user) {
         localStorage.setItem('token', idToken);
         localStorage.setItem('uid', response.data.data.user.id);
+        localStorage.setItem('username', response.data.data.user.username);
 
         const user = response.data.data.user;
 
@@ -101,6 +102,7 @@ export const signupUser = createAsyncThunk(
         // Signup was successful, now we can store the token
         localStorage.setItem('token', idToken);
         localStorage.setItem('uid', response.data.data.user.id);
+        localStorage.setItem('username', response.data.data.user.username);
 
         const user = response.data.data.user;
 
@@ -151,6 +153,7 @@ export const loginUser = createAsyncThunk(
         // Login was successful, now we can store the token
         localStorage.setItem('token', idToken);
         localStorage.setItem('uid', response.data.data.user.id);
+        localStorage.setItem('username', response.data.data.user.username);
 
         const user = response.data.data.user;
         return {
@@ -181,6 +184,7 @@ export const logoutUser = createAsyncThunk(
       // Remove the token from localStorage
       localStorage.removeItem('token');
       localStorage.removeItem('uid');
+      localStorage.removeItem('username');
 
       dispatch(clearUserData());
       console.log('Logout successful');
@@ -192,53 +196,10 @@ export const logoutUser = createAsyncThunk(
       // to ensure the user is logged out on the client side
       localStorage.removeItem('token');
       localStorage.removeItem('uid');
+      localStorage.removeItem('username');
       dispatch(clearUserData());
       return rejectWithValue(
         error.message || 'An error occurred during logout'
-      );
-    }
-  }
-);
-
-export const fetchUserProfile = createAsyncThunk(
-  'user/fetchProfile',
-  async (userId, { rejectWithValue }) => {
-    try {
-      const response = await api.get(`/users/${userId}`);
-      console.log('Fetch User Profile API Response:', response.data);
-
-      if (response.data.data && response.data.data.user) {
-        return response.data.data.user;
-      } else {
-        console.error('Unexpected API response structure:', response.data);
-        return rejectWithValue('Unexpected API response structure');
-      }
-    } catch (error) {
-      console.error('Fetch User Profile Error:', error);
-      return rejectWithValue(
-        error.response?.data?.message || error.message
-      );
-    }
-  }
-);
-
-export const updateUserProfile = createAsyncThunk(
-  'user/updateProfile',
-  async ({ userId, userData }, { rejectWithValue }) => {
-    try {
-      const response = await api.put(`/users/${userId}`, userData);
-      console.log('Update User Profile API Response:', response.data);
-
-      if (response.data.data && response.data.data.user) {
-        return response.data.data.user;
-      } else {
-        console.error('Unexpected API response structure:', response.data);
-        return rejectWithValue('Unexpected API response structure');
-      }
-    } catch (error) {
-      console.error('Update User Profile Error:', error);
-      return rejectWithValue(
-        error.response?.data?.message || error.message
       );
     }
   }

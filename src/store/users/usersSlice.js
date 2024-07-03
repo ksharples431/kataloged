@@ -4,8 +4,6 @@ import {
   signupUser,
   loginUser,
   logoutUser,
-  fetchUserProfile,
-  updateUserProfile,
 } from './usersThunks';
 
 const initialState = {
@@ -23,6 +21,12 @@ const userSlice = createSlice({
       state.username = null;
       state.isAuthenticated = false;
       state.status = 'idle';
+      state.error = null;
+    },
+    setUser: (state, action) => {
+      state.username = action.payload.username;
+      state.isAuthenticated = true;
+      state.status = 'succeeded';
       state.error = null;
     },
   },
@@ -72,29 +76,9 @@ const userSlice = createSlice({
         state.username = null;
         state.isAuthenticated = false;
         state.error = null;
-      })
-      .addCase(fetchUserProfile.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(fetchUserProfile.fulfilled, (state) => {
-        state.status = 'succeeded';
-        // We don't store the full profile in the Redux store anymore
-      })
-      .addCase(fetchUserProfile.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload || 'Unknown error occurred';
-      })
-      .addCase(updateUserProfile.fulfilled, (state, action) => {
-        // We only update the username if it's changed
-        if (
-          action.payload.username &&
-          action.payload.username !== state.username
-        ) {
-          state.username = action.payload.username;
-        }
       });
   },
 });
 
-export const { clearUserData } = userSlice.actions;
+export const { clearUserData, setUser } = userSlice.actions;
 export default userSlice.reducer;
