@@ -3,10 +3,68 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   getIdToken,
+  signInWithPopup,
+  GoogleAuthProvider,
 } from 'firebase/auth';
 import { clearUserData } from './usersSlice';
 import auth from '../../../firebaseConfig';
 import api from '../../services/api';
+
+export const signInWithGoogle = createAsyncThunk(
+  'user/googleSignIn',
+  async (_, { rejectWithValue }) => {
+    try {
+      const provider = new GoogleAuthProvider();
+
+      provider.setCustomParameters({
+        client_id: import.meta.env.VITE_OAUTH_CLIENT_ID,
+      });
+
+      const result = await signInWithPopup(auth, provider);
+      const firebaseUser = result.user;
+
+      // The rest of your function remains the same
+      const idToken = await getIdToken(firebaseUser);
+
+      // Send the token and user data to your backend
+      const response = await api.post(
+        '/users/google-signin',
+        {
+          email: firebaseUser.email,
+          username: firebaseUser.displayName,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+          },
+        }
+      );
+
+      console.log('Google Sign-In API Response:', response.data);
+
+      if (response.data && response.data.data && response.data.data.user) {
+        localStorage.setItem('token', idToken);
+
+        const user = response.data.data.user;
+
+        return {
+          id: user.id,
+          uid: firebaseUser.uid,
+          username: user.username,
+        };
+      } else {
+        console.error('Unexpected API response structure:', response.data);
+        return rejectWithValue('Unexpected API response structure');
+      }
+    } catch (error) {
+      console.error('Google Sign-In Error:', error);
+      await auth.signOut();
+      return rejectWithValue(
+        error.response?.data?.message || error.message
+      );
+    }
+  }
+);
 
 export const signupUser = createAsyncThunk(
   'user/signup',

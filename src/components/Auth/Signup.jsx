@@ -11,9 +11,10 @@ import {
   Paper,
   Link,
   useTheme,
+  Divider
 } from '@mui/material';
 
-import { signupUser } from '../../store/users/usersThunks'; 
+import { signupUser, signInWithGoogle } from '../../store/users/usersThunks'; 
 import LoadingSpinner from '../UI/LoadingSpinner.jsx';
 import ErrorMessage from '../UI/ErrorMessage.jsx';
 
@@ -52,6 +53,15 @@ const SignUp = () => {
       navigate('/');
     }
   };
+
+  const handleGoogleSignIn = async () => {
+    const resultAction = await dispatch(signInWithGoogle());
+    if (signInWithGoogle.fulfilled.match(resultAction)) {
+      // Google Sign-In was successful, navigate to home or dashboard
+      navigate('/');
+    }
+  };
+
 
   if (status === 'loading') {
     return <LoadingSpinner />;
@@ -116,6 +126,14 @@ const SignUp = () => {
             color="primary"
             disabled={status === 'loading'}>
             Sign Up
+          </SubmitButton>
+          <Divider style={{ margin: theme.spacing(3, 0) }}>Or</Divider>
+          <SubmitButton
+            fullWidth
+            variant="outlined"
+            color="primary"
+            onClick={handleGoogleSignIn}>
+            Sign Up with Google
           </SubmitButton>
           <Box mt={2}>
             <Typography

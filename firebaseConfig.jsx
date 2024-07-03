@@ -9,12 +9,12 @@ const firebaseConfig = {
   messagingSenderId: import.meta.env.VITE_FB_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_FB_APP_ID,
   measurementId: import.meta.env.VITE_FB_MEASUREMENT_ID,
+  clientId: import.meta.env.VITE_OAUTH_CLIENT_ID,
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-// Export the app or any services you need
 
 export default auth;
 

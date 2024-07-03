@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
+  signInWithGoogle,
   signupUser,
   loginUser,
   logoutUser,
@@ -29,6 +30,17 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(signInWithGoogle.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(signInWithGoogle.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.currentUser = action.payload;
+      })
+      .addCase(signInWithGoogle.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload || 'Unknown error occurred';
+      })
       .addCase(signupUser.pending, (state) => {
         state.status = 'loading';
       })
