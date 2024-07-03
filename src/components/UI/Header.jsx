@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { logoutUser } from '../../store/users/usersThunks';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -43,6 +45,10 @@ const ButtonGroup = styled('div')(({ theme }) => ({
 }));
 
 const Header = ({ theme }) => {
+  const isAuthenticated = useSelector(
+    (state) => state.users.isAuthenticated
+  );
+  const dispatch = useDispatch();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -52,6 +58,10 @@ const Header = ({ theme }) => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
   };
 
   return (
@@ -75,24 +85,30 @@ const Header = ({ theme }) => {
             </IconButton>
           )}
           {!isSmallScreen && (
-            <>
-              <ButtonGroup>
-                <Button color="inherit">
-                  <Link
-                    to="/auth/login"
-                    style={{ textDecoration: 'none', color: 'inherit' }}>
-                    Log In
-                  </Link>
+            <ButtonGroup>
+              {isAuthenticated ? (
+                <Button color="inherit" onClick={handleLogout}>
+                  Log Out
                 </Button>
-                <Button color="inherit">
-                  <Link
-                    to="/auth/signup"
-                    style={{ textDecoration: 'none', color: 'inherit' }}>
-                    Sign Up
-                  </Link>
-                </Button>
-              </ButtonGroup>
-            </>
+              ) : (
+                <>
+                  <Button color="inherit">
+                    <Link
+                      to="/auth/login"
+                      style={{ textDecoration: 'none', color: 'inherit' }}>
+                      Log In
+                    </Link>
+                  </Button>
+                  <Button color="inherit">
+                    <Link
+                      to="/auth/signup"
+                      style={{ textDecoration: 'none', color: 'inherit' }}>
+                      Sign Up
+                    </Link>
+                  </Button>
+                </>
+              )}
+            </ButtonGroup>
           )}
           <Menu
             id="menu-appbar"
@@ -108,26 +124,39 @@ const Header = ({ theme }) => {
             }}
             open={Boolean(anchorEl)}
             onClose={handleClose}>
-            <MenuItem onClick={handleClose}>
-              <Link
-                to="/auth/login"
-                style={{
-                  textDecoration: 'none',
-                  color: theme.palette.text.secondary,
-                }}>
-                Login
-              </Link>
-            </MenuItem>
-            <MenuItem onClick={handleClose}>
-              <Link
-                to="/auth/signup"
-                style={{
-                  textDecoration: 'none',
-                  color: theme.palette.text.secondary,
-                }}>
-                Sign Up
-              </Link>
-            </MenuItem>
+            {isAuthenticated
+              ? [
+                  <MenuItem
+                    key="logout"
+                    onClick={() => {
+                      handleClose();
+                      handleLogout();
+                    }}>
+                    Log Out
+                  </MenuItem>,
+                ]
+              : [
+                  <MenuItem key="login" onClick={handleClose}>
+                    <Link
+                      to="/auth/login"
+                      style={{
+                        textDecoration: 'none',
+                        color: theme.palette.text.secondary,
+                      }}>
+                      Login
+                    </Link>
+                  </MenuItem>,
+                  <MenuItem key="signup" onClick={handleClose}>
+                    <Link
+                      to="/auth/signup"
+                      style={{
+                        textDecoration: 'none',
+                        color: theme.palette.text.secondary,
+                      }}>
+                      Sign Up
+                    </Link>
+                  </MenuItem>,
+                ]}
           </Menu>
         </ToolbarContent>
       </StyledToolbar>
