@@ -12,9 +12,6 @@ const ErrorMessage = ({ message }) => {
       height="100vh"
       sx={{ backgroundColor: theme.palette.background.default }}>
       <Typography color="error">Error: {message}</Typography>
-      <Typography sx={{ color: theme.palette.text.primary }}>
-        Error: {message}
-      </Typography>
     </Box>
   );
 };

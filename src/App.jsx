@@ -8,6 +8,7 @@ import Login from './components/Auth/Login.jsx';
 import HomePage from './pages/HomePage/HomePage.jsx';
 import BookList from './pages/BooksPage/BookList.jsx';
 import BookDetailsCard from './pages/BookDetailPage/BookDetailsCard.jsx';
+import BookSearchForm from './pages/BookDetailPage/BookSearchForm.jsx'
 import './App.css';
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
           <Route path="/books">
             <Route index element={<BookList />} />
             <Route path="/books/:bid" element={<BookDetailsCard />} />
+            <Route path="/books/search" element={<BookSearchForm />} />
           </Route>
           <Route path="/auth">
             <Route path="signup" element={<Signup />} />
