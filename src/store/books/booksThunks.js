@@ -26,6 +26,7 @@ export const fetchBooks = createAsyncThunk(
 export const fetchBookById = createAsyncThunk(
   'books/fetchBookById',
   async (id, { rejectWithValue }) => {
+    console.log('Fetch Book By ID:', id);
     try {
       const response = await api.get(`/books/${id}`);
       console.log('Fetch Book By ID Response:', response.data);

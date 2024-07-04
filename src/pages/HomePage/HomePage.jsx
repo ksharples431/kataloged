@@ -9,7 +9,7 @@ import CardCatalog from './CardCatalog';
 const HomePage = () => {
   const dispatch = useDispatch();
   const { status, error } = useSelector((state) => state.books);
-  const theme = useTheme();
+  // const theme = useTheme();
 
   useEffect(() => {
     if (status === 'idle') {
@@ -43,8 +43,8 @@ const HomePage = () => {
         maxWidth: 1200,
         margin: '0 auto',
         padding: 3,
-        backgroundColor: '#FFFFFF',
-        backgroundImage: theme.customBackgrounds?.wood,
+        backgroundColor: '#1B263B',
+        // backgroundImage: theme.customBackgrounds?.wood,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',

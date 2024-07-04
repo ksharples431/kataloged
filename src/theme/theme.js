@@ -8,14 +8,14 @@ export default createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundImage: 'url("/src/assets/bookcase.jpeg")',
+          backgroundImage: 'url("/bookcase.jpeg")',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: 'fixed',
           minHeight: '100vh',
         },
         html: {
-          backgroundImage: 'url("/src/assets/bookcase.jpeg")',
+          backgroundImage: 'url("/bookcase.jpeg")',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: 'fixed',
@@ -42,6 +42,6 @@ export default createTheme({
     },
   },
   customBackgrounds: {
-    wood: 'url("/src/assets/wood.jpeg")',
+    wood: 'url("/wood.jpeg")',
   },
 });
