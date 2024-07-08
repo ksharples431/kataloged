@@ -1,71 +1,41 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { searchBooks } from '../../store/books/booksThunks';
 
-import {
-  Container,
-  Box,
-  Card,
-  CardContent,
-  TextField,
-  Button,
-  Typography,
-} from '@mui/material';
-// import { useTheme } from '@mui/material/styles';
-// import useMediaQuery from '@mui/material/useMediaQuery';
-
-const BookSearchForm = () => {
+function BookSearchForm() {
   const [searchTerm, setSearchTerm] = useState('');
-  // const theme = useTheme();
-  // const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const dispatch = useDispatch();
+  const { searchResults, status, error } = useSelector(
+    (state) => state.books
+  );
 
-  const handleSearch = (event) => {
-    event.preventDefault();
-
+  const handleSearch = (e) => {
+    e.preventDefault();
+    dispatch(searchBooks(searchTerm));
   };
 
   return (
-    <Container
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh', // Ensure the container takes up the full height of the viewport
-      }}>
-      <Card
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          mb: 4,
-          maxWidth: '600px',
-          width: '100%', // Ensure the card doesn't exceed the max width
-          p: 2,
-        }}>
-        <CardContent>
-          <Typography component="h2" variant="h4" gutterBottom>
-            Search for a Book
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSearch}
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 2,
-            }}>
-            <TextField
-              label="Book Title"
-              variant="outlined"
-              fullWidth
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <Button type="submit" variant="contained" color="primary">
-              Search
-            </Button>
-          </Box>
-        </CardContent>
-      </Card>
-    </Container>
+    <div>
+      <form onSubmit={handleSearch}>
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Enter book title"
+        />
+        <button type="submit">Search</button>
+      </form>
+      {status === 'loading' && <p>Searching...</p>}
+      {error && <p>Error: {error}</p>}
+      {searchResults.map((book) => (
+        <div key={book.id || book.title}>
+          <h3>{book.title}</h3>
+          <p>By: {book.authors?.join(', ')}</p>
+          {/* Display other book details */}
+        </div>
+      ))}
+    </div>
   );
-};
+}
 
 export default BookSearchForm;

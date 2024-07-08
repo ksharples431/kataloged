@@ -3,6 +3,22 @@ import api from '../../services/api';
 
 // FIXED DATA STRUCTURE HERE NEED TO DO REST OF THUNKS
 // DID THE REST OF THE TUNKS BUT NOT SURE IF THEY WORK YET
+export const searchBooks = createAsyncThunk(
+  'books/searchBooks',
+  async (title, { rejectWithValue }) => {
+    try {
+      const response = await api.get('/books/search', {
+        params: { title },
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || error.message
+      );
+    }
+  }
+);
+
 export const fetchBooks = createAsyncThunk(
   'books/fetchBooks',
   async (_, { rejectWithValue }) => {

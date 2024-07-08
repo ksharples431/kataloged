@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
+  searchBooks,
   fetchBooks,
   fetchBookById,
   addBook,
@@ -10,6 +11,7 @@ import {
 const initialState = {
   books: [],
   selectedBook: null,
+  searchResults: [],
   status: 'idle',
   error: null,
 };
@@ -24,6 +26,17 @@ const booksSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+    .addCase(searchBooks.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(searchBooks.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.searchResults = action.payload.data.books;
+      })
+      .addCase(searchBooks.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
       .addCase(fetchBooks.pending, (state) => {
         state.status = 'loading';
       })
