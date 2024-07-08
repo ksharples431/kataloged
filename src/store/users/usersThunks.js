@@ -15,7 +15,6 @@ export const signInWithGoogle = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const provider = new GoogleAuthProvider();
-
       provider.setCustomParameters({
         client_id: import.meta.env.VITE_OAUTH_CLIENT_ID,
       });
@@ -23,34 +22,19 @@ export const signInWithGoogle = createAsyncThunk(
       const result = await signInWithPopup(auth, provider);
       const firebaseUser = result.user;
 
-      // The rest of your function remains the same
-      const idToken = await getIdToken(firebaseUser);
-
-      // Send the token and user data to your backend
-      const response = await api.post(
-        '/users/google-signin',
-        {
-          email: firebaseUser.email,
-          username: firebaseUser.displayName,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${idToken}`,
-          },
-        }
-      );
+      const response = await api.post('/users/google-signin', {
+        email: firebaseUser.email,
+        username: firebaseUser.displayName,
+      });
 
       console.log('Google Sign-In API Response:', response.data);
 
-      if (response.data && response.data.data && response.data.data.user) {
-        localStorage.setItem('token', idToken);
-        localStorage.setItem('uid', response.data.data.user.id);
-        localStorage.setItem('username', response.data.data.user.username);
-
+      if (response.data.data.user) {
         const user = response.data.data.user;
-
         return {
           username: user.username,
+          uid: user.uid,
+          email: user.email,
         };
       } else {
         console.error('Unexpected API response structure:', response.data);
@@ -96,7 +80,7 @@ export const signupUser = createAsyncThunk(
       );
 
       console.log('Signup API Response:', response.data);
-      console.log(response.data.data.user.id)
+      console.log(response.data.data.user.id);
 
       if (response.data && response.data.data && response.data.data.user) {
         // Signup was successful, now we can store the token
@@ -178,13 +162,7 @@ export const logoutUser = createAsyncThunk(
   'user/logout',
   async (_, { dispatch, rejectWithValue }) => {
     try {
-      // Sign out from Firebase
       await auth.signOut();
-
-      // Remove the token from localStorage
-      localStorage.removeItem('token');
-      localStorage.removeItem('uid');
-      localStorage.removeItem('username');
 
       dispatch(clearUserData());
       console.log('Logout successful');
@@ -192,11 +170,7 @@ export const logoutUser = createAsyncThunk(
       return null;
     } catch (error) {
       console.error('Logout Error:', error);
-      // Even if there's an error with Firebase signOut, we should still remove the token
-      // to ensure the user is logged out on the client side
-      localStorage.removeItem('token');
-      localStorage.removeItem('uid');
-      localStorage.removeItem('username');
+
       dispatch(clearUserData());
       return rejectWithValue(
         error.message || 'An error occurred during logout'

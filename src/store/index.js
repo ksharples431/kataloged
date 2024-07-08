@@ -1,6 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
 import booksReducer from './books/booksSlice';
 import usersReducer from './users/usersSlice';
+import userBooksReducer from './userBooks/userBooksSlice';
+
 
 const preloadedState = () => {
   const token = localStorage.getItem('token');
@@ -24,6 +26,8 @@ const store = configureStore({
   reducer: {
     books: booksReducer,
     users: usersReducer,
+    userBooks: userBooksReducer,
+
   },
   preloadedState: preloadedState(),
 });

@@ -9,25 +9,18 @@ import CardCatalog from './CardCatalog';
 const HomePage = () => {
   const dispatch = useDispatch();
   const { status, error } = useSelector((state) => state.books);
+  const isAuthenticated = useSelector((state) => state.users.isAuthenticated);
   // const theme = useTheme();
 
   useEffect(() => {
-    if (status === 'idle') {
+    if (isAuthenticated && status === 'idle') {
       dispatch(fetchBooks());
     }
-  }, [status, dispatch]);
+  }, [isAuthenticated, status, dispatch]);
 
-  const drawers = [
-    { label: 'All Books', path: '/books' },
-    { label: 'My Books', path: '/my-books' },
-    { label: 'Authors', path: '/authors' },
-    { label: 'Genres', path: '/genres' },
-    { label: 'Series', path: '/series' },
-    { label: 'My Queue', path: '/queue' },
-    { label: 'Favorites', path: '/favorites' },
-    { label: 'Account', path: '/account' },
-    { label: 'Stuff', path: '/stuff' },
-  ];
+  if (!isAuthenticated) {
+    return <div>Please sign in to view books.</div>;
+  }
 
   if (status === 'loading') {
     return <LoadingSpinner />;
@@ -36,6 +29,23 @@ const HomePage = () => {
   if (status === 'failed') {
     return <ErrorMessage message={error} />;
   }
+  // useEffect(() => {
+  //   if (status === 'idle') {
+  //     dispatch(fetchBooks());
+  //   }
+  // }, [status, dispatch]);
+
+  const drawers = [
+    { label: 'All Books', path: '/books' },
+    { label: 'My Books', path: '/userBooks' },
+    { label: 'Authors', path: '/authors' },
+    { label: 'Genres', path: '/genres' },
+    { label: 'Series', path: '/series' },
+    { label: 'My Queue', path: '/queue' },
+    { label: 'Favorites', path: '/favorites' },
+    { label: 'Account', path: '/account' },
+    { label: 'Stuff', path: '/stuff' },
+  ]
 
   return (
     <Box

@@ -4,14 +4,14 @@ import api from '../../services/api';
 // FIXED DATA STRUCTURE HERE NEED TO DO REST OF THUNKS
 // DID THE REST OF THE TUNKS BUT NOT SURE IF THEY WORK YET
 export const fetchUserBooks = createAsyncThunk(
-  'books/fetchUserBooks',
+  'userBooks/fetchUserBooks',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get('/books');
+      const response = await api.get('/userBooks');
       console.log('API Response:', response.data);
 
-      if (Array.isArray(response.data.data.books)) {
-        return response.data.data.books;
+      if (Array.isArray(response.data.data.userBooks)) {
+        return response.data.data.userBooks;
       } else {
         console.error('Unexpected API response structure:', response.data);
         return rejectWithValue('Unexpected API response structure');

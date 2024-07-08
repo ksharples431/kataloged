@@ -8,7 +8,7 @@ import {
 } from './userBooksThunks';
 
 const initialState = {
-  books: [],
+  userBooks: [],
   selectedUserBook: null,
   status: 'idle',
   error: null,
@@ -29,7 +29,7 @@ const userBooksSlice = createSlice({
       })
       .addCase(fetchUserBooks.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.books = action.payload;
+        state.userBooks = action.payload;
       })
       .addCase(fetchUserBooks.rejected, (state, action) => {
         state.status = 'failed';

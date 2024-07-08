@@ -24,8 +24,10 @@ const userSlice = createSlice({
       state.error = null;
     },
     setUser: (state, action) => {
+      state.uid = action.payload.uid;
       state.username = action.payload.username;
-      state.isAuthenticated = true;
+      state.email = action.payload.email;
+      state.isAuthenticated = !!action.payload;
       state.status = 'succeeded';
       state.error = null;
     },
@@ -37,7 +39,9 @@ const userSlice = createSlice({
       })
       .addCase(signInWithGoogle.fulfilled, (state, action) => {
         state.status = 'succeeded';
+        state.uid = action.payload.uid;
         state.username = action.payload.username;
+        state.email = action.payload.email;
         state.isAuthenticated = true;
         state.error = null;
       })

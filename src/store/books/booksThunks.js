@@ -18,12 +18,16 @@ export const fetchBooks = createAsyncThunk(
       }
     } catch (error) {
       console.error('Fetch Books Error:', error);
+      if (error.response && error.response.status === 401) {
+        return rejectWithValue('User not authenticated');
+      }
       return rejectWithValue(
         error.response?.data?.message || error.message
       );
     }
   }
 );
+
 export const fetchBookById = createAsyncThunk(
   'books/fetchBookById',
   async (id, { rejectWithValue }) => {
