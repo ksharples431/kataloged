@@ -40,7 +40,7 @@ const UserBooksList = () => {
       </Typography>
       <Grid container spacing={2}>
         {userBooks.map((book) => (
-          <Grid item xs={12} sm={4} md={3} lg={2.4} key={book.id}>
+          <Grid item xs={12} sm={4} md={3} lg={2.4} key={book.bid}>
             <UserBookCard book={book} />
           </Grid>
         ))}

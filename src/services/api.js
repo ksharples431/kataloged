@@ -16,7 +16,7 @@ api.interceptors.request.use(
     if (auth.currentUser) {
       const token = await auth.currentUser.getIdToken();
       config.headers.Authorization = `Bearer ${token}`;
-       console.log('Token added to request:', token); 
+
     } else {
       console.log('No user logged in');
     }

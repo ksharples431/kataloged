@@ -81,22 +81,22 @@ const CardContentWrapper = styled(CardContent)(({ theme }) => ({
 
 const BookCard = ({ book }) => (
   <BookCardWrapper>
-    <LinkWrapper to={`/books/${encodeURIComponent(book.id)}`}>
+    <LinkWrapper to={`/books/${encodeURIComponent(book.ubid)}`}>
       <BookImage
         component="img"
-        image={book.bookInfo.imagePath || '/placeholder-book.jpg'}
+        image={book.imagePath || '/placeholder-book.jpg'}
         alt={book.title}
       />
     </LinkWrapper>
     <CardContentWrapper>
-      <LinkWrapper to={`/books/${encodeURIComponent(book.id)}`}>
+      <LinkWrapper to={`/books/${encodeURIComponent(book.ubid)}`}>
         <BookTitle variant="h6" component="h2">
-          {book.bookInfo.title}
+          {book.title}
         </BookTitle>
       </LinkWrapper>
       <LinkWrapper to={`/authors/${encodeURIComponent(book.author)}`}>
         <AuthorName variant="body2" color="text.secondary">
-          {book.bookInfo.author}
+          {book.author}
         </AuthorName>
       </LinkWrapper>
     </CardContentWrapper>
@@ -105,7 +105,7 @@ const BookCard = ({ book }) => (
 
 BookCard.propTypes = {
   book: PropTypes.shape({
-    id: PropTypes.string.isRequired,
+    ubid: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     author: PropTypes.string.isRequired,
     imagePath: PropTypes.string,
