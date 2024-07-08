@@ -83,7 +83,7 @@ export const signupUser = createAsyncThunk(
 
       // Send the token, UID, and user data to your backend
       const response = await api.post(
-        '/users',
+        '/users/signup',
         {
           username,
           email,
@@ -140,8 +140,8 @@ export const loginUser = createAsyncThunk(
       const idToken = await getIdToken(firebaseUser);
 
       // Send the token and UID to your backend to validate and get user info
-      const uid = firebaseUser.uid;
-      const response = await api.get(`/users/${uid}`, {
+      // const uid = firebaseUser.uid;
+      const response = await api.get(`/users/login`, {
         headers: {
           Authorization: `Bearer ${idToken}`,
         },

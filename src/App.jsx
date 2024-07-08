@@ -8,7 +8,7 @@ import Login from './components/Auth/Login.jsx';
 import HomePage from './pages/HomePage/HomePage.jsx';
 import BookList from './pages/BooksPage/BookList.jsx';
 import BookDetailsCard from './pages/BookDetailPage/BookDetailsCard.jsx';
-import BookSearchForm from './pages/BookDetailPage/BookSearchForm.jsx'
+import BookSearchForm from './pages/BookDetailPage/BookSearchForm.jsx';
 import './App.css';
 
 function App() {

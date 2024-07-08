@@ -3,8 +3,8 @@ import api from '../../services/api';
 
 // FIXED DATA STRUCTURE HERE NEED TO DO REST OF THUNKS
 // DID THE REST OF THE TUNKS BUT NOT SURE IF THEY WORK YET
-export const fetchBooks = createAsyncThunk(
-  'books/fetchBooks',
+export const fetchUserBooks = createAsyncThunk(
+  'books/fetchUserBooks',
   async (_, { rejectWithValue }) => {
     try {
       const response = await api.get('/books');
@@ -24,8 +24,8 @@ export const fetchBooks = createAsyncThunk(
     }
   }
 );
-export const fetchBookById = createAsyncThunk(
-  'books/fetchBookById',
+export const fetchUserBookById = createAsyncThunk(
+  'books/fetchUserBookById',
   async (id, { rejectWithValue }) => {
     console.log('Fetch Book By ID:', id);
     try {
@@ -47,8 +47,8 @@ export const fetchBookById = createAsyncThunk(
   }
 );
 
-export const addBook = createAsyncThunk(
-  'books/addBook',
+export const addUserBook = createAsyncThunk(
+  'books/addUserBook',
   async (bookData, { rejectWithValue }) => {
     try {
       const response = await api.post('/books', bookData);
@@ -69,8 +69,8 @@ export const addBook = createAsyncThunk(
   }
 );
 
-export const updateBook = createAsyncThunk(
-  'books/updateBook',
+export const updateUserBook = createAsyncThunk(
+  'books/updateUserBook',
   async ({ id, bookData }, { rejectWithValue }) => {
     try {
       const response = await api.patch(`/books/${id}`, bookData);
@@ -91,12 +91,12 @@ export const updateBook = createAsyncThunk(
   }
 );
 
-export const deleteBook = createAsyncThunk(
-  'books/deleteBook',
+export const deleteUserBook = createAsyncThunk(
+  'books/deleteUserBook',
   async (id, { rejectWithValue }) => {
     try {
       await api.delete(`/books/${id}`);
-      return id; 
+      return id;
     } catch (error) {
       console.error('Delete Book Error:', error);
       return rejectWithValue(
