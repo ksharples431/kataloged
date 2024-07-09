@@ -15,7 +15,7 @@ const Footer = () => {
         alignItems="center" // Center vertically
         justifyContent="center" // Center horizontally
       >
-        © 2024 KSharpCreations
+        © {new Date().getFullYear()} KSharpCreations
       </Box>
     </Grid>
   );

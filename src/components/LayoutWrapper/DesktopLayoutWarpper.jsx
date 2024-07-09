@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import { Container, Grid, Box, useTheme } from '@mui/material';
-import Header from './Header';
-import Footer from './Footer';
+import Header from '../UI/Header';
+import Footer from '../UI/Footer';
 
-const LayoutWrapper = ({ children }) => {
+const DesktopLayoutWrapper = ({ children }) => {
   const theme = useTheme();
   return (
     <Container maxWidth="lg">
@@ -16,21 +16,20 @@ const LayoutWrapper = ({ children }) => {
             component="main"
             p={2}
             bgcolor={theme.palette.background.default}
-            minHeight="calc(100vh - 230px)" // Adjust based on your header/footer height
-          >
+            minHeight="calc(100vh - 230px)">
             {children}
           </Box>
         </Grid>
         <Grid item xs={12}>
-          <Footer/>
+          <Footer />
         </Grid>
       </Grid>
     </Container>
   );
 };
 
-export default LayoutWrapper;
+export default DesktopLayoutWrapper;
 
-LayoutWrapper.propTypes = {
+DesktopLayoutWrapper.propTypes = {
   children: PropTypes.node.isRequired,
 };
