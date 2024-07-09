@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import auth from '../firebaseConfig.jsx'
 import { setUser } from './store/users/usersSlice.js';
-import LayoutWrapper from './components/UI/LayoutWrapper.jsx';
+import LayoutWrapper from './components/UI/LayoutWrapper2.jsx';
 import Signup from './components/Auth/Signup.jsx';
 import Login from './components/Auth/Login.jsx';
 import HomePage from './pages/HomePage/HomePage.jsx';
