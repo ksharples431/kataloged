@@ -9,18 +9,14 @@ import CardCatalog from './CardCatalog';
 const HomePage = () => {
   const dispatch = useDispatch();
   const { status, error } = useSelector((state) => state.books);
-  const isAuthenticated = useSelector((state) => state.users.isAuthenticated);
+  
   // const theme = useTheme();
 
   useEffect(() => {
-    if (isAuthenticated && status === 'idle') {
+    if (status === 'idle') {
       dispatch(fetchBooks());
     }
-  }, [isAuthenticated, status, dispatch]);
-
-  if (!isAuthenticated) {
-    return <div>Please sign in to view books.</div>;
-  }
+  }, [status, dispatch]);
 
   if (status === 'loading') {
     return <LoadingSpinner />;
@@ -29,11 +25,6 @@ const HomePage = () => {
   if (status === 'failed') {
     return <ErrorMessage message={error} />;
   }
-  // useEffect(() => {
-  //   if (status === 'idle') {
-  //     dispatch(fetchBooks());
-  //   }
-  // }, [status, dispatch]);
 
   const drawers = [
     { label: 'All Books', path: '/books' },
@@ -45,7 +36,7 @@ const HomePage = () => {
     { label: 'Favorites', path: '/favorites' },
     { label: 'Account', path: '/account' },
     { label: 'Stuff', path: '/stuff' },
-  ]
+  ];
 
   return (
     <Box

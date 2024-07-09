@@ -11,15 +11,27 @@ const api = axios.create({
   },
 });
 
+const unprotectedRoutes = [
+  '/books/',
+  '/books/:bid',
+  '/users/signup',
+  '/users/login',
+  '/users/google-signin', 
+];
+
 api.interceptors.request.use(
   async (config) => {
-    if (auth.currentUser) {
+    const isUnprotectedRoute = unprotectedRoutes.some((route) =>
+      config.url.includes(route)
+    );
+
+    if (!isUnprotectedRoute && auth.currentUser) {
       const token = await auth.currentUser.getIdToken();
       config.headers.Authorization = `Bearer ${token}`;
-
-    } else {
-      console.log('No user logged in');
+    } else if (!isUnprotectedRoute) {
+      console.log('No user logged in, but route is protected');
     }
+
     return config;
   },
   (error) => {

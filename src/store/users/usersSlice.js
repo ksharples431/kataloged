@@ -24,12 +24,21 @@ const userSlice = createSlice({
       state.error = null;
     },
     setUser: (state, action) => {
-      state.uid = action.payload.uid;
-      state.username = action.payload.username;
-      state.email = action.payload.email;
-      state.isAuthenticated = !!action.payload;
-      state.status = 'succeeded';
-      state.error = null;
+      if (action.payload) {
+        state.uid = action.payload.uid;
+        state.username = action.payload.username;
+        state.email = action.payload.email;
+        state.isAuthenticated = true;
+        state.status = 'succeeded';
+        state.error = null;
+      } else {
+        state.uid = null;
+        state.username = null;
+        state.email = null;
+        state.isAuthenticated = false;
+        state.status = 'idle';
+        state.error = null;
+      }
     },
   },
   extraReducers: (builder) => {
