@@ -7,6 +7,7 @@ import { setUser } from './store/users/usersSlice.js';
 import ResponsiveLayoutWrapper from './components/LayoutWrapper/ResponsiveLayoutWrapper.jsx';
 import HomePage from './pages/HomePage/HomePage.jsx';
 import BooksPage from './pages/BooksPage/BooksPage.jsx';
+import BookDetailsPage from './pages/BookDetailsPage/BookDetailsPage.jsx'
 import ResponsiveLogin from './components/Auth/ResponsiveLogin.jsx';
 import ResponsiveSignup from './components/Auth/ResponsiveSignup.jsx';
 import './App.css';
@@ -40,9 +41,8 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/auth/login" element={<ResponsiveLogin />} />
           <Route path="/auth/signup" element={<ResponsiveSignup />} />
-          <Route path="/books">
-            <Route index element={<BooksPage />} />
-          </Route>
+          <Route path="/books" element={<BooksPage />} />
+          <Route path="/books/:bid" element={<BookDetailsPage />} />
         </Routes>
       </ResponsiveLayoutWrapper>
     </BrowserRouter>

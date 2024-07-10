@@ -99,7 +99,8 @@ const userSlice = createSlice({
         state.username = null;
         state.isAuthenticated = false;
         state.error = null;
-      });
+        state.isSignup = false;
+      })
   },
 });
 
