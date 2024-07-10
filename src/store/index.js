@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
+import { api } from './api/apiSlice';
 import booksReducer from './books/booksSlice';
 import usersReducer from './users/usersSlice';
 import userBooksReducer from './userBooks/userBooksSlice';
-
 
 const preloadedState = () => {
   const token = localStorage.getItem('token');
@@ -12,7 +12,7 @@ const preloadedState = () => {
   if (token && uid && username) {
     return {
       users: {
-        username: null, // Fetch or set an initial value
+        username: null,
         isAuthenticated: true,
         status: 'succeeded',
         error: null,
@@ -24,11 +24,13 @@ const preloadedState = () => {
 
 const store = configureStore({
   reducer: {
+    [api.reducerPath]: api.reducer,
     books: booksReducer,
     users: usersReducer,
     userBooks: userBooksReducer,
-
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(api.middleware),
   preloadedState: preloadedState(),
 });
 
