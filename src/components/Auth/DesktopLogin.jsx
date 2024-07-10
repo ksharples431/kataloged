@@ -16,10 +16,11 @@ import {
 } from '@mui/material';
 
 import {
-  loginUser,
-  signInWithGoogle,
-} from '../../store/users/usersThunks';
-import { setIsSignup } from '../../store/users/usersSlice';
+  useLoginMutation,
+  useGoogleSignInMutation,
+} from '../../store/api/api.slice';
+import { setUser } from '../../store/auth/auth.slice';
+import { setIsSignup } from '../../store/ui/ui.slice';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import ErrorMessage from '../UI/ErrorMessage';
 
@@ -47,20 +48,33 @@ const DesktopLogin = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { status, error, isSignup } = useSelector((state) => state.users);
+  const { isSignup } = useSelector((state) => state.ui);
+
+  const [login, { isLoading: isLoginLoading, error: loginError }] =
+    useLoginMutation();
+  const [
+    googleSignIn,
+    { isLoading: isGoogleSignInLoading, error: googleSignInError },
+  ] = useGoogleSignInMutation();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const resultAction = await dispatch(loginUser({ email, password }));
-    if (loginUser.fulfilled.match(resultAction)) {
+    try {
+      const userData = await login({ email, password }).unwrap();
+      dispatch(setUser(userData));
       navigate('/');
+    } catch (err) {
+      console.error(err);
     }
   };
 
   const handleGoogleSignIn = async () => {
-    const resultAction = await dispatch(signInWithGoogle());
-    if (signInWithGoogle.fulfilled.match(resultAction)) {
+    try {
+      const userData = await googleSignIn().unwrap();
+      dispatch(setUser(userData));
       navigate('/');
+    } catch (err) {
+      // Error is handled by RTK Query
     }
   };
 
@@ -68,12 +82,15 @@ const DesktopLogin = () => {
     dispatch(setIsSignup(!isSignup));
   };
 
-  if (status === 'loading') {
+  if (isLoginLoading || isGoogleSignInLoading) {
     return <LoadingSpinner />;
   }
 
-  if (status === 'failed') {
-    return <ErrorMessage message={error} />;
+  const error = loginError || googleSignInError;
+  if (error) {
+    return (
+      <ErrorMessage message={error.data?.message || 'An error occurred'} />
+    );
   }
 
   return (
@@ -121,7 +138,7 @@ const DesktopLogin = () => {
             fullWidth
             variant="contained"
             color="primary"
-            disabled={status === 'loading'}>
+            disabled={isLoginLoading}>
             Log In
           </SubmitButton>
 
@@ -130,10 +147,10 @@ const DesktopLogin = () => {
             fullWidth
             variant="outlined"
             color="primary"
-            onClick={handleGoogleSignIn}>
+            onClick={handleGoogleSignIn}
+            disabled={isGoogleSignInLoading}>
             Log in with Google
           </SubmitButton>
-
           <Box mt={3}>
             <Typography
               variant="body1"

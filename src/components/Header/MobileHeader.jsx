@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { logoutUser } from '../../store/users/usersThunks';
-import { setIsSignup } from '../../store/users/usersSlice';
+import { setIsSignup } from '../../store/ui/ui.slice';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -46,7 +46,7 @@ const StyledDrawer = styled(Drawer)(({ theme }) => ({
 const MobileHeader = () => {
   const theme = useTheme();
   const isAuthenticated = useSelector(
-    (state) => state.users.isAuthenticated
+    (state) => state.auth?.isAuthenticated ?? false
   );
 const isSignup = useSelector((state) => state.users.isSignup ?? false);
   const dispatch = useDispatch();

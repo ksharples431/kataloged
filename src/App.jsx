@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import auth from '../firebaseConfig.jsx';
-import { setUser } from './store/users/usersSlice.js';
+import { setUser, setToken } from './store/auth/auth.slice.js';
 import ResponsiveLayoutWrapper from './components/LayoutWrapper/ResponsiveLayoutWrapper.jsx';
 import ResponsiveLogin from './components/Auth/ResponsiveLogin.jsx';
 import ResponsiveSignup from './components/Auth/ResponsiveSignup.jsx';
@@ -18,8 +18,9 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
+        const token = await user.getIdToken();
         const userData = {
           uid: user.uid,
           email: user.email,
@@ -27,6 +28,7 @@ function App() {
         };
         console.log('User is signed in:', userData);
         dispatch(setUser(userData));
+        dispatch(setToken(token));
       } else {
         console.log('No user is signed in.');
         dispatch(setUser(null));

@@ -18,7 +18,7 @@ import {
   signupUser,
   signInWithGoogle,
 } from '../../store/users/usersThunks';
-import { setIsSignup } from '../../store/users/usersSlice';
+import { setIsSignup } from '../../store/ui/ui.slice';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import ErrorMessage from '../UI/ErrorMessage';
 

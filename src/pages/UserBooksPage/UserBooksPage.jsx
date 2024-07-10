@@ -14,7 +14,7 @@ const UserBooksPage = () => {
     (state) => state.userBooks
   );
   const isAuthenticated = useSelector(
-    (state) => state.users.isAuthenticated
+    (state) => state.auth?.isAuthenticated ?? false
   );
 
   useEffect(() => {
