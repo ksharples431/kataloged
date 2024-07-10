@@ -6,7 +6,7 @@ import { fetchBookById } from '../../store/books/booksThunks';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
 import ResponsiveBookDetailsCard from '../../components/BookDetailsCard/ResponsiveBookDetailsCard';
-import BookActions from '../../components/UI/BookActions';
+import AddUserBookAction from '../../components/ButtonActions/AddUserBookAction';
 
 const BookDetailsPage = () => {
   const { bid } = useParams();
@@ -40,7 +40,7 @@ const BookDetailsPage = () => {
         padding: 2,
       }}>
       <ResponsiveBookDetailsCard book={book} />
-      <BookActions />
+      <AddUserBookAction bid={bid}/>
     </Box>
   );
 };

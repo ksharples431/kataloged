@@ -49,13 +49,13 @@ export const fetchUserBookById = createAsyncThunk(
 
 export const addUserBook = createAsyncThunk(
   'books/addUserBook',
-  async (bookData, { rejectWithValue }) => {
+  async ({ bid, uid }, { rejectWithValue }) => {
     try {
-      const response = await api.post('/books', bookData);
+      const response = await api.post('/userBooks', { bid, uid });
       console.log('Add Book Response:', response.data);
 
-      if (response.data.data.book) {
-        return response.data.data.book;
+      if (response.data.data.userBook) {
+        return response.data.data.userBook;
       } else {
         console.error('Unexpected API response structure:', response.data);
         return rejectWithValue('Unexpected API response structure');
