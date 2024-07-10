@@ -5,6 +5,7 @@ import {
   getIdToken,
   signInWithPopup,
   GoogleAuthProvider,
+  updateProfile,
 } from 'firebase/auth';
 import { clearUserData } from './usersSlice';
 import auth from '../../../firebaseConfig';
@@ -54,18 +55,16 @@ export const signupUser = createAsyncThunk(
   'user/signup',
   async ({ username, email, password }, { rejectWithValue }) => {
     try {
-      // Create the user in Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
-        password
+        password,
       );
-      const firebaseUser = userCredential.user;
 
-      // Get the ID token
+      const firebaseUser = userCredential.user;
+      await updateProfile(firebaseUser, { displayName: username });
       const idToken = await getIdToken(firebaseUser);
 
-      // Send the token, UID, and user data to your backend
       const response = await api.post(
         '/users/signup',
         {
@@ -80,14 +79,8 @@ export const signupUser = createAsyncThunk(
       );
 
       console.log('Signup API Response:', response.data);
-      console.log(response.data.data.user.id);
 
       if (response.data && response.data.data && response.data.data.user) {
-        // Signup was successful, now we can store the token
-        localStorage.setItem('token', idToken);
-        localStorage.setItem('uid', response.data.data.user.id);
-        localStorage.setItem('username', response.data.data.user.username);
-
         const user = response.data.data.user;
 
         return {
@@ -99,7 +92,6 @@ export const signupUser = createAsyncThunk(
       }
     } catch (error) {
       console.error('Signup Error:', error);
-      // If there's an error, we should sign out the user from Firebase
       await auth.signOut();
       return rejectWithValue(
         error.response?.data?.message || error.message
@@ -112,19 +104,15 @@ export const loginUser = createAsyncThunk(
   'user/login',
   async ({ email, password }, { rejectWithValue }) => {
     try {
-      // Sign in the user with Firebase
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
         password
       );
-      const firebaseUser = userCredential.user;
 
-      // Get the ID token
+      const firebaseUser = userCredential.user;
       const idToken = await getIdToken(firebaseUser);
 
-      // Send the token and UID to your backend to validate and get user info
-      // const uid = firebaseUser.uid;
       const response = await api.get(`/users/login`, {
         headers: {
           Authorization: `Bearer ${idToken}`,
@@ -134,12 +122,8 @@ export const loginUser = createAsyncThunk(
       console.log('Login API Response:', response.data);
 
       if (response.data && response.data.data && response.data.data.user) {
-        // Login was successful, now we can store the token
-        localStorage.setItem('token', idToken);
-        localStorage.setItem('uid', response.data.data.user.id);
-        localStorage.setItem('username', response.data.data.user.username);
-
         const user = response.data.data.user;
+
         return {
           username: user.username,
         };
@@ -149,7 +133,6 @@ export const loginUser = createAsyncThunk(
       }
     } catch (error) {
       console.error('Login Error:', error);
-      // If there's an error, we should sign out the user from Firebase
       await auth.signOut();
       return rejectWithValue(
         error.response?.data?.message || error.message

@@ -11,21 +11,15 @@ import {
   Paper,
   Link,
   useTheme,
-  Divider,
+  Divider
 } from '@mui/material';
 
-import {
-  loginUser,
-  signInWithGoogle,
-} from '../../store/users/usersThunks';
-import LoadingSpinner from '../UI/LoadingSpinner.jsx';
-import ErrorMessage from '../UI/ErrorMessage.jsx';
+import { signupUser, signInWithGoogle } from '../store/users/usersThunks.js'; 
+import LoadingSpinner from '../components/UI/LoadingSpinner.jsx';
+import ErrorMessage from '../components/UI/ErrorMessage.jsx';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(8),
-  [theme.breakpoints.down('sm')]: {
-    marginTop: '0',
-  },
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -42,20 +36,19 @@ const SubmitButton = styled(Button)(({ theme }) => ({
   margin: theme.spacing(3, 0, 2),
 }));
 
-const Login = () => {
+const SignUp = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { status, error } = useSelector((state) => state.users);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const resultAction = await dispatch(
-      loginUser({ email, password })
-    );
-    if (loginUser.fulfilled.match(resultAction)) {
+    const resultAction = await dispatch(signupUser({ username, email, password }));
+    if (signupUser.fulfilled.match(resultAction)) {
       // Signup was successful, navigate to login or dashboard
       navigate('/');
     }
@@ -68,6 +61,7 @@ const Login = () => {
       navigate('/');
     }
   };
+
 
   if (status === 'loading') {
     return <LoadingSpinner />;
@@ -84,9 +78,21 @@ const Login = () => {
           component="h1"
           variant="h5"
           color={theme.palette.text.secondary}>
-          Log In
+          Sign Up
         </Typography>
         <Form onSubmit={handleSubmit}>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="username"
+            label="Username"
+            name="username"
+            autoComplete="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
           <TextField
             variant="outlined"
             margin="normal"
@@ -109,7 +115,7 @@ const Login = () => {
             label="Password"
             type="password"
             id="password"
-            autoComplete="current-password"
+            autoComplete="new-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -119,7 +125,7 @@ const Login = () => {
             variant="contained"
             color="primary"
             disabled={status === 'loading'}>
-            Log In
+            Sign Up
           </SubmitButton>
           <Divider style={{ margin: theme.spacing(3, 0) }}>Or</Divider>
           <SubmitButton
@@ -127,19 +133,19 @@ const Login = () => {
             variant="outlined"
             color="primary"
             onClick={handleGoogleSignIn}>
-            Log in with Google
+            Sign up with Google
           </SubmitButton>
           <Box mt={2}>
             <Typography
               variant="body2"
               align="center"
               color={theme.palette.text.secondary}>
-              Don&apos;t have an account?{' '}
+              Already have an account?{' '}
               <Link
                 component={RouterLink}
-                to="/auth/signup"
+                to="/auth/login"
                 color="primary">
-                Sign Up
+                Log In
               </Link>
             </Typography>
           </Box>
@@ -149,4 +155,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignUp;

@@ -1,36 +1,21 @@
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import { CardContent } from '@mui/material';
-import { Card, CardMedia, Typography } from '@mui/material';
+import { Card, CardMedia, Typography, CardContent } from '@mui/material';
 
 const BookCardWrapper = styled(Card)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   padding: theme.spacing(1),
-  cursor: 'pointer',
-  position: 'relative',
-  overflow: 'hidden',
-  height: '100%',
   backgroundColor: theme.palette.primary.main,
-  justifyContent: 'center',
-  '&:hover': {
-    cursor: 'default',
-  },
-  [theme.breakpoints.down('sm', 'xs')]: {
-    flexDirection: 'row',
-  },
+  height: '100%',
 }));
 
-const BookImage = styled(CardMedia)(({ theme }) => ({
+const BookImage = styled(CardMedia)(() => ({
   height: '200px',
   width: '150px',
   objectFit: 'cover',
-  [theme.breakpoints.down('sm')]: {
-    width: '80px',
-    height: '110px',
-  },
 }));
 
 const BookTitle = styled(Typography)(({ theme }) => ({
@@ -55,16 +40,15 @@ const AuthorName = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const LinkWrapper = styled(Link)(({ theme }) => ({
+const LinkWrapper = styled(Link)(({theme}) => ({
   color: theme.palette.text.primary,
   textDecoration: 'none',
-  cursor: 'pointer',
   '&:hover': {
     textDecoration: 'underline',
   },
 }));
 
-const CardContentWrapper = styled(CardContent)(({ theme }) => ({
+const CardContentWrapper = styled(CardContent)(() => ({
   textAlign: 'center',
   padding: '8px 16px',
   paddingBottom: '8px !important',
@@ -73,15 +57,11 @@ const CardContentWrapper = styled(CardContent)(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   flex: 1,
-  [theme.breakpoints.down('sm', 'xs')]: {
-    alignItems: 'flex-start',
-    textAlign: 'left',
-  },
 }));
 
-const BookCard = ({ book }) => (
+const DesktopBookCard = ({ book }) => (
   <BookCardWrapper>
-    <LinkWrapper to={`/books/${encodeURIComponent(book.ubid)}`}>
+    <LinkWrapper to={`/books/${encodeURIComponent(book.bid)}`}>
       <BookImage
         component="img"
         image={book.imagePath || '/placeholder-book.jpg'}
@@ -89,27 +69,25 @@ const BookCard = ({ book }) => (
       />
     </LinkWrapper>
     <CardContentWrapper>
-      <LinkWrapper to={`/books/${encodeURIComponent(book.ubid)}`}>
+      <LinkWrapper to={`/books/${encodeURIComponent(book.bid)}`}>
         <BookTitle variant="h6" component="h2">
           {book.title}
         </BookTitle>
       </LinkWrapper>
       <LinkWrapper to={`/authors/${encodeURIComponent(book.author)}`}>
-        <AuthorName variant="body2" color="text.secondary">
-          {book.author}
-        </AuthorName>
+        <AuthorName variant="body2">{book.author}</AuthorName>
       </LinkWrapper>
     </CardContentWrapper>
   </BookCardWrapper>
 );
 
-BookCard.propTypes = {
+DesktopBookCard.propTypes = {
   book: PropTypes.shape({
-    ubid: PropTypes.string.isRequired,
+    bid: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     author: PropTypes.string.isRequired,
     imagePath: PropTypes.string,
   }).isRequired,
 };
 
-export default BookCard;
+export default DesktopBookCard;

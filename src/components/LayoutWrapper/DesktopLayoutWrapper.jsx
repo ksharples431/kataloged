@@ -1,36 +1,35 @@
 import PropTypes from 'prop-types';
 import { Container, Grid, Box, useTheme } from '@mui/material';
-import Header from './Header';
-import Footer from './Footer';
+import DesktopHeader from '../Header/DesktopHeader.jsx';
+import Footer from '../UI/Footer.jsx';
 
-const LayoutWrapper = ({ children }) => {
+const DesktopLayoutWrapper = ({ children }) => {
   const theme = useTheme();
   return (
     <Container maxWidth="lg">
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Header theme={theme} />
+          <DesktopHeader />
         </Grid>
         <Grid item xs={12}>
           <Box
             component="main"
             p={2}
             bgcolor={theme.palette.background.default}
-            minHeight="calc(100vh - 230px)" // Adjust based on your header/footer height
-          >
+            minHeight="calc(100vh - 230px)">
             {children}
           </Box>
         </Grid>
         <Grid item xs={12}>
-          <Footer/>
+          <Footer />
         </Grid>
       </Grid>
     </Container>
   );
 };
 
-export default LayoutWrapper;
+export default DesktopLayoutWrapper;
 
-LayoutWrapper.propTypes = {
+DesktopLayoutWrapper.propTypes = {
   children: PropTypes.node.isRequired,
 };

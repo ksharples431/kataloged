@@ -9,19 +9,18 @@ import {
 const initialState = {
   username: null,
   isAuthenticated: false,
+  isSignup: false,
   status: 'idle',
   error: null,
 };
 
+// LOOK FOR REDUNDANCES
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    clearUserData: (state) => {
-      state.username = null;
-      state.isAuthenticated = false;
-      state.status = 'idle';
-      state.error = null;
+    setIsSignup: (state, action) => {
+      state.isSignup = action.payload;
     },
     setUser: (state, action) => {
       if (action.payload) {
@@ -39,6 +38,14 @@ const userSlice = createSlice({
         state.status = 'idle';
         state.error = null;
       }
+    },
+    clearUserData: (state) => {
+      state.uid = null;
+      state.username = null;
+      state.email = null;
+      state.isAuthenticated = false;
+      state.status = 'idle';
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
@@ -63,6 +70,7 @@ const userSlice = createSlice({
       })
       .addCase(signupUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
+        state.uid = action.payload.uid;
         state.username = action.payload.username;
         state.isAuthenticated = true;
         state.error = null;
@@ -76,6 +84,7 @@ const userSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
+        state.uid = action.payload.uid;
         state.username = action.payload.username;
         state.isAuthenticated = true;
         state.error = null;
@@ -86,12 +95,14 @@ const userSlice = createSlice({
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.status = 'idle';
+        state.uid = null;
         state.username = null;
         state.isAuthenticated = false;
         state.error = null;
-      });
+        state.isSignup = false;
+      })
   },
 });
 
-export const { clearUserData, setUser } = userSlice.actions;
+export const { clearUserData, setUser, setIsSignup } = userSlice.actions;
 export default userSlice.reducer;

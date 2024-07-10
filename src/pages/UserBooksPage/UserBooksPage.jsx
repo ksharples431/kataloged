@@ -1,16 +1,18 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Box, Grid, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
+import ResponsiveUserBookList from '../../components/UserBookList/ResponsiveUserBookList.jsx';
 
 import { fetchUserBooks } from '../../store/userBooks/userBooksThunks';
-import UserBookCard from './UserBookCard';
 
-const UserBooksList = () => {
+const UserBooksPage = () => {
   const dispatch = useDispatch();
-  const { userBooks, status, error } = useSelector((state) => state.userBooks);
+  const { userBooks = [], status, error } = useSelector(
+    (state) => state.userBooks
+  );
   const isAuthenticated = useSelector(
     (state) => state.users.isAuthenticated
   );
@@ -34,19 +36,10 @@ const UserBooksList = () => {
   }
 
   return (
-    <Box sx={{ flexGrow: 1, padding: 2 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Books
-      </Typography>
-      <Grid container spacing={2}>
-        {userBooks.map((book) => (
-          <Grid item xs={12} sm={4} md={3} lg={2.4} key={book.bid}>
-            <UserBookCard book={book} />
-          </Grid>
-        ))}
-      </Grid>
+    <Box>
+      <ResponsiveUserBookList userBooks={userBooks} />
     </Box>
   );
 };
 
-export default UserBooksList;
+export default UserBooksPage;

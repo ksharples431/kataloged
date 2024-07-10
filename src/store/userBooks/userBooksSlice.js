@@ -3,8 +3,8 @@ import {
   fetchUserBooks,
   fetchUserBookById,
   addUserBook,
-  updateUserBook,
-  deleteUserBook,
+  // updateUserBook,
+  // deleteUserBook,
 } from './userBooksThunks';
 
 const initialState = {
@@ -40,12 +40,12 @@ const userBooksSlice = createSlice({
       })
       .addCase(fetchUserBookById.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.selectedBook = action.payload;
-        const index = state.books.findIndex(
+        state.selectedUserBook = action.payload;
+        const index = state.userBooks.findIndex(
           (book) => book.id === action.payload.id
         );
         if (index !== -1) {
-          state.books[index] = action.payload;
+          state.userBooks[index] = action.payload;
         }
       })
       .addCase(fetchUserBookById.rejected, (state, action) => {
@@ -53,33 +53,33 @@ const userBooksSlice = createSlice({
         state.error = action.payload || 'Unknown error occurred';
       })
       .addCase(addUserBook.fulfilled, (state, action) => {
-        state.books.push(action.payload);
+        state.userBooks.push(action.payload);
       })
-      .addCase(updateUserBook.fulfilled, (state, action) => {
-        const index = state.books.findIndex(
-          (book) => book.id === action.payload.id
-        );
-        if (index !== -1) {
-          state.books[index] = action.payload;
-        }
-        if (
-          state.selectedBook &&
-          state.selectedBook.id === action.payload.id
-        ) {
-          state.selectedBook = action.payload;
-        }
-      })
-      .addCase(deleteUserBook.fulfilled, (state, action) => {
-        state.books = state.books.filter(
-          (book) => book.id !== action.payload
-        );
-        if (
-          state.selectedBook &&
-          state.selectedBook.id === action.payload
-        ) {
-          state.selectedBook = null;
-        }
-      });
+      // .addCase(updateUserBook.fulfilled, (state, action) => {
+      //   const index = state.userBooks.findIndex(
+      //     (book) => book.id === action.payload.id
+      //   );
+      //   if (index !== -1) {
+      //     state.userBooks[index] = action.payload;
+      //   }
+      //   if (
+      //     state.selectedUserBook &&
+      //     state.selectedUserBook.id === action.payload.id
+      //   ) {
+      //     state.selectedUserBook = action.payload;
+      //   }
+      // })
+      // .addCase(deleteUserBook.fulfilled, (state, action) => {
+      //   state.userBooks = state.userBooks.filter(
+      //     (book) => book.id !== action.payload
+      //   );
+      //   if (
+      //     state.selectedUserBook &&
+      //     state.selectedUserBook.id === action.payload
+      //   ) {
+      //     state.selectedUserBook = null;
+      //   }
+      // });
   },
 });
 

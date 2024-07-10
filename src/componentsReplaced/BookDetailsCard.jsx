@@ -12,9 +12,9 @@ import {
   useMediaQuery,
 } from '@mui/material';
 
-import { fetchBookById } from '../../store/books/booksThunks';
-import LoadingSpinner from '../../components/UI/LoadingSpinner';
-import ErrorMessage from '../../components/UI/ErrorMessage';
+import { fetchBookById } from '../store/books/booksThunks';
+import LoadingSpinner from '../components/UI/LoadingSpinner';
+import ErrorMessage from '../components/UI/ErrorMessage';
 
 const BookDetailsCard = () => {
   const { bid } = useParams();

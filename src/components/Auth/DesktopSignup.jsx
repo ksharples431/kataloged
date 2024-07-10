@@ -10,21 +10,26 @@ import {
   Box,
   Paper,
   Link,
+  Divider,
   useTheme,
-  Divider
+  Grid,
 } from '@mui/material';
 
-import { signupUser, signInWithGoogle } from '../../store/users/usersThunks'; 
-import LoadingSpinner from '../UI/LoadingSpinner.jsx';
-import ErrorMessage from '../UI/ErrorMessage.jsx';
+import {
+  signupUser,
+  signInWithGoogle,
+} from '../../store/users/usersThunks';
+import { setIsSignup } from '../../store/users/usersSlice';
+import LoadingSpinner from '../UI/LoadingSpinner';
+import ErrorMessage from '../UI/ErrorMessage';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(8),
+  padding: theme.spacing(4),
+  backgroundColor: theme.palette.background.paper,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  padding: theme.spacing(4),
-  backgroundColor: theme.palette.background.paper,
 }));
 
 const Form = styled('form')(({ theme }) => ({
@@ -36,20 +41,21 @@ const SubmitButton = styled(Button)(({ theme }) => ({
   margin: theme.spacing(3, 0, 2),
 }));
 
-const SignUp = () => {
+const DesktopSignup = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { status, error } = useSelector((state) => state.users);
+  const [username, setUsername] = useState(''); // State for username
+  const { status, error, isSignup } = useSelector((state) => state.users);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const resultAction = await dispatch(signupUser({ username, email, password }));
+    const resultAction = await dispatch(
+      signupUser({ email, password, username })
+    );
     if (signupUser.fulfilled.match(resultAction)) {
-      // Signup was successful, navigate to login or dashboard
       navigate('/');
     }
   };
@@ -57,11 +63,13 @@ const SignUp = () => {
   const handleGoogleSignIn = async () => {
     const resultAction = await dispatch(signInWithGoogle());
     if (signInWithGoogle.fulfilled.match(resultAction)) {
-      // Google Sign-In was successful, navigate to home or dashboard
       navigate('/');
     }
   };
 
+  const handleToggleSignup = () => {
+    dispatch(setIsSignup(!isSignup));
+  };
 
   if (status === 'loading') {
     return <LoadingSpinner />;
@@ -72,53 +80,58 @@ const SignUp = () => {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="sm">
       <StyledPaper elevation={6}>
         <Typography
-          component="h1"
-          variant="h5"
-          color={theme.palette.text.secondary}>
+          variant="h4"
+          color={theme.palette.text.primary}
+          gutterBottom>
           Sign Up
         </Typography>
         <Form onSubmit={handleSubmit}>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="username"
-            label="Username"
-            name="username"
-            autoComplete="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="new-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="username"
+                label="Username"
+                id="username"
+                autoComplete="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Grid>
+          </Grid>
           <SubmitButton
             type="submit"
             fullWidth
@@ -127,6 +140,7 @@ const SignUp = () => {
             disabled={status === 'loading'}>
             Sign Up
           </SubmitButton>
+
           <Divider style={{ margin: theme.spacing(3, 0) }}>Or</Divider>
           <SubmitButton
             fullWidth
@@ -135,16 +149,18 @@ const SignUp = () => {
             onClick={handleGoogleSignIn}>
             Sign up with Google
           </SubmitButton>
-          <Box mt={2}>
+
+          <Box mt={3}>
             <Typography
-              variant="body2"
+              variant="body1"
               align="center"
               color={theme.palette.text.secondary}>
               Already have an account?{' '}
               <Link
                 component={RouterLink}
                 to="/auth/login"
-                color="primary">
+                color="primary"
+                onClick={handleToggleSignup}>
                 Log In
               </Link>
             </Typography>
@@ -155,4 +171,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default DesktopSignup;
