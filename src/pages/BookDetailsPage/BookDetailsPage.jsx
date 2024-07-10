@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { Box } from '@mui/material';
 import { fetchBookById } from '../../store/books/booksThunks';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
 import ResponsiveBookDetailsCard from '../../components/BookDetailsCard/ResponsiveBookDetailsCard';
+import BookActions from '../../components/UI/BookActions';
 
 const BookDetailsPage = () => {
   const { bid } = useParams();
@@ -26,7 +28,21 @@ const BookDetailsPage = () => {
     return <ErrorMessage message={error} />;
   }
 
-  return <ResponsiveBookDetailsCard book={book} />;
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 3,
+        maxWidth: 800,
+        margin: 'auto',
+        padding: 2,
+      }}>
+      <ResponsiveBookDetailsCard book={book} />
+      <BookActions />
+    </Box>
+  );
 };
 
 export default BookDetailsPage;
