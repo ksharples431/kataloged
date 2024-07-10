@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Container, Grid, Box, useTheme } from '@mui/material';
-import Header from '../UI/Header';
-import Footer from '../UI/Footer';
+import DesktopHeader from '../Header/DesktopHeader.jsx';
+import Footer from '../UI/Footer.jsx';
 
 const DesktopLayoutWrapper = ({ children }) => {
   const theme = useTheme();
@@ -9,7 +9,7 @@ const DesktopLayoutWrapper = ({ children }) => {
     <Container maxWidth="lg">
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Header theme={theme} />
+          <DesktopHeader />
         </Grid>
         <Grid item xs={12}>
           <Box

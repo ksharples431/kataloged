@@ -2,12 +2,11 @@ import PropTypes from 'prop-types';
 import {
   Box,
   Container,
-  AppBar,
-  Toolbar,
   Typography,
   useTheme,
 } from '@mui/material';
 import { styled } from '@mui/system';
+import MobileHeader from '../Header/MobileHeader.jsx';
 
 const StyledMain = styled('main')(({ theme }) => ({
   flexGrow: 1,
@@ -18,7 +17,7 @@ const StyledMain = styled('main')(({ theme }) => ({
   },
 }));
 
-const MobileLayoutWrapper = ({ children }) => {
+const MobileLayoutWrapper = ({ children}) => {
   const theme = useTheme();
   return (
     <Box
@@ -28,24 +27,17 @@ const MobileLayoutWrapper = ({ children }) => {
         flexDirection: 'column',
         minHeight: '100vh',
       }}>
-      <AppBar position="fixed">
-        <Toolbar>
-          <Typography variant="h6" noWrap component="div">
-            Kataloged
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <MobileHeader  />
       <StyledMain>
         <Container maxWidth="lg">{children}</Container>
       </StyledMain>
       <Box
         component="footer"
-        sx={{ mt: 'auto', py: 3, bgcolor: 'background.paper' }}>
-        <Container maxWidth="lg">
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            align="center">
+        sx={{ mt: 'auto', py: 3, bgcolor: 'primary.main' }}>
+        <Container
+          maxWidth="lg"
+          bgcolor={theme.palette.background.default}>
+          <Typography variant="body2" color="text.primary" align="center">
             © {new Date().getFullYear()} KSharpCreations
           </Typography>
         </Container>

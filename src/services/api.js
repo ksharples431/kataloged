@@ -14,9 +14,10 @@ const api = axios.create({
 const unprotectedRoutes = [
   '/books/',
   '/books/:bid',
-  '/users/signup',
-  '/users/login',
-  '/users/google-signin', 
+  // '/users/signup',
+  // '/users/login',
+  // '/users/google-signin', 
+  // '/users',
 ];
 
 api.interceptors.request.use(

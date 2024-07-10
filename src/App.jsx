@@ -7,18 +7,12 @@ import { setUser } from './store/users/usersSlice.js';
 import ResponsiveLayoutWrapper from './components/LayoutWrapper/ResponsiveLayoutWrapper.jsx';
 import HomePage from './pages/HomePage/HomePage.jsx';
 import BooksPage from './pages/BooksPage/BooksPage.jsx';
-
-import Signup from './components/Auth/Signup.jsx';
-import Login from './components/Auth/Login.jsx';
-import BookDetailsCard from './pages/BookDetailPage/BookDetailsCard.jsx';
-import UserBooksList from './pages/UserBooksPage/UserBooksPage.jsx';
-import BookSearchForm from './pages/BookDetailPage/BookSearchForm.jsx';
-import useMediaQuery from './hooks/useMediaQuery';
+import ResponsiveLogin from './components/Auth/ResponsiveLogin.jsx';
+import ResponsiveSignup from './components/Auth/ResponsiveSignup.jsx';
 import './App.css';
 
 function App() {
   const dispatch = useDispatch();
-  const isMobile = useMediaQuery('(max-width: 768px)');
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -41,32 +35,13 @@ function App() {
 
   return (
     <BrowserRouter>
-      <ResponsiveLayoutWrapper isMobile={isMobile}>
+      <ResponsiveLayoutWrapper>
         <Routes>
-          <Route path="/" element={<HomePage isMobile={isMobile} />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/auth/login" element={<ResponsiveLogin />} />
+          <Route path="/auth/signup" element={<ResponsiveSignup />} />
           <Route path="/books">
-            <Route index element={<BooksPage isMobile={isMobile} />} />
-            <Route
-              path="/books/:bid"
-              element={<BookDetailsCard isMobile={isMobile} />}
-            />
-            <Route
-              path="/books/search"
-              element={<BookSearchForm isMobile={isMobile} />}
-            />
-          </Route>
-          <Route path="/auth">
-            <Route
-              path="signup"
-              element={<Signup isMobile={isMobile} />}
-            />
-            <Route path="login" element={<Login isMobile={isMobile} />} />
-          </Route>
-          <Route path="/userBooks">
-            <Route
-              path="/userBooks"
-              element={<UserBooksList isMobile={isMobile} />}
-            />
+            <Route index element={<BooksPage />} />
           </Route>
         </Routes>
       </ResponsiveLayoutWrapper>

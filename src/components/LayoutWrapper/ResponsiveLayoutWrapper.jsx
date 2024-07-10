@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import DesktopLayoutWrapper from './DesktopLayoutWarpper.jsx';
+import DesktopLayoutWrapper from './DesktopLayoutWrapper.jsx';
 import MobileLayoutWrapper from './MobileLayoutWrapper.jsx';
 
 const ResponsiveLayoutWrapper = ({ children }) => {
