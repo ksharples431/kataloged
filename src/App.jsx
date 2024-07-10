@@ -5,11 +5,13 @@ import { onAuthStateChanged } from 'firebase/auth';
 import auth from '../firebaseConfig.jsx';
 import { setUser } from './store/users/usersSlice.js';
 import ResponsiveLayoutWrapper from './components/LayoutWrapper/ResponsiveLayoutWrapper.jsx';
+import ResponsiveLogin from './components/Auth/ResponsiveLogin.jsx';
+import ResponsiveSignup from './components/Auth/ResponsiveSignup.jsx';
 import HomePage from './pages/HomePage/HomePage.jsx';
 import BooksPage from './pages/BooksPage/BooksPage.jsx';
 import BookDetailsPage from './pages/BookDetailsPage/BookDetailsPage.jsx'
-import ResponsiveLogin from './components/Auth/ResponsiveLogin.jsx';
-import ResponsiveSignup from './components/Auth/ResponsiveSignup.jsx';
+import UserBooksPage from './pages/UserBooksPage/UserBooksPage.jsx';
+import UserBookDetailsPage from './pages/UserBookDetailsPage/UserBookDetailsPage.jsx'
 import './App.css';
 
 function App() {
@@ -43,6 +45,8 @@ function App() {
           <Route path="/auth/signup" element={<ResponsiveSignup />} />
           <Route path="/books" element={<BooksPage />} />
           <Route path="/books/:bid" element={<BookDetailsPage />} />
+          <Route path="/userBooks" element={<UserBooksPage />} />
+          <Route path="/userBooks/:ubid" element={<UserBookDetailsPage />} />
         </Routes>
       </ResponsiveLayoutWrapper>
     </BrowserRouter>

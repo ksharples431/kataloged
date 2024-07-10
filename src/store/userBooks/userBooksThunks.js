@@ -25,15 +25,15 @@ export const fetchUserBooks = createAsyncThunk(
   }
 );
 export const fetchUserBookById = createAsyncThunk(
-  'books/fetchUserBookById',
-  async (id, { rejectWithValue }) => {
-    console.log('Fetch Book By ID:', id);
+  'userBooks/fetchUserBookById',
+  async (ubid, { rejectWithValue }) => {
+    console.log('Fetch Book By ID:', ubid);
     try {
-      const response = await api.get(`/books/${id}`);
+      const response = await api.get(`/userBooks/${ubid}`);
       console.log('Fetch Book By ID Response:', response.data);
 
-      if (response.data.data.book) {
-        return response.data.data.book;
+      if (response.data.data.userBook) {
+        return response.data.data.userBook;
       } else {
         console.error('Unexpected API response structure:', response.data);
         return rejectWithValue('Unexpected API response structure');
@@ -69,39 +69,39 @@ export const addUserBook = createAsyncThunk(
   }
 );
 
-export const updateUserBook = createAsyncThunk(
-  'books/updateUserBook',
-  async ({ id, bookData }, { rejectWithValue }) => {
-    try {
-      const response = await api.patch(`/books/${id}`, bookData);
-      console.log('Update Book Response:', response.data);
+// export const updateUserBook = createAsyncThunk(
+//   'books/updateUserBook',
+//   async ({ id, bookData }, { rejectWithValue }) => {
+//     try {
+//       const response = await api.patch(`/books/${id}`, bookData);
+//       console.log('Update Book Response:', response.data);
 
-      if (response.data.data.book) {
-        return response.data.data.book;
-      } else {
-        console.error('Unexpected API response structure:', response.data);
-        return rejectWithValue('Unexpected API response structure');
-      }
-    } catch (error) {
-      console.error('Update Book Error:', error);
-      return rejectWithValue(
-        error.response?.data?.message || error.message
-      );
-    }
-  }
-);
+//       if (response.data.data.book) {
+//         return response.data.data.book;
+//       } else {
+//         console.error('Unexpected API response structure:', response.data);
+//         return rejectWithValue('Unexpected API response structure');
+//       }
+//     } catch (error) {
+//       console.error('Update Book Error:', error);
+//       return rejectWithValue(
+//         error.response?.data?.message || error.message
+//       );
+//     }
+//   }
+// );
 
-export const deleteUserBook = createAsyncThunk(
-  'books/deleteUserBook',
-  async (id, { rejectWithValue }) => {
-    try {
-      await api.delete(`/books/${id}`);
-      return id;
-    } catch (error) {
-      console.error('Delete Book Error:', error);
-      return rejectWithValue(
-        error.response?.data?.message || error.message
-      );
-    }
-  }
-);
+// export const deleteUserBook = createAsyncThunk(
+//   'books/deleteUserBook',
+//   async (id, { rejectWithValue }) => {
+//     try {
+//       await api.delete(`/books/${id}`);
+//       return id;
+//     } catch (error) {
+//       console.error('Delete Book Error:', error);
+//       return rejectWithValue(
+//         error.response?.data?.message || error.message
+//       );
+//     }
+//   }
+// );

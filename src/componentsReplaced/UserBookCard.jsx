@@ -79,24 +79,24 @@ const CardContentWrapper = styled(CardContent)(({ theme }) => ({
   },
 }));
 
-const BookCard = ({ book }) => (
+const BookCard = ({ userBook }) => (
   <BookCardWrapper>
-    <LinkWrapper to={`/books/${encodeURIComponent(book.ubid)}`}>
+    <LinkWrapper to={`/userBooks/${encodeURIComponent(userBook.ubid)}`}>
       <BookImage
         component="img"
-        image={book.imagePath || '/placeholder-book.jpg'}
-        alt={book.title}
+        image={userBook.imagePath || '/placeholder-book.jpg'}
+        alt={userBook.title}
       />
     </LinkWrapper>
     <CardContentWrapper>
-      <LinkWrapper to={`/books/${encodeURIComponent(book.ubid)}`}>
+      <LinkWrapper to={`/userBooks/${encodeURIComponent(userBook.ubid)}`}>
         <BookTitle variant="h6" component="h2">
-          {book.title}
+          {userBook.title}
         </BookTitle>
       </LinkWrapper>
-      <LinkWrapper to={`/authors/${encodeURIComponent(book.author)}`}>
+      <LinkWrapper to={`/authors/${encodeURIComponent(userBook.author)}`}>
         <AuthorName variant="body2" color="text.secondary">
-          {book.author}
+          {userBook.author}
         </AuthorName>
       </LinkWrapper>
     </CardContentWrapper>
@@ -104,7 +104,7 @@ const BookCard = ({ book }) => (
 );
 
 BookCard.propTypes = {
-  book: PropTypes.shape({
+  userBook: PropTypes.shape({
     ubid: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     author: PropTypes.string.isRequired,

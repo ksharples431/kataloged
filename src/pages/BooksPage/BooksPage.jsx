@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Box } from '@mui/material';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
-import BookList from '../../components/BookList/ResponsiveBookList.jsx';
+import ResponsiveBookList from '../../components/BookList/ResponsiveBookList.jsx';
 
 import { fetchBooks } from '../../store/books/booksThunks';
 
@@ -28,7 +28,7 @@ const BooksPage = () => {
 
   return (
     <Box>
-      <BookList books={books} />
+      <ResponsiveBookList books={books} />
     </Box>
   );
 };
