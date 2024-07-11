@@ -11,10 +11,10 @@ import {
   Paper,
   Link,
   useTheme,
-  Divider
+  Divider,
 } from '@mui/material';
 
-import { signupUser, signInWithGoogle } from '../store/users/usersThunks.js'; 
+import { signup, googleSignIn } from '../store/users/usersThunks.js';
 import LoadingSpinner from '../components/UI/LoadingSpinner.jsx';
 import ErrorMessage from '../components/UI/ErrorMessage.jsx';
 
@@ -47,21 +47,22 @@ const SignUp = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const resultAction = await dispatch(signupUser({ username, email, password }));
-    if (signupUser.fulfilled.match(resultAction)) {
+    const resultAction = await dispatch(
+      signup({ username, email, password })
+    );
+    if (signup.fulfilled.match(resultAction)) {
       // Signup was successful, navigate to login or dashboard
       navigate('/');
     }
   };
 
   const handleGoogleSignIn = async () => {
-    const resultAction = await dispatch(signInWithGoogle());
-    if (signInWithGoogle.fulfilled.match(resultAction)) {
+    const resultAction = await dispatch(googleSignIn());
+    if (googleSignIn.fulfilled.match(resultAction)) {
       // Google Sign-In was successful, navigate to home or dashboard
       navigate('/');
     }
   };
-
 
   if (status === 'loading') {
     return <LoadingSpinner />;

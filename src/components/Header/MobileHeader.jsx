@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { logoutUser } from '../../store/users/usersThunks';
+import { logout } from '../../store/users/usersThunks';
 import { setIsSignup } from '../../store/users/usersSlice';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
@@ -57,7 +57,7 @@ const isSignup = useSelector((state) => state.users.isSignup ?? false);
   };
 
   const handleLogout = () => {
-    dispatch(logoutUser());
+    dispatch(logout());
     setIsDrawerOpen(false);
   };
 

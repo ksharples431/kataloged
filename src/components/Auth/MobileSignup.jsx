@@ -14,10 +14,7 @@ import {
   useTheme,
 } from '@mui/material';
 
-import {
-  signupUser,
-  signInWithGoogle,
-} from '../../store/users/usersThunks';
+import { signup, googleSignIn } from '../../store/users/usersThunks';
 import { setIsSignup } from '../../store/users/usersSlice';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import ErrorMessage from '../UI/ErrorMessage';
@@ -49,16 +46,16 @@ const MobileSignup = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const resultAction = await dispatch(
-      signupUser({ email, password, username })
+      signup({ email, password, username })
     );
-    if (signupUser.fulfilled.match(resultAction)) {
+    if (signup.fulfilled.match(resultAction)) {
       navigate('/');
     }
   };
 
   const handleGoogleSignIn = async () => {
-    const resultAction = await dispatch(signInWithGoogle());
-    if (signInWithGoogle.fulfilled.match(resultAction)) {
+    const resultAction = await dispatch(googleSignIn());
+    if (googleSignIn.fulfilled.match(resultAction)) {
       navigate('/');
     }
   };

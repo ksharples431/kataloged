@@ -15,10 +15,7 @@ import {
   Grid,
 } from '@mui/material';
 
-import {
-  loginUser,
-  signInWithGoogle,
-} from '../../store/users/usersThunks';
+import { login, googleSignIn } from '../../store/users/usersThunks';
 import { setIsSignup } from '../../store/users/usersSlice';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import ErrorMessage from '../UI/ErrorMessage';
@@ -51,15 +48,15 @@ const DesktopLogin = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const resultAction = await dispatch(loginUser({ email, password }));
-    if (loginUser.fulfilled.match(resultAction)) {
+    const resultAction = await dispatch(login({ email, password }));
+    if (login.fulfilled.match(resultAction)) {
       navigate('/');
     }
   };
 
   const handleGoogleSignIn = async () => {
-    const resultAction = await dispatch(signInWithGoogle());
-    if (signInWithGoogle.fulfilled.match(resultAction)) {
+    const resultAction = await dispatch(googleSignIn());
+    if (googleSignIn.fulfilled.match(resultAction)) {
       navigate('/');
     }
   };

@@ -14,10 +14,7 @@ import {
   Divider,
 } from '@mui/material';
 
-import {
-  loginUser,
-  signInWithGoogle,
-} from '../store/users/usersThunks.js';
+import { login, googleSignIn } from '../store/users/usersThunks.js';
 import LoadingSpinner from '../components/UI/LoadingSpinner.jsx';
 import ErrorMessage from '../components/UI/ErrorMessage.jsx';
 
@@ -52,18 +49,16 @@ const Login = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const resultAction = await dispatch(
-      loginUser({ email, password })
-    );
-    if (loginUser.fulfilled.match(resultAction)) {
+    const resultAction = await dispatch(login({ email, password }));
+    if (login.fulfilled.match(resultAction)) {
       // Signup was successful, navigate to login or dashboard
       navigate('/');
     }
   };
 
   const handleGoogleSignIn = async () => {
-    const resultAction = await dispatch(signInWithGoogle());
-    if (signInWithGoogle.fulfilled.match(resultAction)) {
+    const resultAction = await dispatch(googleSignIn());
+    if (googleSignIn.fulfilled.match(resultAction)) {
       // Google Sign-In was successful, navigate to home or dashboard
       navigate('/');
     }

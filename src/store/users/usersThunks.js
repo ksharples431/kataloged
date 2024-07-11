@@ -11,7 +11,7 @@ import { clearUserData } from './usersSlice';
 import auth from '../../../firebaseConfig';
 import api from '../../services/api';
 
-export const signInWithGoogle = createAsyncThunk(
+export const googleSignIn = createAsyncThunk(
   'user/googleSignIn',
   async (_, { rejectWithValue }) => {
     try {
@@ -22,16 +22,21 @@ export const signInWithGoogle = createAsyncThunk(
 
       const result = await signInWithPopup(auth, provider);
       const firebaseUser = result.user;
+      const idToken = await getIdToken(firebaseUser);
 
-      const response = await api.post('/users/google-signin', {
+
+      const response = await api.post('/auth/google-signin', {
         email: firebaseUser.email,
-        username: firebaseUser.displayName,
-      });
+      }, {
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+          },
+        });
 
       console.log('Google Sign-In API Response:', response.data);
 
-      if (response.data.data.user) {
-        const user = response.data.data.user;
+      if (response.data.user) {
+        const user = response.data.user;
         return {
           username: user.username,
           uid: user.uid,
@@ -51,7 +56,7 @@ export const signInWithGoogle = createAsyncThunk(
   }
 );
 
-export const signupUser = createAsyncThunk(
+export const signup = createAsyncThunk(
   'user/signup',
   async ({ username, email, password }, { rejectWithValue }) => {
     try {
@@ -66,7 +71,7 @@ export const signupUser = createAsyncThunk(
       const idToken = await getIdToken(firebaseUser);
 
       const response = await api.post(
-        '/users/signup',
+        '/auth/signup',
         {
           username,
           email,
@@ -80,11 +85,11 @@ export const signupUser = createAsyncThunk(
 
       console.log('Signup API Response:', response.data);
 
-      if (response.data && response.data.data && response.data.data.user) {
-        const user = response.data.data.user;
-
+      if (response.data.user) {
         return {
-          username: user.username,
+          username: response.data.user.username,
+          uid: response.data.user.uid,
+          email: response.data.user.email,
         };
       } else {
         console.error('Unexpected API response structure:', response.data);
@@ -100,7 +105,7 @@ export const signupUser = createAsyncThunk(
   }
 );
 
-export const loginUser = createAsyncThunk(
+export const login = createAsyncThunk(
   'user/login',
   async ({ email, password }, { rejectWithValue }) => {
     try {
@@ -113,7 +118,7 @@ export const loginUser = createAsyncThunk(
       const firebaseUser = userCredential.user;
       const idToken = await getIdToken(firebaseUser);
 
-      const response = await api.get(`/users/login`, {
+      const response = await api.get(`/auth/login`, {
         headers: {
           Authorization: `Bearer ${idToken}`,
         },
@@ -121,11 +126,11 @@ export const loginUser = createAsyncThunk(
 
       console.log('Login API Response:', response.data);
 
-      if (response.data && response.data.data && response.data.data.user) {
-        const user = response.data.data.user;
-
+      if (response.data.user) {
         return {
-          username: user.username,
+          username: response.data.user.username,
+          uid: response.data.user.uid,
+          email: response.data.user.email,
         };
       } else {
         console.error('Unexpected API response structure:', response.data);
@@ -141,19 +146,29 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-export const logoutUser = createAsyncThunk(
+export const logout = createAsyncThunk(
   'user/logout',
   async (_, { dispatch, rejectWithValue }) => {
     try {
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        const idToken = await getIdToken(currentUser);
+        await api.post(
+          '/auth/logout',
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${idToken}`,
+            },
+          }
+        );
+      }
+
       await auth.signOut();
-
       dispatch(clearUserData());
-      console.log('Logout successful');
-
       return null;
     } catch (error) {
       console.error('Logout Error:', error);
-
       dispatch(clearUserData());
       return rejectWithValue(
         error.message || 'An error occurred during logout'
