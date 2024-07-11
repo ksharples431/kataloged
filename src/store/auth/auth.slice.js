@@ -1,5 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { signInWithGoogle, signup, login } from './auth.thunks';
+import { googleSignin, 
+  // signup, 
+  // login, 
+  // logout 
+} from './auth.thunks';
 
 const authSlice = createSlice({
   name: 'auth',
@@ -11,9 +15,13 @@ const authSlice = createSlice({
     error: null,
   },
   reducers: {
+    updateToken: (state, action) => {
+      state.token = action.payload;
+    },
     setUser: (state, action) => {
       if (action.payload) {
         state.user = action.payload;
+        state.token = action.payload.token;
         state.isAuthenticated = true;
         state.status = 'succeeded';
         state.error = null;
@@ -25,10 +33,7 @@ const authSlice = createSlice({
         state.error = null;
       }
     },
-    setToken: (state, action) => {
-      state.token = action.payload;
-    },
-    logout: (state) => {
+    clearUser: (state) => {
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
@@ -38,50 +43,78 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(signInWithGoogle.pending, (state) => {
+      .addCase(googleSignin.pending, (state) => {
         state.status = 'loading';
         state.error = null;
       })
-      .addCase(signInWithGoogle.fulfilled, (state, action) => {
+      .addCase(googleSignin.fulfilled, (state, action) => {
         state.user = action.payload;
+        state.token = action.payload.token;
         state.isAuthenticated = true;
         state.status = 'succeeded';
         state.error = null;
       })
-      .addCase(signInWithGoogle.rejected, (state, action) => {
+      .addCase(googleSignin.rejected, (state, action) => {
+        state.user = null;
+        state.token = null;
+        state.isAuthenticated = false;
         state.status = 'failed';
         state.error = action.payload || 'Unknown error occurred';
       })
-      .addCase(signup.pending, (state) => {
-        state.status = 'loading';
-        state.error = null;
-      })
-      .addCase(signup.fulfilled, (state, action) => {
-        state.user = action.payload;
-        state.isAuthenticated = true;
-        state.status = 'succeeded';
-        state.error = null;
-      })
-      .addCase(signup.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload || 'Unknown error occurred';
-      })
-      .addCase(login.pending, (state) => {
-        state.status = 'loading';
-        state.error = null;
-      })
-      .addCase(login.fulfilled, (state, action) => {
-        state.user = action.payload;
-        state.isAuthenticated = true;
-        state.status = 'succeeded';
-        state.error = null;
-      })
-      .addCase(login.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload || 'Unknown error occurred';
-      });
+      // .addCase(signup.pending, (state) => {
+      //   state.status = 'loading';
+      //   state.error = null;
+      // })
+      // .addCase(signup.fulfilled, (state, action) => {
+      //   state.user = action.payload;
+      //   state.token = action.payload.token;
+      //   state.isAuthenticated = true;
+      //   state.status = 'succeeded';
+      //   state.error = null;
+      // })
+      // .addCase(signup.rejected, (state, action) => {
+      //   state.user = null;
+      //   state.token = null;
+      //   state.isAuthenticated = false;
+      //   state.status = 'failed';
+      //   state.error = action.payload || 'Unknown error occurred';
+      // })
+      // .addCase(login.pending, (state) => {
+      //   state.status = 'loading';
+      //   state.error = null;
+      // })
+      // .addCase(login.fulfilled, (state, action) => {
+      //   state.user = action.payload;
+      //   state.token = action.payload.token;
+      //   state.isAuthenticated = true;
+      //   state.status = 'succeeded';
+      //   state.error = null;
+      // })
+      // .addCase(login.rejected, (state, action) => {
+      //   state.user = null;
+      //   state.token = null;
+      //   state.isAuthenticated = false;
+      //   state.status = 'failed';
+      //   state.error = action.payload || 'Unknown error occurred';
+      // })
+      // .addCase(logout.pending, (state) => {
+      //   state.status = 'loading';
+      //   state.error = null;
+      // })
+      // .addCase(logout.fulfilled, (state) => {
+      //   state.user = null;
+      //   state.token = null;
+      //   state.isAuthenticated = false;
+      //   state.status = 'idle';
+      //   state.error = null;
+      // })
+      // .addCase(logout.rejected, (state, action) => {
+      //   state.status = 'failed';
+      //   state.error = action.payload || 'Unknown error occurred';
+      // });
   },
 });
 
-export const { setUser, setToken, logout } = authSlice.actions;
+export const { setUser, clearUser, updateToken } = authSlice.actions;
 export default authSlice.reducer;
+

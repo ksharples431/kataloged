@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../../services/api';
+import api from '../../componentsReplaced/api';
 
 // FIXED DATA STRUCTURE HERE NEED TO DO REST OF THUNKS
 // DID THE REST OF THE TUNKS BUT NOT SURE IF THEY WORK YET

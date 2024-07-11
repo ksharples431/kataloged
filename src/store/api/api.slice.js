@@ -1,6 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import {  } from '../../services/api/baseQuery.js';
 
 export const api = createApi({
+  reducerPath: 'api',
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_URL_LOCAL,
     prepareHeaders: (headers, { getState }) => {
@@ -12,50 +14,50 @@ export const api = createApi({
     },
   }),
   endpoints: (builder) => ({
-    googleSignIn: builder.mutation({
-      query: (userData) => ({
-        url: '/users/google-signin',
-        method: 'POST',
-        body: userData,
-      }),
-    }),
-    signup: builder.mutation({
-      query: (userData) => ({
-        url: '/users/signup',
-        method: 'POST',
-        body: userData,
-      }),
-    }),
-    login: builder.mutation({
-      query: (credentials) => ({
-        url: '/users/login',
-        method: 'POST',
-        body: credentials,
-      }),
-    }),
-    logout: builder.mutation({
-      query: () => ({
-        url: '/users/logout',
-        method: 'POST',
-      }),
-    }),
+    // googleSignin: builder.mutation({
+    //   query: (credentials) => ({
+    //     url: '/auth/google-signin',
+    //     method: 'POST',
+    //     body: credentials,
+    //   }),
+    // }),
+    // signup: builder.mutation({
+    //   query: (userData) => ({
+    //     url: '/auth/signup',
+    //     method: 'POST',
+    //     body: userData,
+    //   }),
+    // }),
+    // login: builder.mutation({
+    //   query: (credentials) => ({
+    //     url: '/auth/login',
+    //     method: 'POST',
+    //     body: credentials,
+    //   }),
+    // }),
+    // logout: builder.mutation({
+    //   query: () => ({
+    //     url: '/auth/logout',
+    //     method: 'POST',
+    //   }),
+    // }),
     getBooks: builder.query({
-      query: () => 'books',
+      query: () => '/books',
     }),
     getBookById: builder.query({
-      query: (bid) => `books/${bid}`,
+      query: (bid) => `/books/${bid}`,
     }),
     getUserBooks: builder.query({
-      query: () => 'userBooks',
+      query: () => '/userBooks',
     }),
     getUserBookById: builder.query({
-      query: (ubid) => `userBooks/${ubid}`,
+      query: (ubid) => `/userBooks/${ubid}`,
     }),
   }),
 });
 
 export const {
-  useGoogleSignInMutation,
+  useGoogleSigninMutation,
   useSignupMutation,
   useLoginMutation,
   useLogoutMutation,

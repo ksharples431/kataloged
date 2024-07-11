@@ -9,7 +9,7 @@ import {
 } from 'firebase/auth';
 import { clearUserData } from './usersSlice';
 import auth from '../../../firebaseConfig';
-import api from '../../services/api';
+import api from '../../componentsReplaced/api';
 
 export const signInWithGoogle = createAsyncThunk(
   'user/googleSignIn',
@@ -58,7 +58,7 @@ export const signupUser = createAsyncThunk(
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
-        password,
+        password
       );
 
       const firebaseUser = userCredential.user;

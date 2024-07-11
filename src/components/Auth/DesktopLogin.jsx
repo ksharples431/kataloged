@@ -14,15 +14,15 @@ import {
   useTheme,
   Grid,
 } from '@mui/material';
-
-import {
-  useLoginMutation,
-  useGoogleSignInMutation,
-} from '../../store/api/api.slice';
-import { setUser } from '../../store/auth/auth.slice';
+// import {
+  // useLoginMutation,
+  // useGoogleSigninMutation,
+// } from '../../store/api/api.slice';
+// import { setUser } from '../../store/auth/auth.slice';
 import { setIsSignup } from '../../store/ui/ui.slice';
-import LoadingSpinner from '../UI/LoadingSpinner';
-import ErrorMessage from '../UI/ErrorMessage';
+// import LoadingSpinner from '../UI/LoadingSpinner';
+// import ErrorMessage from '../UI/ErrorMessage';
+import { googleSignin } from '../../store/auth/auth.thunks';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(8),
@@ -50,48 +50,50 @@ const DesktopLogin = () => {
   const [password, setPassword] = useState('');
   const { isSignup } = useSelector((state) => state.ui);
 
-  const [login, { isLoading: isLoginLoading, error: loginError }] =
-    useLoginMutation();
-  const [
-    googleSignIn,
-    { isLoading: isGoogleSignInLoading, error: googleSignInError },
-  ] = useGoogleSignInMutation();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const userData = await login({ email, password }).unwrap();
-      dispatch(setUser(userData));
-      navigate('/');
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
-  const handleGoogleSignIn = async () => {
-    try {
-      const userData = await googleSignIn().unwrap();
-      dispatch(setUser(userData));
-      navigate('/');
-    } catch (err) {
-      // Error is handled by RTK Query
-    }
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  //   try {
+  //     const userData = await login({ email, password }).unwrap();
+  //     dispatch(setUser(userData));
+  //     navigate('/');
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
+
+ const handleGoogleSignin = async () => {
+   const resultAction = await dispatch(googleSignin().unwrap());
+   if (googleSignin.fulfilled.match(resultAction)) {
+     navigate('/');
+   }
   };
+  // const handleGoogleSignIn = async () => {
+  //   try {
+  //     console.log('Attempting google signin')
+  //     const userData = await googleSignIn().unwrap();
+  //     dispatch(setUser(userData));
+  //     navigate('/');
+  //   } catch (err) {
+  //     // Error is handled by RTK Query
+  //   }
+  // };
 
   const handleToggleSignup = () => {
     dispatch(setIsSignup(!isSignup));
   };
 
-  if (isLoginLoading || isGoogleSignInLoading) {
-    return <LoadingSpinner />;
-  }
+  // if (isLoginLoading || isGoogleSigninLoading) {
+  //   return <LoadingSpinner />;
+  // }
 
-  const error = loginError || googleSignInError;
-  if (error) {
-    return (
-      <ErrorMessage message={error.data?.message || 'An error occurred'} />
-    );
-  }
+  // const error = loginError || googleSigninError;
+  // if (error) {
+  //   return (
+  //     <ErrorMessage message={error.data?.message || 'An error occurred'} />
+  //   );
+  // }
 
   return (
     <Container component="main" maxWidth="sm">
@@ -102,7 +104,7 @@ const DesktopLogin = () => {
           gutterBottom>
           Log In
         </Typography>
-        <Form onSubmit={handleSubmit}>
+        {/* <Form onSubmit={handleSubmit}> */}
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -138,7 +140,8 @@ const DesktopLogin = () => {
             fullWidth
             variant="contained"
             color="primary"
-            disabled={isLoginLoading}>
+            // disabled={isLoginLoading}
+            >
             Log In
           </SubmitButton>
 
@@ -147,8 +150,9 @@ const DesktopLogin = () => {
             fullWidth
             variant="outlined"
             color="primary"
-            onClick={handleGoogleSignIn}
-            disabled={isGoogleSignInLoading}>
+            onClick={handleGoogleSignin}
+            // disabled={isGoogleSigninLoading}
+            >
             Log in with Google
           </SubmitButton>
           <Box mt={3}>
@@ -166,7 +170,7 @@ const DesktopLogin = () => {
               </Link>
             </Typography>
           </Box>
-        </Form>
+        {/* </Form> */}
       </StyledPaper>
     </Container>
   );
