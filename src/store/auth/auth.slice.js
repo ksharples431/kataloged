@@ -95,6 +95,8 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(logout.rejected, (state, action) => {
+        state.user = null;
+        state.isAuthenticated = false;
         state.status = 'failed';
         state.error = action.payload || 'Unknown error occurred';
       });

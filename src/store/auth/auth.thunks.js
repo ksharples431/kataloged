@@ -7,13 +7,13 @@ import {
   GoogleAuthProvider,
   updateProfile,
 } from 'firebase/auth';
-import { clearUser, setUser } from './auth.slice';
+import { setUser } from './auth.slice';
 import auth from '../../../firebaseConfig';
 import api from '../../services/api/authApi';
 
 export const googleSignIn = createAsyncThunk(
   'auth/googleSignIn',
-  async (_, {dispatch, rejectWithValue }) => {
+  async (_, { dispatch, rejectWithValue }) => {
     try {
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({
@@ -70,20 +70,17 @@ export const signup = createAsyncThunk(
 
       console.log('Signup API Response:', response.data);
 
-       if (response.data.user) {
-         const userData = {
-           username: response.data.user.username,
-           uid: response.data.user.uid,
-         };
-         dispatch(setUser(userData));
-         return userData;
-       } else {
-         console.error(
-           'Unexpected API response structure:',
-           response.data
-         );
-         return rejectWithValue('Unexpected API response structure');
-       }
+      if (response.data.user) {
+        const userData = {
+          username: response.data.user.username,
+          uid: response.data.user.uid,
+        };
+        dispatch(setUser(userData));
+        return userData;
+      } else {
+        console.error('Unexpected API response structure:', response.data);
+        return rejectWithValue('Unexpected API response structure');
+      }
     } catch (error) {
       console.error('Signup Error:', error);
       await auth.signOut();
@@ -98,30 +95,23 @@ export const login = createAsyncThunk(
   'auth/login',
   async ({ email, password }, { dispatch, rejectWithValue }) => {
     try {
-      await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      await signInWithEmailAndPassword(auth, email, password);
 
       const response = await api.get('/auth/login');
 
       console.log('Login API Response:', response.data);
 
-       if (response.data.user) {
-         const userData = {
-           username: response.data.user.username,
-           uid: response.data.user.uid,
-         };
-         dispatch(setUser(userData));
-         return userData;
-       } else {
-         console.error(
-           'Unexpected API response structure:',
-           response.data
-         );
-         return rejectWithValue('Unexpected API response structure');
-       }
+      if (response.data.user) {
+        const userData = {
+          username: response.data.user.username,
+          uid: response.data.user.uid,
+        };
+        dispatch(setUser(userData));
+        return userData;
+      } else {
+        console.error('Unexpected API response structure:', response.data);
+        return rejectWithValue('Unexpected API response structure');
+      }
     } catch (error) {
       console.error('Login Error:', error);
       await auth.signOut();
@@ -134,7 +124,7 @@ export const login = createAsyncThunk(
 
 export const logout = createAsyncThunk(
   'auth/logout',
-  async (_, { dispatch, rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const currentUser = auth.currentUser;
       if (currentUser) {
@@ -143,11 +133,9 @@ export const logout = createAsyncThunk(
       }
 
       await auth.signOut();
-      dispatch(clearUser());
       return null;
     } catch (error) {
       console.error('Logout Error:', error);
-      dispatch(clearUser());
       return rejectWithValue(
         error.message || 'An error occurred during logout'
       );
