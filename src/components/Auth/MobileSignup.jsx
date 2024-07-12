@@ -41,7 +41,8 @@ const MobileSignup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState(''); // State for username
-  const { status, error, isSignup } = useSelector((state) => state.users);
+  const { status, error } = useSelector((state) => state.auth);
+  const isSignup = useSelector((state) => state.ui.isSignup);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
