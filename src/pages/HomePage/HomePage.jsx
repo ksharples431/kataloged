@@ -1,29 +1,8 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Box } from '@mui/material';
-import LoadingSpinner from '../../components/UI/LoadingSpinner';
-import ErrorMessage from '../../components/UI/ErrorMessage';
-import { fetchBooks } from '../../store/books/booksThunks';
+
 import ResponsiveCardCatalog from '../../components/CardCatalog/ResponsiveCardCatalog.jsx';
 
 const HomePage = () => {
-  const dispatch = useDispatch();
-  const { status, error } = useSelector((state) => state.books);
-
-  useEffect(() => {
-    if (status === 'idle') {
-      dispatch(fetchBooks());
-    }
-  }, [status, dispatch]);
-
-  if (status === 'loading') {
-    return <LoadingSpinner />;
-  }
-
-  if (status === 'failed') {
-    return <ErrorMessage message={error} />;
-  }
-
   const drawers = [
     { label: 'All Books', path: '/books' },
     { label: 'My Books', path: '/userBooks' },

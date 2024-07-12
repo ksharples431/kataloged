@@ -1,34 +1,24 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
 import { Box } from '@mui/material';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
 import ResponsiveBookList from '../../components/BookList/ResponsiveBookList.jsx';
 
-import { fetchBooks } from '../../store/books/booksThunks';
+import { useGetBooksQuery } from '../../store/api/api.slice.js';
 
 const BooksPage = () => {
-  const dispatch = useDispatch();
-  const { books = [], status, error } = useSelector((state) => state.books);
+  const { data, isLoading, isError } = useGetBooksQuery();
 
-  useEffect(() => {
-    if (status === 'idle') {
-      dispatch(fetchBooks());
-    }
-  }, [status, dispatch]);
-
-  if (status === 'loading') {
+  if (isLoading) {
     return <LoadingSpinner />;
   }
 
-  if (status === 'failed') {
-    return <ErrorMessage message={error} />;
+  if (isError) {
+    return <ErrorMessage message={data.message} />;
   }
 
   return (
     <Box>
-      <ResponsiveBookList books={books} />
+      <ResponsiveBookList books={data.books} />
     </Box>
   );
 };
