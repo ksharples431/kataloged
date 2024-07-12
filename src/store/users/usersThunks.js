@@ -7,7 +7,7 @@ import {
   GoogleAuthProvider,
   updateProfile,
 } from 'firebase/auth';
-import { clearUserData } from './usersSlice';
+import { clearUser } from './usersSlice';
 import auth from '../../../firebaseConfig';
 import api from '../../componentsReplaced/api';
 
@@ -165,11 +165,11 @@ export const logout = createAsyncThunk(
       }
 
       await auth.signOut();
-      dispatch(clearUserData());
+      dispatch(clearUser());
       return null;
     } catch (error) {
       console.error('Logout Error:', error);
-      dispatch(clearUserData());
+      dispatch(clearUser());
       return rejectWithValue(
         error.message || 'An error occurred during logout'
       );

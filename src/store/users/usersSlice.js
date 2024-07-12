@@ -7,7 +7,8 @@ import {
 } from './usersThunks';
 
 const initialState = {
-  username: null,
+  user: null,
+  token: null,
   isAuthenticated: false,
   isSignup: false,
   status: 'idle',
@@ -24,25 +25,22 @@ const userSlice = createSlice({
     },
     setUser: (state, action) => {
       if (action.payload) {
-        state.uid = action.payload.uid;
-        state.username = action.payload.username;
-        state.email = action.payload.email;
+        state.user = action.payload;
+        state.token = action.payload.token;
         state.isAuthenticated = true;
         state.status = 'succeeded';
         state.error = null;
       } else {
-        state.uid = null;
-        state.username = null;
-        state.email = null;
+        state.user = null;
+        state.token = null;
         state.isAuthenticated = false;
         state.status = 'idle';
         state.error = null;
       }
     },
-    clearUserData: (state) => {
-      state.uid = null;
-      state.username = null;
-      state.email = null;
+    clearUser: (state) => {
+      state.user = null;
+      state.token = null;
       state.isAuthenticated = false;
       state.status = 'idle';
       state.error = null;
@@ -52,57 +50,75 @@ const userSlice = createSlice({
     builder
       .addCase(googleSignIn.pending, (state) => {
         state.status = 'loading';
+        state.error = null;
       })
       .addCase(googleSignIn.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.uid = action.payload.uid;
-        state.username = action.payload.username;
-        state.email = action.payload.email;
+        state.user = action.payload;
+        state.token = action.payload.token;
         state.isAuthenticated = true;
+        state.status = 'succeeded';
         state.error = null;
       })
       .addCase(googleSignIn.rejected, (state, action) => {
+        state.user = null;
+        state.token = null;
+        state.isAuthenticated = false;
         state.status = 'failed';
         state.error = action.payload || 'Unknown error occurred';
       })
       .addCase(signup.pending, (state) => {
         state.status = 'loading';
+        state.error = null;
       })
       .addCase(signup.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.uid = action.payload.uid;
-        state.username = action.payload.username;
+        state.user = action.payload;
+        state.token = action.payload.token;
         state.isAuthenticated = true;
+        state.status = 'succeeded';
         state.error = null;
       })
       .addCase(signup.rejected, (state, action) => {
+        state.user = null;
+        state.token = null;
+        state.isAuthenticated = false;
         state.status = 'failed';
         state.error = action.payload || 'Unknown error occurred';
       })
       .addCase(login.pending, (state) => {
         state.status = 'loading';
+        state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.uid = action.payload.uid;
-        state.username = action.payload.username;
+        state.user = action.payload;
+        state.token = action.payload.token;
         state.isAuthenticated = true;
+        state.status = 'succeeded';
         state.error = null;
       })
       .addCase(login.rejected, (state, action) => {
+        state.user = null;
+        state.token = null;
+        state.isAuthenticated = false;
         state.status = 'failed';
         state.error = action.payload || 'Unknown error occurred';
       })
-      .addCase(logout.fulfilled, (state) => {
-        state.status = 'idle';
-        state.uid = null;
-        state.username = null;
-        state.isAuthenticated = false;
+      .addCase(logout.pending, (state) => {
+        state.status = 'loading';
         state.error = null;
-        state.isSignup = false;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.user = null;
+        state.token = null;
+        state.isAuthenticated = false;
+        state.status = 'idle';
+        state.error = null;
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload || 'Unknown error occurred';
       });
   },
 });
 
-export const { clearUserData, setUser, setIsSignup } = userSlice.actions;
+export const { clearUser, setUser, setIsSignup } = userSlice.actions;
 export default userSlice.reducer;

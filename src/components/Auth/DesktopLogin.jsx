@@ -44,9 +44,7 @@ const DesktopLogin = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { isSignup } = useSelector((state) => state.ui);
-
-
+  const { status, error, isSignup } = useSelector((state) => state.users);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -62,31 +60,18 @@ const DesktopLogin = () => {
       navigate('/');
     }
   };
-  // const handleGoogleSignIn = async () => {
-  //   try {
-  //     console.log('Attempting google signin')
-  //     const userData = await googleSignIn().unwrap();
-  //     dispatch(setUser(userData));
-  //     navigate('/');
-  //   } catch (err) {
-  //     // Error is handled by RTK Query
-  //   }
-  // };
 
   const handleToggleSignup = () => {
     dispatch(setIsSignup(!isSignup));
   };
 
-  // if (isLoginLoading || isGoogleSigninLoading) {
-  //   return <LoadingSpinner />;
-  // }
+  if (status === 'loading') {
+    return <LoadingSpinner />;
+  }
 
-  // const error = loginError || googleSigninError;
-  // if (error) {
-  //   return (
-  //     <ErrorMessage message={error.data?.message || 'An error occurred'} />
-  //   );
-  // }
+  if (status === 'failed') {
+    return <ErrorMessage message={error} />;
+  }
 
   return (
     <Container component="main" maxWidth="sm">
@@ -97,7 +82,7 @@ const DesktopLogin = () => {
           gutterBottom>
           Log In
         </Typography>
-        {/* <Form onSubmit={handleSubmit}> */}
+        <Form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -133,8 +118,7 @@ const DesktopLogin = () => {
             fullWidth
             variant="contained"
             color="primary"
-            // disabled={isLoginLoading}
-            >
+            disabled={status === 'loading'}>
             Log In
           </SubmitButton>
 
@@ -143,9 +127,8 @@ const DesktopLogin = () => {
             fullWidth
             variant="outlined"
             color="primary"
-            onClick={handleGoogleSignin}
-            // disabled={isGoogleSigninLoading}
-            >
+            onClick={handleGoogleSignIn}
+            disabled={status === 'loading'}>
             Log in with Google
           </SubmitButton>
           <Box mt={3}>
@@ -163,7 +146,7 @@ const DesktopLogin = () => {
               </Link>
             </Typography>
           </Box>
-        {/* </Form> */}
+        </Form>
       </StyledPaper>
     </Container>
   );
