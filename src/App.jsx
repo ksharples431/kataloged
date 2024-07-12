@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -19,15 +19,12 @@ import './App.css';
 function App() {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+  const handleAuthStateChange = useCallback(
+    async (user) => {
       if (user) {
-        const token = await user.getIdToken();
         const userData = {
           uid: user.uid,
-          email: user.email,
           username: user.displayName,
-          token: token,
         };
         console.log('User is signed in:', userData);
         dispatch(setUser(userData));
@@ -35,10 +32,14 @@ function App() {
         console.log('No user is signed in.');
         dispatch(setUser(null));
       }
-    });
+    },
+    [dispatch]
+  );
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, handleAuthStateChange);
     return () => unsubscribe();
-  }, [dispatch]);
+  }, [handleAuthStateChange]);
 
   return (
     <BrowserRouter>

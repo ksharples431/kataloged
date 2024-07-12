@@ -14,8 +14,8 @@ import {
   useTheme,
 } from '@mui/material';
 
-import { login, googleSignIn } from '../../store/users/usersThunks';
-import { setIsSignup } from '../../store/users/usersSlice';
+import { login, googleSignIn } from '../../store/auth/auth.thunks';
+import { setIsSignup } from '../../store/ui/ui.slice';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import ErrorMessage from '../UI/ErrorMessage';
 

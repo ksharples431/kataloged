@@ -15,8 +15,8 @@ import {
   Grid,
 } from '@mui/material';
 
-import { signup, googleSignIn } from '../../store/users/usersThunks';
-import { setIsSignup } from '../../store/users/usersSlice';
+import { signup, googleSignIn } from '../../store/auth/auth.thunks';
+import { setIsSignup } from '../../store/ui/ui.slice';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import ErrorMessage from '../UI/ErrorMessage';
 
