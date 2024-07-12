@@ -14,15 +14,11 @@ import {
   useTheme,
   Grid,
 } from '@mui/material';
-// import {
-  // useLoginMutation,
-  // useGoogleSigninMutation,
-// } from '../../store/api/api.slice';
-// import { setUser } from '../../store/auth/auth.slice';
-import { setIsSignup } from '../../store/ui/ui.slice';
-// import LoadingSpinner from '../UI/LoadingSpinner';
-// import ErrorMessage from '../UI/ErrorMessage';
-import { googleSignin } from '../../store/auth/auth.thunks';
+
+import { login, googleSignIn } from '../../store/users/usersThunks';
+import { setIsSignup } from '../../store/users/usersSlice';
+import LoadingSpinner from '../UI/LoadingSpinner';
+import ErrorMessage from '../UI/ErrorMessage';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(8),
@@ -52,22 +48,19 @@ const DesktopLogin = () => {
 
 
 
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
-  //   try {
-  //     const userData = await login({ email, password }).unwrap();
-  //     dispatch(setUser(userData));
-  //     navigate('/');
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const resultAction = await dispatch(login({ email, password }));
+    if (login.fulfilled.match(resultAction)) {
+      navigate('/');
+    }
+  };
 
- const handleGoogleSignin = async () => {
-   const resultAction = await dispatch(googleSignin().unwrap());
-   if (googleSignin.fulfilled.match(resultAction)) {
-     navigate('/');
-   }
+  const handleGoogleSignIn = async () => {
+    const resultAction = await dispatch(googleSignIn());
+    if (googleSignIn.fulfilled.match(resultAction)) {
+      navigate('/');
+    }
   };
   // const handleGoogleSignIn = async () => {
   //   try {
