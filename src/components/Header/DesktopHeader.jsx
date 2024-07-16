@@ -44,7 +44,18 @@ const DesktopHeader = () => {
     dispatch(setIsSignup(!isSignup));
   };
 
-  const menuItems = isAuthenticated
+const menuItems = [
+  // Add the "Search the catalog" button only for authenticated users
+  ...(isAuthenticated
+    ? [
+        {
+          text: 'Search the catalog',
+          link: '/search',
+        },
+      ]
+    : []),
+  // Then add the conditional auth items
+  ...(isAuthenticated
     ? [{ text: 'Log Out', onClick: handleLogout }]
     : [
         {
@@ -52,7 +63,8 @@ const DesktopHeader = () => {
           link: isSignup ? '/auth/signup' : '/auth/login',
           onClick: toggleSignupMode,
         },
-      ];
+      ]),
+];
 
   return (
     <>

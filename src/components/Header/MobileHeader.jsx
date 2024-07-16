@@ -48,7 +48,7 @@ const MobileHeader = () => {
   const isAuthenticated = useSelector(
     (state) => state.auth?.isAuthenticated ?? false
   );
-  const isSignup = useSelector((state) => state.users.isSignup ?? false);
+  const isSignup = useSelector((state) => state.ui.isSignup ?? false);
   const dispatch = useDispatch();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -65,15 +65,27 @@ const MobileHeader = () => {
     dispatch(setIsSignup(!isSignup));
   };
 
-  const menuItems = isAuthenticated
-    ? [{ text: 'Log Out', onClick: handleLogout }]
-    : [
-        {
-          text: isSignup ? 'Sign Up' : 'Log In',
-          link: isSignup ? '/auth/signup' : '/auth/login',
-          onClick: toggleSignupMode,
-        },
-      ];
+  const menuItems = [
+    // Add the "Search the catalog" button only for authenticated users
+    ...(isAuthenticated
+      ? [
+          {
+            text: 'Search the catalog',
+            link: '/search',
+          },
+        ]
+      : []),
+    // Then add the conditional auth items
+    ...(isAuthenticated
+      ? [{ text: 'Log Out', onClick: handleLogout }]
+      : [
+          {
+            text: isSignup ? 'Sign Up' : 'Log In',
+            link: isSignup ? '/auth/signup' : '/auth/login',
+            onClick: toggleSignupMode,
+          },
+        ]),
+  ];
 
   return (
     <>

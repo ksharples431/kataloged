@@ -10,6 +10,8 @@ import BooksPage from './pages/BooksPage/BooksPage.jsx';
 import BookDetailsPage from './pages/BookDetailsPage/BookDetailsPage.jsx';
 import UserBooksPage from './pages/UserBooksPage/UserBooksPage.jsx';
 import UserBookDetailsPage from './pages/UserBookDetailsPage/UserBookDetailsPage.jsx';
+import SearchResultsPage from './pages/SearchResultsPage/SearchResultsPage.jsx';
+import SearchDetailsPage from './pages/SearchDetailsPage/SearchDetailsPage';
 import LoadingSpinner from './components/UI/LoadingSpinner.jsx'
 
 import auth from '../firebaseConfig.jsx';
@@ -30,7 +32,7 @@ function App() {
           username: user.displayName,
           token: token,
         };
-        console.log('User is signed in:', userData);
+        console.log('User is signed in:', userData.username);
         dispatch(setUser(userData));
       } else {
         console.log('No user is signed in.');
@@ -73,6 +75,8 @@ function App() {
             path="/userBooks/:ubid"
             element={<UserBookDetailsPage />}
           />
+          <Route path="/search" element={<SearchResultsPage />} />
+          <Route path="/search/:bid" element={<SearchDetailsPage />} />
         </Routes>
       </ResponsiveLayoutWrapper>
     </BrowserRouter>

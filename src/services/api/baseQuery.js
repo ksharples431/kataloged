@@ -5,7 +5,6 @@ import { getAuth, getIdToken } from 'firebase/auth';
 const getCurrentUserToken = async () => {
   const auth = getAuth();
   const user = auth.currentUser;
-  console.log(user)
   if (user) {
     return await user.getIdToken();
   }
@@ -13,7 +12,7 @@ const getCurrentUserToken = async () => {
 };
 
 export const baseQuery = fetchBaseQuery({
-  baseUrl: import.meta.env.VITE_API_URL_LOCAL, // Adjust your base URL as needed
+  baseUrl: import.meta.env.VITE_API_URL_LOCAL, 
   prepareHeaders: async (headers) => {
     const token = await getCurrentUserToken();
     if (token) {

@@ -30,6 +30,14 @@ export const api = createApi({
         { type: 'UserBook', id: ubid },
       ],
     }),
+    searchBooks: builder.query({
+      query: (searchString) => ({
+        url: '/books/search',
+        params: new URLSearchParams(searchString),
+      }),
+      // This will keep the data in the cache for 5 minutes
+      keepUnusedDataFor: 300,
+    }),
   }),
 });
 
@@ -38,4 +46,5 @@ export const {
   useGetBookByIdQuery,
   useGetUserBooksQuery,
   useGetUserBookByIdQuery,
+  useSearchBooksQuery,
 } = api;
