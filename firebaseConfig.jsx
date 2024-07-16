@@ -16,10 +16,16 @@ const firebaseConfig = {
   clientId: import.meta.env.VITE_OAUTH_CLIENT_ID,
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-setPersistence(auth, browserLocalPersistence);
+
+setPersistence(auth, browserLocalPersistence)
+  .then(() => {
+    console.log('Persistence set to local');
+  })
+  .catch((error) => {
+    console.error('Failed to set persistence:', error);
+  });
 
 export default auth;
 

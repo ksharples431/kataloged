@@ -1,7 +1,6 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { onAuthStateChanged } from 'firebase/auth';
 
 import ResponsiveLayoutWrapper from './components/LayoutWrapper/ResponsiveLayoutWrapper.jsx';
 import ResponsiveLogin from './components/Auth/ResponsiveLogin.jsx';
@@ -11,35 +10,54 @@ import BooksPage from './pages/BooksPage/BooksPage.jsx';
 import BookDetailsPage from './pages/BookDetailsPage/BookDetailsPage.jsx';
 import UserBooksPage from './pages/UserBooksPage/UserBooksPage.jsx';
 import UserBookDetailsPage from './pages/UserBookDetailsPage/UserBookDetailsPage.jsx';
+import LoadingSpinner from './components/UI/LoadingSpinner.jsx'
 
 import auth from '../firebaseConfig.jsx';
-import { setUser } from './store/auth/auth.slice.js';
+import { setUser, clearUser } from './store/auth/auth.slice.js';
+
 import './App.css';
 
 function App() {
   const dispatch = useDispatch();
+  const [authInitialized, setAuthInitialized] = useState(false);
 
   const handleAuthStateChange = useCallback(
     async (user) => {
       if (user) {
+        const token = await user.getIdToken();
         const userData = {
           uid: user.uid,
           username: user.displayName,
+          token: token,
         };
         console.log('User is signed in:', userData);
         dispatch(setUser(userData));
       } else {
         console.log('No user is signed in.');
-        dispatch(setUser(null));
+        dispatch(clearUser());
       }
+      setAuthInitialized(true);
     },
     [dispatch]
   );
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, handleAuthStateChange);
-    return () => unsubscribe();
+    const unsubscribeAuthState = auth.onAuthStateChanged(
+      handleAuthStateChange
+    );
+    const unsubscribeIdToken = auth.onIdTokenChanged(
+      handleAuthStateChange
+    );
+
+    return () => {
+      unsubscribeAuthState();
+      unsubscribeIdToken();
+    };
   }, [handleAuthStateChange]);
+
+  if (!authInitialized) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <BrowserRouter>

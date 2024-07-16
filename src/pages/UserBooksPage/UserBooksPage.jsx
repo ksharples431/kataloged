@@ -1,43 +1,27 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
+import { useSelector } from 'react-redux';
 import { Box } from '@mui/material';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
 import ResponsiveUserBookList from '../../components/UserBookList/ResponsiveUserBookList.jsx';
 
-import { fetchUserBooks } from '../../store/userBooks/userBooksThunks';
+import { useGetUserBooksQuery } from '../../store/api/api.slice.js';
 
 const UserBooksPage = () => {
-  const dispatch = useDispatch();
-  const { userBooks = [], status, error } = useSelector(
-    (state) => state.userBooks
-  );
-  const isAuthenticated = useSelector(
-    (state) => state.auth?.isAuthenticated ?? false
-  );
+  const uid = useSelector((state) => state.auth.user?.uid);
+  const { data, isLoading, isError } = useGetUserBooksQuery(uid);
 
-  useEffect(() => {
-    if (isAuthenticated && status === 'idle') {
-      dispatch(fetchUserBooks());
-    }
-  }, [isAuthenticated, status, dispatch]);
 
-  if (!isAuthenticated) {
-    return <div>Please sign in to view books.</div>;
-  }
-
-  if (status === 'loading') {
+  if (isLoading) {
     return <LoadingSpinner />;
   }
 
-  if (status === 'failed') {
-    return <ErrorMessage message={error} />;
+  if (isError) {
+    return <ErrorMessage message={data.message} />;
   }
 
   return (
     <Box>
-      <ResponsiveUserBookList userBooks={userBooks} />
+      <ResponsiveUserBookList userBooks={data.userBooks} />
     </Box>
   );
 };

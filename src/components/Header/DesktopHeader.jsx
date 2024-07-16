@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../../store/users/usersThunks';
-import { setIsSignup } from '../../store/users/usersSlice';
+import { logout } from '../../store/users/users.thunks';
+import { setIsSignup } from '../../store/users/users.slice';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import {
@@ -33,7 +33,7 @@ const DesktopHeader = () => {
   const isAuthenticated = useSelector(
     (state) => state.auth?.isAuthenticated ?? false
   );
- const isSignup = useSelector((state) => state.ui.isSignup ?? false);
+  const isSignup = useSelector((state) => state.ui.isSignup ?? false);
   const dispatch = useDispatch();
 
   const handleLogout = () => {

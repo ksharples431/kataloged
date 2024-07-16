@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../../store/users/usersThunks';
-import { setIsSignup } from '../../store/users/usersSlice';
+import { logout } from '../../store/users/users.thunks';
+import { setIsSignup } from '../../store/users/users.slice';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -48,7 +48,7 @@ const MobileHeader = () => {
   const isAuthenticated = useSelector(
     (state) => state.auth?.isAuthenticated ?? false
   );
-const isSignup = useSelector((state) => state.users.isSignup ?? false);
+  const isSignup = useSelector((state) => state.users.isSignup ?? false);
   const dispatch = useDispatch();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -71,10 +71,9 @@ const isSignup = useSelector((state) => state.users.isSignup ?? false);
         {
           text: isSignup ? 'Sign Up' : 'Log In',
           link: isSignup ? '/auth/signup' : '/auth/login',
-          onClick: toggleSignupMode, 
+          onClick: toggleSignupMode,
         },
       ];
-
 
   return (
     <>

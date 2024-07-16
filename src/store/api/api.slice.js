@@ -6,6 +6,9 @@ export const api = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: ['Book', 'UserBook'],
   endpoints: (builder) => ({
+    getUserById: builder.query({
+      query: (uid) => `/users/${uid}`,
+    }),
     getBooks: builder.query({
       query: () => '/books',
       providesTags: ['Book'],
@@ -15,7 +18,10 @@ export const api = createApi({
       providesTags: (result, error, bid) => [{ type: 'Book', id: bid }],
     }),
     getUserBooks: builder.query({
-      query: () => '/userBooks',
+      query: (uid) => ({
+        url: '/userBooks',
+        params: { uid },
+      }),
       providesTags: ['UserBook'],
     }),
     getUserBookById: builder.query({
