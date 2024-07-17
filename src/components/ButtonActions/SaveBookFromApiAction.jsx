@@ -2,23 +2,46 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import ButtonSuite from '../UI/ButtonSuite';
-import { useAddUserBookMutation } from '../../store/api/api.slice';
+import {
+  useAddUserBookMutation,
+  useAddBookMutation,
+} from '../../store/api/api.slice';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Snackbar, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-const AddUserBookAction = ({ bid }) => {
+const SaveBookFromApiAction = ({ bid }) => {
   const navigate = useNavigate();
-  const uid = useSelector((state) => state.auth.user.uid);
-  const [addUserBook, { isLoading }] = useAddUserBookMutation();
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
+  const uid = useSelector((state) => state.auth.user.uid);
+  const book = useSelector((state) =>
+    state.search.results.find((b) => b.bid === bid)
+  );
+
+  const [addUserBook] = useAddUserBookMutation();
+  const [addBook] = useAddBookMutation();
+
   const handleAddBook = async () => {
+    if (!book) {
+      setError('Book details not found');
+      return;
+    }
+
     try {
-      const userBook = await addUserBook({ bid, uid }).unwrap();
-      console.log('Book added successfully:', userBook);
+      // First, add the book to the database
+      const addedBook = await addBook(book).unwrap();
+      console.log('Book added to database:', addedBook);
+      console.log(addedBook.book.bid)
+      // Then, add the book to the user's library
+      const userBook = await addUserBook({
+        bid: addedBook.book.bid,
+        uid,
+      }).unwrap();
+      console.log('Book added to user library:', userBook);
+
       setSuccess(true);
     } catch (err) {
       console.error('Failed to add book:', err);
@@ -32,11 +55,11 @@ const AddUserBookAction = ({ bid }) => {
       onClick: handleAddBook,
       icon: <FavoriteIcon />,
       color: 'secondary',
-      disabled: isLoading,
+      disabled: !book,
     },
     {
-      label: 'Back to book list',
-      onClick: () => navigate('/books'),
+      label: 'Back to search list',
+      onClick: () => navigate('/search'),
       icon: <ArrowBackIcon />,
       color: 'primary',
     },
@@ -71,8 +94,8 @@ const AddUserBookAction = ({ bid }) => {
   );
 };
 
-AddUserBookAction.propTypes = {
+SaveBookFromApiAction.propTypes = {
   bid: PropTypes.string.isRequired,
 };
 
-export default AddUserBookAction;
+export default SaveBookFromApiAction;

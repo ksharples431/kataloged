@@ -1,38 +1,34 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Box, Typography } from '@mui/material';
 import BookList from '../../components/BookList/BookList.jsx';
 import BookSearchForm from './BookSearchForm.jsx';
+import { setSearchResults } from '../../store/search/search.slice';
 
 const SearchResultsPage = () => {
-  const [searchResults, setSearchResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [searchError, setSearchError] = useState(null);
+  const dispatch = useDispatch();
+  const {
+    results: searchResults,
+    isSearching,
+    error: searchError,
+  } = useSelector((state) => state.search);
 
-  const handleSearchResults = (results) => {
-    setSearchResults(results);
-    setIsSearching(false);
-    setSearchError(null);
-    localStorage.setItem('lastSearchResults', JSON.stringify(results));
-  };
-
-  const handleSearchStart = () => {
-    setIsSearching(true);
-    setSearchError(null);
-  };
-
-  const handleSearchError = (error) => {
-    setIsSearching(false);
-    setSearchError(error);
-  };
+  useEffect(() => {
+    // If there are no results in Redux, check localStorage
+    if (searchResults.length === 0) {
+      const storedResults = JSON.parse(
+        localStorage.getItem('lastSearchResults') || '[]'
+      );
+      if (storedResults.length > 0) {
+        dispatch(setSearchResults(storedResults));
+      }
+    }
+  }, [dispatch, searchResults.length]);
 
   return (
     <>
       <Box>
-        <BookSearchForm
-          onSearchResults={handleSearchResults}
-          onSearchStart={handleSearchStart}
-          onSearchError={handleSearchError}
-        />
+        <BookSearchForm />
       </Box>
       <Box>
         {isSearching && <Typography>Searching...</Typography>}

@@ -1,5 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useSearchBooksQuery } from '../../store/api/api.slice.js';
+import {
+  setSearchResults,
+  setIsSearching,
+  setSearchError,
+} from '../../store/search/search.slice';
 import {
   Container,
   Box,
@@ -11,11 +17,8 @@ import {
   Grid,
 } from '@mui/material';
 
-const BookSearchForm = ({
-  onSearchResults,
-  onSearchStart,
-  onSearchError,
-}) => {
+const BookSearchForm = () => {
+  const dispatch = useDispatch();
   const [searchCriteria, setSearchCriteria] = useState({
     title: '',
     author: '',
@@ -36,7 +39,7 @@ const BookSearchForm = ({
     const { title, author, isbn } = searchCriteria;
 
     if (!title && !author && !isbn) {
-      console.error('Please enter a title, author, or ISBN');
+      dispatch(setSearchError('Please enter a title, author, or ISBN'));
       return;
     }
 
@@ -46,17 +49,17 @@ const BookSearchForm = ({
     if (isbn) searchParams.append('isbn', isbn.trim());
 
     setSearch(searchParams.toString());
-    onSearchStart();
+    dispatch(setIsSearching(true));
   };
 
-  useEffect(() => {
-    if (data && data.books) {
-      onSearchResults(data.books);
-    }
-    if (isError) {
-      onSearchError('An error occurred while searching');
-    }
-  }, [data, isError, onSearchResults, onSearchError]);
+  // Handle the search results
+  if (data && data.books) {
+    dispatch(setSearchResults(data.books));
+    localStorage.setItem('lastSearchResults', JSON.stringify(data.books));
+  }
+  if (isError) {
+    dispatch(setSearchError('An error occurred while searching'));
+  }
 
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>

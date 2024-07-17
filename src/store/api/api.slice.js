@@ -4,14 +4,14 @@ import { baseQueryWithReauth } from '../../services/api/baseQuery.js';
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['Book', 'UserBook'],
+  tagTypes: ['Book', 'Books', 'UserBook', 'UserBooks'],
   endpoints: (builder) => ({
     getUserById: builder.query({
       query: (uid) => `/users/${uid}`,
     }),
     getBooks: builder.query({
       query: () => '/books',
-      providesTags: ['Book'],
+      providesTags: ['Books'],
     }),
     getBookById: builder.query({
       query: (bid) => `/books/${bid}`,
@@ -22,7 +22,7 @@ export const api = createApi({
         url: '/userBooks',
         params: { uid },
       }),
-      providesTags: ['UserBook'],
+      providesTags: ['UserBooks'],
     }),
     getUserBookById: builder.query({
       query: (ubid) => `/userBooks/${ubid}`,
@@ -31,12 +31,13 @@ export const api = createApi({
       ],
     }),
     searchBooks: builder.query({
-      query: (searchString) => ({
-        url: '/books/search',
-        params: new URLSearchParams(searchString),
-      }),
-      // This will keep the data in the cache for 5 minutes
-      keepUnusedDataFor: 300,
+      query: (searchString) => {
+        const params = new URLSearchParams(searchString);
+        return {
+          url: '/books/search',
+          params: params,
+        };
+      },
     }),
     addUserBook: builder.mutation({
       query: ({ bid, uid }) => ({
@@ -44,19 +45,27 @@ export const api = createApi({
         method: 'POST',
         body: { bid, uid },
       }),
-      // transformResponse: (response) => {
-      //   console.log(response.data)
-      //   if (response.data && response.data.userBook) {
-      //     return response.data.userBook;
-      //   } else {
-      //     throw new Error('Unexpected API response structure');
-      //   }
-      // },
+      // You can add a transformResponse here if you need to transform the data
+      // transformResponse: (response) => response.data,
+      // Invalidates the 'Books' tag, causing a refetch of any query with this tag
+      invalidatesTags: ['UserBooks'],
+    }),
+    addBook: builder.mutation({
+      query: (bookData) => ({
+        url: '/books',
+        method: 'POST',
+        body: bookData,
+      }),
+      // You can add a transformResponse here if you need to transform the data
+      // transformResponse: (response) => response.data,
+      // Invalidates the 'Books' tag, causing a refetch of any query with this tag
+      invalidatesTags: ['Books'],
     }),
   }),
 });
 
 export const {
+  useAddBookMutation,
   useAddUserBookMutation,
   useGetBooksQuery,
   useGetBookByIdQuery,

@@ -3,25 +3,16 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Typography, Box } from '@mui/material';
 import BookDetailsCard from '../../components/BookDetails/BookDetailsCard.jsx';
+import SaveBookFromApiAction from '../../components/ButtonActions/SaveBookFromApiAction.jsx'
 
 const SearchDetailsPage = () => {
   const { bid } = useParams();
   const [book, setBook] = useState(null);
 
   // Try to get the book from Redux store
-  const storeBook = useSelector((state) => {
-    const queries = state.api.queries;
-    const queryKeys = Object.keys(queries).filter((key) =>
-      key.startsWith('searchBooks')
-    );
-    for (let key of queryKeys) {
-      const foundBook = queries[key]?.data?.books?.find(
-        (b) => b.bid === bid
-      );
-      if (foundBook) return foundBook;
-    }
-    return null;
-  });
+  const storeBook = useSelector((state) =>
+    state.search.results.find((b) => b.bid === bid)
+  );
 
   useEffect(() => {
     console.log('BID:', bid);
@@ -58,7 +49,7 @@ const SearchDetailsPage = () => {
         padding: 2,
       }}>
       <BookDetailsCard book={book} type="search" />
-      {/* <AddUserBookAction bid={bid} /> */}
+      <SaveBookFromApiAction bid={bid} />
     </Box>
   );
 };
