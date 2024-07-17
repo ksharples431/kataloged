@@ -12,10 +12,10 @@ const BookCardWrapper = styled(Card)(({ theme }) => ({
   height: '100%',
 }));
 
-const BookImage = styled(CardMedia)(() => ({
+const BookImageWrapper = styled(CardMedia)(() => ({
   height: '200px',
   width: '150px',
-  objectFit: 'cover',
+  overflow: 'hidden',
 }));
 
 const BookTitle = styled(Typography)(({ theme }) => ({
@@ -40,7 +40,7 @@ const AuthorName = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const LinkWrapper = styled(Link)(({theme}) => ({
+const LinkWrapper = styled(Link)(({ theme }) => ({
   color: theme.palette.text.primary,
   textDecoration: 'none',
   '&:hover': {
@@ -59,35 +59,55 @@ const CardContentWrapper = styled(CardContent)(() => ({
   flex: 1,
 }));
 
-const DesktopBookCard = ({ book }) => (
-  <BookCardWrapper>
-    <LinkWrapper to={`/books/${encodeURIComponent(book.bid)}`}>
-      <BookImage
-        component="img"
-        image={book.imagePath || '/placeholder-book.jpg'}
-        alt={book.title}
-      />
-    </LinkWrapper>
-    <CardContentWrapper>
-      <LinkWrapper to={`/books/${encodeURIComponent(book.bid)}`}>
-        <BookTitle variant="h6" component="h2">
-          {book.title}
-        </BookTitle>
-      </LinkWrapper>
-      <LinkWrapper to={`/authors/${encodeURIComponent(book.author)}`}>
-        <AuthorName variant="body2">{book.author}</AuthorName>
-      </LinkWrapper>
-    </CardContentWrapper>
-  </BookCardWrapper>
-);
+const DesktopBookListCard = ({ book, type }) => {
+  const getBookLink = () => {
+    switch (type) {
+      case 'user':
+        return `/userBooks/${encodeURIComponent(book.ubid)}`;
+      case 'search':
+        return `/search/${encodeURIComponent(book.bid)}`;
+      default:
+        return `/books/${encodeURIComponent(book.bid)}`;
+    }
+  };
 
-DesktopBookCard.propTypes = {
+  return (
+    <BookCardWrapper>
+      <LinkWrapper to={getBookLink()}>
+        <BookImageWrapper>
+          <img
+            src={book.imagePath || '/placeholder-book.jpg'}
+            alt={book.title}
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
+        </BookImageWrapper>
+      </LinkWrapper>
+      <CardContentWrapper>
+        <LinkWrapper to={getBookLink()}>
+          <BookTitle variant="h6" component="h2">
+            {book.title}
+          </BookTitle>
+        </LinkWrapper>
+        <LinkWrapper to={`/authors/${encodeURIComponent(book.author)}`}>
+          <AuthorName variant="body2">{book.author}</AuthorName>
+        </LinkWrapper>
+      </CardContentWrapper>
+    </BookCardWrapper>
+  );
+};
+
+DesktopBookListCard.propTypes = {
   book: PropTypes.shape({
-    bid: PropTypes.string.isRequired,
+    bid: PropTypes.string,
+    ubid: PropTypes.string,
     title: PropTypes.string.isRequired,
     author: PropTypes.string.isRequired,
     imagePath: PropTypes.string,
+    isbn: PropTypes.string,
+    seriesName: PropTypes.string,
+    seriesNumber: PropTypes.string,
   }).isRequired,
+  type: PropTypes.oneOf(['book', 'user', 'search']).isRequired,
 };
 
-export default DesktopBookCard;
+export default DesktopBookListCard;

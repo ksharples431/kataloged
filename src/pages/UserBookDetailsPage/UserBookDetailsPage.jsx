@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 import { useGetUserBookByIdQuery } from '../../store/api/api.slice';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
-import ResponsiveUserBookDetailsCard from '../../components/UserBookDetailsCard/ResponsiveUserBookDetailsCard';
+import BookDetailsCard from '../../components/BookDetails/BookDetailsCard';
 // import AddUserBookAction from '../../components/ButtonActions/AddUserBookAction';
 
 const UserBookDetailsPage = () => {
@@ -30,7 +30,7 @@ if (isError) {
         margin: 'auto',
         padding: 2,
       }}>
-      <ResponsiveUserBookDetailsCard userBook={data.userBook} />
+      <BookDetailsCard book={data.userBook} type="user" />
       {/* <AddUserBookAction ubid={ubid} /> */}
     </Box>
   );

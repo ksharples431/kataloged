@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Box, Typography } from '@mui/material';
-import ResponsiveBookSearchList from '../../components/BookSearchList/ResponsiveBookSearchList.jsx';
+import BookList from '../../components/BookList/BookList.jsx';
 import BookSearchForm from './BookSearchForm.jsx';
 
 const SearchResultsPage = () => {
@@ -12,7 +12,6 @@ const SearchResultsPage = () => {
     setSearchResults(results);
     setIsSearching(false);
     setSearchError(null);
-    // Store the results in localStorage
     localStorage.setItem('lastSearchResults', JSON.stringify(results));
   };
 
@@ -43,7 +42,7 @@ const SearchResultsPage = () => {
         {!isSearching && !searchError && (
           <>
             {searchResults.length > 0 ? (
-              <ResponsiveBookSearchList books={searchResults} />
+              <BookList books={searchResults} type="search" />
             ) : (
               <Typography>No books found. Try another search.</Typography>
             )}

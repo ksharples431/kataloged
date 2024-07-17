@@ -2,8 +2,7 @@ import { useSelector } from 'react-redux';
 import { Box } from '@mui/material';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
-import ResponsiveUserBookList from '../../components/UserBookList/ResponsiveUserBookList.jsx';
-
+import BookList from '../../components/BookList/BookList.jsx';
 import { useGetUserBooksQuery } from '../../store/api/api.slice.js';
 
 const UserBooksPage = () => {
@@ -21,7 +20,7 @@ const UserBooksPage = () => {
 
   return (
     <Box>
-      <ResponsiveUserBookList userBooks={data.userBooks} />
+      <BookList books={data.userBooks} type="user" />
     </Box>
   );
 };

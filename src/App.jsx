@@ -57,6 +57,7 @@ function App() {
     };
   }, [handleAuthStateChange]);
 
+  //figure out way to do this without loadingspinner
   if (!authInitialized) {
     return <LoadingSpinner />;
   }

@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { Box } from '@mui/material';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
-import ResponsiveBookDetailsCard from '../../components/BookDetailsCard/ResponsiveBookDetailsCard';
+import BookDetailsCard from '../../components/BookDetails/BookDetailsCard';
 // import AddUserBookAction from '../../components/ButtonActions/AddUserBookAction';
 import { useGetBookByIdQuery } from '../../store/api/api.slice';
 
@@ -29,7 +29,7 @@ const BookDetailsPage = () => {
         margin: 'auto',
         padding: 2,
       }}>
-      <ResponsiveBookDetailsCard book={data.book} />
+      <BookDetailsCard book={data.book} type="book" />
       {/* <AddUserBookAction bid={bid} /> */}
     </Box>
   );

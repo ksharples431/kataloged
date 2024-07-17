@@ -1,8 +1,7 @@
 import { Box } from '@mui/material';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
-import ResponsiveBookList from '../../components/BookList/ResponsiveBookList.jsx';
-
+import BookList from '../../components/BookList/BookList.jsx';
 import { useGetBooksQuery } from '../../store/api/api.slice.js';
 
 const BooksPage = () => {
@@ -18,7 +17,7 @@ const BooksPage = () => {
 
   return (
     <Box>
-      <ResponsiveBookList books={data.books} />
+      <BookList books={data.books} type="book" />
     </Box>
   );
 };
