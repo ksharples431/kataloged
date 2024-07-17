@@ -38,10 +38,26 @@ export const api = createApi({
       // This will keep the data in the cache for 5 minutes
       keepUnusedDataFor: 300,
     }),
+    addUserBook: builder.mutation({
+      query: ({ bid, uid }) => ({
+        url: '/userBooks',
+        method: 'POST',
+        body: { bid, uid },
+      }),
+      // transformResponse: (response) => {
+      //   console.log(response.data)
+      //   if (response.data && response.data.userBook) {
+      //     return response.data.userBook;
+      //   } else {
+      //     throw new Error('Unexpected API response structure');
+      //   }
+      // },
+    }),
   }),
 });
 
 export const {
+  useAddUserBookMutation,
   useGetBooksQuery,
   useGetBookByIdQuery,
   useGetUserBooksQuery,

@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
 import BookDetailsCard from '../../components/BookDetails/BookDetailsCard';
-// import AddUserBookAction from '../../components/ButtonActions/AddUserBookAction';
+import AddUserBookAction from '../../components/ButtonActions/AddUserBookAction.jsx';
 import { useGetBookByIdQuery } from '../../store/api/api.slice';
 
 const BookDetailsPage = () => {
@@ -30,7 +30,7 @@ const BookDetailsPage = () => {
         padding: 2,
       }}>
       <BookDetailsCard book={data.book} type="book" />
-      {/* <AddUserBookAction bid={bid} /> */}
+      <AddUserBookAction bid={bid} />
     </Box>
   );
 };

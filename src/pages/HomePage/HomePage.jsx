@@ -1,20 +1,38 @@
 import { Box } from '@mui/material';
-
+import { useSelector } from 'react-redux';
 import ResponsiveCardCatalog from '../../components/CardCatalog/ResponsiveCardCatalog.jsx';
 
 const HomePage = () => {
-  const drawers = [
-    { label: 'All Books', path: '/books' },
-    { label: 'My Books', path: '/userBooks' },
+    const isAuthenticated = useSelector(
+      (state) => state.auth.isAuthenticated
+    );
+  const allDrawers = [
+    { label: 'Library', path: '/books' },
     { label: 'Authors', path: '/authors' },
     { label: 'Genres', path: '/genres' },
     { label: 'Series', path: '/series' },
-    { label: 'My Queue', path: '/queue' },
-    { label: 'Favorites', path: '/favorites' },
-    { label: 'Account', path: '/account' },
-    { label: 'Stuff', path: '/stuff' },
+    { label: 'My Books', path: '/userBooks' },
+    { label: 'My Authors', path: '/userBooks' },
+    { label: 'My Genres', path: '/userBooks' },
+    { label: 'My Series', path: '/userBooks' },
+    // { label: 'My Queue', path: '/queue' },
+    // { label: 'Favorites', path: '/favorites' },
+    // { label: 'Account', path: '/account' },
+    // { label: 'Stuff', path: '/stuff' },
   ];
 
+  const guestDrawers = [
+    { label: 'Books', path: '/books' },
+    { label: 'Authors', path: '/authors' },
+    { label: 'Genres', path: '/genres' },
+    { label: 'Series', path: '/series' },
+    // { label: 'My Queue', path: '/queue' },
+    // { label: 'Favorites', path: '/favorites' },
+    // { label: 'Account', path: '/account' },
+    // { label: 'Stuff', path: '/stuff' },
+  ];
+
+  const drawers = isAuthenticated ? allDrawers : guestDrawers;
   return (
     <Box
       sx={{
