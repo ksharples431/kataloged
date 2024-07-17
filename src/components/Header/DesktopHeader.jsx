@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../../store/users/usersThunks';
-import { setIsSignup } from '../../store/users/usersSlice';
+import { logout } from '../../store/users/users.thunks';
+import { setIsSignup } from '../../store/users/users.slice';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import {
@@ -31,9 +31,9 @@ const Logo = styled(Typography)(() => ({
 
 const DesktopHeader = () => {
   const isAuthenticated = useSelector(
-    (state) => state.users.isAuthenticated
+    (state) => state.auth?.isAuthenticated ?? false
   );
- const isSignup = useSelector((state) => state.users.isSignup ?? false);
+  const isSignup = useSelector((state) => state.ui.isSignup ?? false);
   const dispatch = useDispatch();
 
   const handleLogout = () => {
@@ -44,7 +44,18 @@ const DesktopHeader = () => {
     dispatch(setIsSignup(!isSignup));
   };
 
-  const menuItems = isAuthenticated
+const menuItems = [
+  // Add the "Search the catalog" button only for authenticated users
+  ...(isAuthenticated
+    ? [
+        {
+          text: 'Search the catalog',
+          link: '/search',
+        },
+      ]
+    : []),
+  // Then add the conditional auth items
+  ...(isAuthenticated
     ? [{ text: 'Log Out', onClick: handleLogout }]
     : [
         {
@@ -52,7 +63,8 @@ const DesktopHeader = () => {
           link: isSignup ? '/auth/signup' : '/auth/login',
           onClick: toggleSignupMode,
         },
-      ];
+      ]),
+];
 
   return (
     <>

@@ -7,9 +7,9 @@ import {
   GoogleAuthProvider,
   updateProfile,
 } from 'firebase/auth';
-import { clearUserData } from './usersSlice';
+import { clearUser } from './users.slice';
 import auth from '../../../firebaseConfig';
-import api from '../../services/api';
+import api from '../../componentsReplaced/api';
 
 export const googleSignIn = createAsyncThunk(
   'user/googleSignIn',
@@ -24,14 +24,17 @@ export const googleSignIn = createAsyncThunk(
       const firebaseUser = result.user;
       const idToken = await getIdToken(firebaseUser);
 
-
-      const response = await api.post('/auth/google-signin', {
-        email: firebaseUser.email,
-      }, {
+      const response = await api.post(
+        '/auth/google-signin',
+        {
+          email: firebaseUser.email,
+        },
+        {
           headers: {
             Authorization: `Bearer ${idToken}`,
           },
-        });
+        }
+      );
 
       console.log('Google Sign-In API Response:', response.data);
 
@@ -63,7 +66,7 @@ export const signup = createAsyncThunk(
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
-        password,
+        password
       );
 
       const firebaseUser = userCredential.user;
@@ -165,11 +168,11 @@ export const logout = createAsyncThunk(
       }
 
       await auth.signOut();
-      dispatch(clearUserData());
+      dispatch(clearUser());
       return null;
     } catch (error) {
       console.error('Logout Error:', error);
-      dispatch(clearUserData());
+      dispatch(clearUser());
       return rejectWithValue(
         error.message || 'An error occurred during logout'
       );

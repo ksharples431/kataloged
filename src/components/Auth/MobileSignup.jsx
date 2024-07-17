@@ -14,8 +14,8 @@ import {
   useTheme,
 } from '@mui/material';
 
-import { signup, googleSignIn } from '../../store/users/usersThunks';
-import { setIsSignup } from '../../store/users/usersSlice';
+import { signup, googleSignIn } from '../../store/auth/auth.thunks';
+import { setIsSignup } from '../../store/ui/ui.slice';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import ErrorMessage from '../UI/ErrorMessage';
 
@@ -41,7 +41,8 @@ const MobileSignup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState(''); // State for username
-  const { status, error, isSignup } = useSelector((state) => state.users);
+  const { status, error } = useSelector((state) => state.auth);
+  const isSignup = useSelector((state) => state.ui.isSignup);
 
   const handleSubmit = async (event) => {
     event.preventDefault();

@@ -1,35 +1,24 @@
 import { configureStore } from '@reduxjs/toolkit';
-import booksReducer from './books/booksSlice';
-import usersReducer from './users/usersSlice';
-import userBooksReducer from './userBooks/userBooksSlice';
-
-
-const preloadedState = () => {
-  const token = localStorage.getItem('token');
-  const uid = localStorage.getItem('uid');
-  const username = localStorage.getItem('username');
-
-  if (token && uid && username) {
-    return {
-      users: {
-        username: null, // Fetch or set an initial value
-        isAuthenticated: true,
-        status: 'succeeded',
-        error: null,
-      },
-    };
-  }
-  return undefined;
-};
+import { api } from './api/api.slice';
+import authReducer from './auth/auth.slice';
+import uiReducer from './ui/ui.slice';
+import searchReducer from './search/search.slice'
+// import booksReducer from './books/booksSlice';
+// import userBooksReducer from './userBooks/userBooksSlice';
+// import usersReducer from './users/usersSlice';
 
 const store = configureStore({
   reducer: {
-    books: booksReducer,
-    users: usersReducer,
-    userBooks: userBooksReducer,
-
+    [api.reducerPath]: api.reducer,
+    auth: authReducer,
+    ui: uiReducer,
+    search: searchReducer
+    // books: booksReducer,
+    // userBooks: userBooksReducer,
+    // users: usersReducer,
   },
-  preloadedState: preloadedState(),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(api.middleware),
 });
 
 export default store;

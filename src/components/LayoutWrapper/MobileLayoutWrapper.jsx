@@ -13,29 +13,34 @@ const StyledMain = styled('main')(({ theme }) => ({
 const MobileLayoutWrapper = ({ children }) => {
   const theme = useTheme();
   return (
-    <Box
-      bgcolor={theme.palette.background.default}
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-      }}>
-      <MobileHeader />
-      <StyledMain>
-        <Container maxWidth="lg">{children}</Container>
-      </StyledMain>
+    <>
       <Box
-        component="footer"
-        sx={{ mt: 'auto', py: 3, bgcolor: 'primary.main' }}>
-        <Container
-          maxWidth="lg"
-          bgcolor={theme.palette.background.default}>
-          <Typography variant="body2" color="text.primary" align="center">
-            © {new Date().getFullYear()} KSharpCreations
-          </Typography>
-        </Container>
+        bgcolor={theme.palette.background.default}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100vh',
+        }}>
+        <MobileHeader />
+        <StyledMain>
+          <Container maxWidth="lg">{children}</Container>
+        </StyledMain>
+        <Box
+          component="footer"
+          sx={{ mt: 'auto', py: 3, bgcolor: 'primary.main' }}>
+          <Container
+            maxWidth="lg"
+            bgcolor={theme.palette.background.default}>
+            <Typography
+              variant="body2"
+              color="text.primary"
+              align="center">
+              © {new Date().getFullYear()} KSharpCreations
+            </Typography>
+          </Container>
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 

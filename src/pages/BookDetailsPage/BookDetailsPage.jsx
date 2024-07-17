@@ -1,31 +1,21 @@
-import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
 import { Box } from '@mui/material';
-import { fetchBookById } from '../../store/books/booksThunks';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
-import ResponsiveBookDetailsCard from '../../components/BookDetailsCard/ResponsiveBookDetailsCard';
-import AddUserBookAction from '../../components/ButtonActions/AddUserBookAction';
+import BookDetailsCard from '../../components/BookDetails/BookDetailsCard';
+import AddUserBookAction from '../../components/ButtonActions/AddUserBookAction.jsx';
+import { useGetBookByIdQuery } from '../../store/api/api.slice';
 
 const BookDetailsPage = () => {
   const { bid } = useParams();
-  const dispatch = useDispatch();
-  const { books, error, status } = useSelector((state) => state.books);
-  const book = books.find((book) => book.bid === bid);
+  const { data, isLoading, isError } = useGetBookByIdQuery(bid);
 
-  useEffect(() => {
-    if (!book) {
-      dispatch(fetchBookById(bid));
-    }
-  }, [bid, book, dispatch]);
-
-  if (status === 'loading') {
+  if (isLoading) {
     return <LoadingSpinner />;
   }
 
-  if (status === 'failed') {
-    return <ErrorMessage message={error} />;
+  if (isError) {
+    return <ErrorMessage message={data.message} />;
   }
 
   return (
@@ -39,8 +29,8 @@ const BookDetailsPage = () => {
         margin: 'auto',
         padding: 2,
       }}>
-      <ResponsiveBookDetailsCard book={book} />
-      <AddUserBookAction bid={bid}/>
+      <BookDetailsCard book={data.book} type="book" />
+      <AddUserBookAction bid={bid} />
     </Box>
   );
 };
