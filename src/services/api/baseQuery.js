@@ -12,7 +12,8 @@ const getCurrentUserToken = async () => {
 };
 
 export const baseQuery = fetchBaseQuery({
-  baseUrl: import.meta.env.VITE_API_URL_LOCAL, 
+  // baseUrl: import.meta.env.VITE_API_URL_LOCAL, 
+  baseUrl: import.meta.env.VITE_API_URL, 
   prepareHeaders: async (headers) => {
     const token = await getCurrentUserToken();
     if (token) {
