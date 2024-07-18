@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 
 const AddUserBookAction = ({ bid }) => {
   const navigate = useNavigate();
-  const uid = useSelector((state) => state.auth.user.uid);
+  const uid = useSelector((state) => state.auth.user?.uid);
   const [addUserBook, { isLoading }] = useAddUserBookMutation();
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
