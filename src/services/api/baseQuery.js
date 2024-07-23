@@ -1,5 +1,7 @@
 import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { getAuth, getIdToken } from 'firebase/auth';
+import store from '../../store/index.js';
+import { logout } from '../../store/auth/auth.thunks.js';
 
 // Function to get the current user's token
 const getCurrentUserToken = async () => {
@@ -12,7 +14,8 @@ const getCurrentUserToken = async () => {
 };
 
 export const baseQuery = fetchBaseQuery({
-  baseUrl: import.meta.env.VITE_API_URL_LOCAL, 
+  // baseUrl: import.meta.env.VITE_API_URL_LOCAL, 
+  baseUrl: import.meta.env.VITE_API_URL, 
   prepareHeaders: async (headers) => {
     const token = await getCurrentUserToken();
     if (token) {
@@ -33,10 +36,11 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
 
     if (user) {
       try {
-        await getIdToken(user, true); // Force refresh the token
-        result = await baseQuery(args, api, extraOptions); // Retry the request
+        await getIdToken(user, true); 
+        result = await baseQuery(args, api, extraOptions); 
       } catch (refreshError) {
         console.error('Failed to refresh token:', refreshError);
+        store.dispatch(logout());
       }
     }
   }

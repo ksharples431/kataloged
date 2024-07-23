@@ -16,7 +16,7 @@ const SaveBookFromApiAction = ({ bid }) => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
-  const uid = useSelector((state) => state.auth.user.uid);
+  const uid = useSelector((state) => state.auth.user?.uid);
   const book = useSelector((state) =>
     state.search.results.find((b) => b.bid === bid)
   );
