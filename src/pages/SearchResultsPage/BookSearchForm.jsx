@@ -5,7 +5,7 @@ import {
   setSearchResults,
   setIsSearching,
   setSearchError,
-} from '../../store/search/search.slice';
+} from '../../store/slices/search.slice';
 import {
   Container,
   Box,

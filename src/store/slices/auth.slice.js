@@ -6,11 +6,10 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   updateProfile,
-  getAuth,
 } from 'firebase/auth';
 import { authApi } from '../api/authApi.slice';
+import auth from '../../config/firebaseConfig';
 
-const auth = getAuth();
 
 const initialState = {
   user: null,

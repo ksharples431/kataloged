@@ -1,11 +1,10 @@
 import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { getAuth } from 'firebase/auth';
+import auth from '../../config/firebaseConfig.jsx'
 
 export const baseQuery = fetchBaseQuery({
   // baseUrl: import.meta.env.VITE_API_URL_LOCAL,
   baseUrl: import.meta.env.VITE_API_URL,
   prepareHeaders: async (headers) => {
-    const auth = getAuth();
     if (auth.currentUser) {
       const token = await auth.currentUser.getIdToken();
       headers.set('authorization', `Bearer ${token}`);
@@ -20,7 +19,6 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
 
   if (result.error && result.error.status === 401) {
-    const auth = getAuth();
     const user = auth.currentUser;
 
     if (user) {

@@ -2,9 +2,9 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { api } from './api/api.slice';
 import { authApi } from './api/authApi.slice';
-import authReducer, { logout } from './auth/auth.slice';
-import uiReducer from './ui/ui.slice';
-import searchReducer from './search/search.slice';
+import authReducer, { logout } from './slices/auth.slice';
+import uiReducer from './slices/ui.slice';
+import searchReducer from './slices/search.slice';
 
 const store = configureStore({
   reducer: {

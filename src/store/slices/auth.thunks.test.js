@@ -6,7 +6,7 @@ import authReducer from './auth.slice';
 import { login, signup, googleSignIn, logout } from './auth.thunks';
 import * as firebaseAuth from 'firebase/auth';
 import api from '../../services/api/authApi';
-import auth from '../../../firebaseConfig';
+import auth from '../../config/firebaseConfig';
 
 // Mocks should be at the top of the file
 vi.mock('firebase/auth');

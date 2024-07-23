@@ -6,7 +6,7 @@ import {
   addBook,
   updateBook,
   deleteBook,
-} from './booksThunks';
+} from '../thunks/booksThunks';
 
 const initialState = {
   books: [],

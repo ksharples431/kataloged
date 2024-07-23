@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../../store/users/users.thunks';
-import { setIsSignup } from '../../store/users/users.slice';
+import { logout } from '../../store/slices/auth.slice.js';
+import { setIsSignup } from '../../store/slices/ui.slice';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import {
