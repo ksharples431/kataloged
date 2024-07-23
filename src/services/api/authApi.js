@@ -1,8 +1,9 @@
 import axios from 'axios';
-import auth from '../../../firebaseConfig.jsx';
+import { getAuth, getIdToken } from 'firebase/auth';
+import store from '../../store/index.js'
+import { logout } from '../../store/auth/auth.thunks.js'
 
 const API_URL = import.meta.env.VITE_API_URL_LOCAL;
-// const API_URL = import.meta.env.VITE_API_URL;
 
 const api = axios.create({
   baseURL: API_URL,
@@ -11,10 +12,21 @@ const api = axios.create({
   },
 });
 
+// Function to get the current user's token
+const getCurrentUserToken = async () => {
+  const auth = getAuth();
+  const user = auth.currentUser;
+  if (user) {
+    return await user.getIdToken();
+  }
+  return null;
+};
+
+// Request interceptor to add the token to headers
 api.interceptors.request.use(
   async (config) => {
-    if (auth.currentUser) {
-      const token = await auth.currentUser.getIdToken();
+    const token = await getCurrentUserToken();
+    if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     } else {
       console.log('No user logged in');
@@ -23,6 +35,34 @@ api.interceptors.request.use(
     return config;
   },
   (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Response interceptor to handle 401 errors
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response && error.response.status === 401) {
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      if (user) {
+        try {
+          const newToken = await getIdToken(user, true); // Force refresh token
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
+
+          // Retry the original request with the new token
+          return api(originalRequest);
+        } catch (refreshError) {
+          console.error('Failed to refresh token:', refreshError);
+          store.dispatch(logout())
+        }
+      }
+    }
+
     return Promise.reject(error);
   }
 );
