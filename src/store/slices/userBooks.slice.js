@@ -5,7 +5,7 @@ import {
   addUserBook,
   // updateUserBook,
   // deleteUserBook,
-} from './userBooksThunks';
+} from '../slices/userBooks.slice';
 
 const initialState = {
   userBooks: [],

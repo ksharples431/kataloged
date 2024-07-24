@@ -12,10 +12,10 @@ import UserBooksPage from './pages/UserBooksPage/UserBooksPage.jsx';
 import UserBookDetailsPage from './pages/UserBookDetailsPage/UserBookDetailsPage.jsx';
 import SearchResultsPage from './pages/SearchResultsPage/SearchResultsPage.jsx';
 import SearchDetailsPage from './pages/SearchDetailsPage/SearchDetailsPage';
-import LoadingSpinner from './components/UI/LoadingSpinner.jsx'
+import LoadingSpinner from './components/UI/LoadingSpinner.jsx';
 
-import auth from '../firebaseConfig.jsx';
-import { setUser, clearUser } from './store/auth/auth.slice.js';
+import auth from './config/firebaseConfig.jsx';
+import { setUser, clearUser } from './store/slices/auth.slice.js';
 
 import './App.css';
 

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Box, Typography } from '@mui/material';
 import BookList from '../../components/BookList/BookList.jsx';
 import BookSearchForm from './BookSearchForm.jsx';
-import { setSearchResults } from '../../store/search/search.slice';
+import { setSearchResults } from '../../store/slices/search.slice';
 
 const SearchResultsPage = () => {
   const dispatch = useDispatch();

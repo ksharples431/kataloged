@@ -31,8 +31,6 @@ const BookDetailsCard = () => {
     }
   }, [bid, book, dispatch]);
 
-  console.log(book);
-
   if (status === 'loading') {
     return <LoadingSpinner />;
   }

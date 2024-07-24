@@ -15,9 +15,6 @@ const SearchDetailsPage = () => {
   );
 
   useEffect(() => {
-    console.log('BID:', bid);
-    console.log('Store Book:', storeBook);
-
     if (storeBook) {
       setBook(storeBook);
     } else {
@@ -26,7 +23,6 @@ const SearchDetailsPage = () => {
         localStorage.getItem('lastSearchResults') || '[]'
       );
       const storedBook = lastSearchResults.find((b) => b.bid === bid);
-      console.log('Local Storage Book:', storedBook);
       if (storedBook) {
         setBook(storedBook);
       }

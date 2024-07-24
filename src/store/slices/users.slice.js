@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { googleSignIn, signup, login, logout } from './users.thunks';
+import { googleSignIn, signup, login, logout } from '../thunks/users.thunks';
 
 const initialState = {
   user: null,
