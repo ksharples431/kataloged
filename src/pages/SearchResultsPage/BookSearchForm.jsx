@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSearchBooksQuery } from '../../store/api/api.slice.js';
 import {
@@ -52,14 +52,21 @@ const BookSearchForm = () => {
     dispatch(setIsSearching(true));
   };
 
-  // Handle the search results
-  if (data && data.books) {
-    dispatch(setSearchResults(data.books));
-    localStorage.setItem('lastSearchResults', JSON.stringify(data.books));
-  }
-  if (isError) {
-    dispatch(setSearchError('An error occurred while searching'));
-  }
+  useEffect(() => {
+    if (data && data.books) {
+      dispatch(setSearchResults(data.books));
+      localStorage.setItem(
+        'lastSearchResults',
+        JSON.stringify(data.books)
+      );
+    }
+  }, [data, dispatch]);
+
+  useEffect(() => {
+    if (isError) {
+      dispatch(setSearchError('An error occurred while searching'));
+    }
+  }, [isError, dispatch]);
 
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>

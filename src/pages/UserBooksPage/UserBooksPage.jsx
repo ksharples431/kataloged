@@ -9,7 +9,6 @@ const UserBooksPage = () => {
   const uid = useSelector((state) => state.auth.user?.uid);
   const { data, isLoading, isError } = useGetUserBooksQuery(uid);
 
-
   if (isLoading) {
     return <LoadingSpinner />;
   }

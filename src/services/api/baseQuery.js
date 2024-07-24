@@ -2,8 +2,8 @@ import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import auth from '../../config/firebaseConfig.jsx'
 
 export const baseQuery = fetchBaseQuery({
-  // baseUrl: import.meta.env.VITE_API_URL_LOCAL,
-  baseUrl: import.meta.env.VITE_API_URL,
+  baseUrl: import.meta.env.VITE_API_URL_LOCAL,
+  // baseUrl: import.meta.env.VITE_API_URL,
   prepareHeaders: async (headers) => {
     if (auth.currentUser) {
       const token = await auth.currentUser.getIdToken();

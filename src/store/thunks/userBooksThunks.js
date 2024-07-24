@@ -8,7 +8,6 @@ export const fetchUserBooks = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await api.get('/userBooks');
-      console.log('API Response:', response.data);
 
       if (Array.isArray(response.data.data.userBooks)) {
         return response.data.data.userBooks;
@@ -27,10 +26,8 @@ export const fetchUserBooks = createAsyncThunk(
 export const fetchUserBookById = createAsyncThunk(
   'userBooks/fetchUserBookById',
   async (ubid, { rejectWithValue }) => {
-    console.log('Fetch Book By ID:', ubid);
     try {
       const response = await api.get(`/userBooks/${ubid}`);
-      console.log('Fetch Book By ID Response:', response.data);
 
       if (response.data.data.userBook) {
         return response.data.data.userBook;
@@ -52,7 +49,6 @@ export const addUserBook = createAsyncThunk(
   async ({ bid, uid }, { rejectWithValue }) => {
     try {
       const response = await api.post('/userBooks', { bid, uid });
-      console.log('Add Book Response:', response.data);
 
       if (response.data.data.userBook) {
         return response.data.data.userBook;
@@ -74,7 +70,6 @@ export const addUserBook = createAsyncThunk(
 //   async ({ id, bookData }, { rejectWithValue }) => {
 //     try {
 //       const response = await api.patch(`/books/${id}`, bookData);
-//       console.log('Update Book Response:', response.data);
 
 //       if (response.data.data.book) {
 //         return response.data.data.book;

@@ -36,8 +36,6 @@ export const googleSignIn = createAsyncThunk(
         }
       );
 
-      console.log('Google Sign-In API Response:', response.data);
-
       if (response.data.user) {
         const user = response.data.user;
         return {
@@ -86,8 +84,6 @@ export const signup = createAsyncThunk(
         }
       );
 
-      console.log('Signup API Response:', response.data);
-
       if (response.data.user) {
         return {
           username: response.data.user.username,
@@ -126,8 +122,6 @@ export const login = createAsyncThunk(
           Authorization: `Bearer ${idToken}`,
         },
       });
-
-      console.log('Login API Response:', response.data);
 
       if (response.data.user) {
         return {
