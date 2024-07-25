@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import { Box } from '@mui/material';
-import LoadingSpinner from '../../components/UI/LoadingSpinner';
-import ErrorMessage from '../../components/UI/ErrorMessage';
+import LoadingSpinner from '../../components/UI/LoadingSpinner.jsx';
+import ErrorMessage from '../../components/UI/ErrorMessage.jsx';
 import BookList from '../../components/BookList/BookList.jsx';
 import { useGetUserBooksQuery } from '../../store/api/api.slice.js';
 

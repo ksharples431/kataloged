@@ -12,6 +12,12 @@ import UserBooksPage from './pages/UserBooksPage/UserBooksPage.jsx';
 import UserBookDetailsPage from './pages/UserBookDetailsPage/UserBookDetailsPage.jsx';
 import AuthorsPage from './pages/AuthorsPage/AuthorsPage.jsx';
 import AuthorBooksPage from './pages/AuthorBooksPage/AuthorBooksPage.jsx';
+import UserAuthorsPage from './pages/UserAuthorsPage/UserAuthorsPage.jsx';
+import UserAuthorBooksPage from './pages/UserAuthorBooksPage/UserAuthorBooksPage.jsx';
+import GenresPage from './pages/GenresPage/GenresPage.jsx';
+import GenreBooksPage from './pages/GenreBooksPage/GenreBooksPage.jsx';
+import UserGenresPage from './pages/UserGenresPage/UserGenresPage.jsx';
+import UserGenreBooksPage from './pages/UserGenreBooksPage/UserGenreBooksPage.jsx';
 import SearchResultsPage from './pages/SearchResultsPage/SearchResultsPage.jsx';
 import SearchDetailsPage from './pages/SearchDetailsPage/SearchDetailsPage';
 import LoadingSpinner from './components/UI/LoadingSpinner.jsx';
@@ -73,7 +79,22 @@ function App() {
           <Route path="/auth/signup" element={<ResponsiveSignup />} />
           <Route path="/books" element={<BooksPage />} />
           <Route path="/authors" element={<AuthorsPage />} />
-          <Route path="/authors/:authorName" element={<AuthorBooksPage />} />
+          <Route
+            path="/authors/:authorName"
+            element={<AuthorBooksPage />}
+          />
+          <Route path="/myAuthors" element={<UserAuthorsPage />} />
+          <Route
+            path="/myAuthors/:authorName"
+            element={<UserAuthorBooksPage />}
+          />
+          <Route path="/genres" element={<GenresPage />} />
+          <Route path="/genres/:genreName" element={<GenreBooksPage />} />
+          <Route path="/myGenres" element={<UserGenresPage />} />
+          <Route
+            path="/myGenres/:genreName"
+            element={<UserGenreBooksPage />}
+          />
           <Route path="/books/:bid" element={<BookDetailsPage />} />
           <Route path="/userBooks" element={<UserBooksPage />} />
           <Route
