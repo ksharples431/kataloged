@@ -10,6 +10,8 @@ import BooksPage from './pages/BooksPage/BooksPage.jsx';
 import BookDetailsPage from './pages/BookDetailsPage/BookDetailsPage.jsx';
 import UserBooksPage from './pages/UserBooksPage/UserBooksPage.jsx';
 import UserBookDetailsPage from './pages/UserBookDetailsPage/UserBookDetailsPage.jsx';
+import AuthorsPage from './pages/AuthorsPage/AuthorsPage.jsx';
+import AuthorBooksPage from './pages/AuthorBooksPage/AuthorBooksPage.jsx';
 import SearchResultsPage from './pages/SearchResultsPage/SearchResultsPage.jsx';
 import SearchDetailsPage from './pages/SearchDetailsPage/SearchDetailsPage';
 import LoadingSpinner from './components/UI/LoadingSpinner.jsx';
@@ -70,6 +72,8 @@ function App() {
           <Route path="/auth/login" element={<ResponsiveLogin />} />
           <Route path="/auth/signup" element={<ResponsiveSignup />} />
           <Route path="/books" element={<BooksPage />} />
+          <Route path="/authors" element={<AuthorsPage />} />
+          <Route path="/authors/:authorName" element={<AuthorBooksPage />} />
           <Route path="/books/:bid" element={<BookDetailsPage />} />
           <Route path="/userBooks" element={<UserBooksPage />} />
           <Route

@@ -1,23 +1,28 @@
-
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Box } from '@mui/material';
 import { useGetUserBookByIdQuery } from '../../store/api/api.slice';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
 import BookDetailsCard from '../../components/BookDetails/BookDetailsCard';
-// import AddUserBookAction from '../../components/ButtonActions/AddUserBookAction';
+import UserBookActions from '../../components/ButtonActions/UserBookActions.jsx';
 
 const UserBookDetailsPage = () => {
-const { ubid } = useParams();
-const { data, isLoading, isError } = useGetUserBookByIdQuery(ubid);
+  const { ubid } = useParams();
+  const navigate = useNavigate();
+  const { data, isLoading, isError } = useGetUserBookByIdQuery(ubid);
 
-if (isLoading) {
-  return <LoadingSpinner />;
-}
+  const handleUserBookDeleted = () => {
+    // Navigate back to the user's library or another appropriate page
+    navigate('/userBooks');
+  };
 
-if (isError) {
-  return <ErrorMessage message={data.message} />;
-}
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  if (isError) {
+    return <ErrorMessage message={data?.message || 'An error occurred'} />;
+  }
 
   return (
     <Box
@@ -31,7 +36,11 @@ if (isError) {
         padding: 2,
       }}>
       <BookDetailsCard book={data.userBook} type="user" />
-      {/* <AddUserBookAction ubid={ubid} /> */}
+      <UserBookActions
+        ubid={data.userBook.ubid}
+        userBook={data.userBook}
+        onUserBookDeleted={handleUserBookDeleted}
+      />
     </Box>
   );
 };

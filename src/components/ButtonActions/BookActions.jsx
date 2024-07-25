@@ -48,7 +48,7 @@ const BookActions = ({ bid, book, onBookDeleted }) => {
   const handleAddBook = async () => {
     try {
       const userBook = await addUserBook({ bid, uid }).unwrap();
-      console.log('Book added successfully:', userBook.ubid);
+      console.log('Book added successfully:', userBook.userBook.ubid);
       setSuccess('Book added to your library successfully!');
     } catch (err) {
       console.error('Failed to add book:', err);

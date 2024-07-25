@@ -7,7 +7,10 @@ import { useGetUserBooksQuery } from '../../store/api/api.slice.js';
 
 const UserBooksPage = () => {
   const uid = useSelector((state) => state.auth.user?.uid);
-  const { data, isLoading, isError } = useGetUserBooksQuery(uid);
+  const { data, isLoading, isError } = useGetUserBooksQuery(
+    { uid },
+    { refetchOnMountOrArgChange: true }
+  );
 
   if (isLoading) {
     return <LoadingSpinner />;
