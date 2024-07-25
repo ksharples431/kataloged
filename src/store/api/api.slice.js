@@ -11,8 +11,21 @@ export const api = createApi({
     'UserBooks',
     'Authors',
     'Genres',
+    'UserAuthors',
+    'UserGenres',
+    'User',
+    'Users',
   ],
   endpoints: (builder) => ({
+    // Books
+    addBook: builder.mutation({
+      query: (bookData) => ({
+        url: '/books',
+        method: 'POST',
+        body: bookData,
+      }),
+      invalidatesTags: ['Books'],
+    }),
     getBooks: builder.query({
       query: (params) => ({
         url: '/books',
@@ -27,16 +40,8 @@ export const api = createApi({
     searchBooks: builder.query({
       query: (searchParams) => ({
         url: '/books/search',
-        params: new URLSearchParams(searchParams),
+        params: searchParams,
       }),
-    }),
-    addBook: builder.mutation({
-      query: (bookData) => ({
-        url: '/books',
-        method: 'POST',
-        body: bookData,
-      }),
-      invalidatesTags: ['Books'],
     }),
     updateBook: builder.mutation({
       query: ({ bid, ...updateData }) => ({
@@ -91,13 +96,11 @@ export const api = createApi({
         { type: 'Genre', id: genre },
       ],
     }),
-    getUserById: builder.query({
-      query: (uid) => `/users/${uid}`,
-    }),
+    // User Books
     getUserBooks: builder.query({
-      query: (uid) => ({
+      query: (params) => ({
         url: '/userBooks',
-        params: { uid },
+        params: params,
       }),
       providesTags: ['UserBooks'],
     }),
@@ -108,12 +111,99 @@ export const api = createApi({
       ],
     }),
     addUserBook: builder.mutation({
-      query: ({ bid, uid }) => ({
+      query: (userBookData) => ({
         url: '/userBooks',
         method: 'POST',
-        body: { bid, uid },
+        body: userBookData,
       }),
       invalidatesTags: ['UserBooks'],
+    }),
+    updateUserBook: builder.mutation({
+      query: ({ ubid, ...updateData }) => ({
+        url: `/userBooks/${ubid}`,
+        method: 'PUT',
+        body: updateData,
+      }),
+      invalidatesTags: (result, error, { ubid }) => [
+        { type: 'UserBook', id: ubid },
+        'UserBooks',
+      ],
+    }),
+    deleteUserBook: builder.mutation({
+      query: (ubid) => ({
+        url: `/userBooks/${ubid}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: (result, error, ubid) => [
+        { type: 'UserBook', id: ubid },
+        'UserBooks',
+      ],
+    }),
+    getUserAuthors: builder.query({
+      query: ({ uid, ...params }) => ({
+        url: `/userBooks/${uid}/authors`,
+        params: params,
+      }),
+      providesTags: ['UserAuthors'],
+    }),
+    getUserGenres: builder.query({
+      query: ({ uid, ...params }) => ({
+        url: `/userBooks/${uid}/genres`,
+        params: params,
+      }),
+      providesTags: ['UserGenres'],
+    }),
+    getUserBooksByAuthor: builder.query({
+      query: ({ uid, author, ...params }) => ({
+        url: `/userBooks/${uid}/authors/${encodeURIComponent(
+          author
+        )}/books`,
+        params: params,
+      }),
+      providesTags: (result, error, { uid, author }) => [
+        { type: 'UserAuthor', id: `${uid}-${author}` },
+      ],
+    }),
+    getUserBooksByGenre: builder.query({
+      query: ({ uid, genre, ...params }) => ({
+        url: `/userBooks/${uid}/genres/${encodeURIComponent(genre)}/books`,
+        params: params,
+      }),
+      providesTags: (result, error, { uid, genre }) => [
+        { type: 'UserGenre', id: `${uid}-${genre}` },
+      ],
+    }),
+    // Users
+    getAllUsers: builder.query({
+      query: () => '/users',
+      providesTags: ['Users', { type: 'User', id: 'LIST' }],
+    }),
+    getUserById: builder.query({
+      query: (uid) => `/users/${uid}`,
+      providesTags: (result, error, uid) => [{ type: 'User', id: uid }],
+    }),
+    updateUser: builder.mutation({
+      query: ({ uid, ...updateData }) => ({
+        url: `/users/${uid}`,
+        method: 'PUT',
+        body: updateData,
+      }),
+      invalidatesTags: (result, error, { uid }) => [
+        { type: 'User', id: uid },
+        { type: 'User', id: 'LIST' },
+        'Users',
+      ],
+    }),
+    deleteUser: builder.mutation({
+      query: (uid) => ({
+        url: `/users/${uid}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: (result, error, uid) => [
+        { type: 'User', id: uid },
+        { type: 'User', id: 'LIST' },
+        'Users',
+      ],
     }),
   }),
 });
@@ -129,8 +219,17 @@ export const {
   useGetGenresQuery,
   useGetBooksByAuthorQuery,
   useGetBooksByGenreQuery,
-  useGetUserByIdQuery,
   useGetUserBooksQuery,
   useGetUserBookByIdQuery,
   useAddUserBookMutation,
+  useUpdateUserBookMutation,
+  useDeleteUserBookMutation,
+  useGetUserAuthorsQuery,
+  useGetUserGenresQuery,
+  useGetUserBooksByAuthorQuery,
+  useGetUserBooksByGenreQuery,
+  useGetAllUsersQuery,
+  useGetUserByIdQuery,
+  useUpdateUserMutation,
+  useDeleteUserMutation,
 } = api;
