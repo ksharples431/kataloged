@@ -1,17 +1,8 @@
-// BookActions.jsx
+/* eslint-disable no-unused-vars */
 import PropTypes from 'prop-types';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useState } from 'react';
-import ButtonSuite from '../UI/ButtonSuite';
-import {
-  useAddUserBookMutation,
-  useDeleteBookMutation,
-  useUpdateBookMutation,
-} from '../../store/api/apiSlice';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import {
   Dialog,
   DialogTitle,
@@ -19,51 +10,94 @@ import {
   DialogActions,
   Button,
   TextField,
+  useTheme,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import EditIcon from '@mui/icons-material/Edit';
 
-const BookActions = ({ bid, book, onBookDeleted }) => {
+import ButtonSuite from '../UI/ButtonSuite';
+import {
+  useAddUserBookMutation,
+  useDeleteBookMutation,
+  useUpdateBookMutation,
+} from '../../store/api/apiSlice';
+
+const BookActions = ({
+  bid,
+  book,
+  onBookAction,
+  onDeleteStart,
+  onUpdateStart,
+}) => {
+  const theme = useTheme();
   const navigate = useNavigate();
+
   const uid = useSelector((state) => state.auth.user?.uid);
+  const [updatedBookData, setUpdatedBookData] = useState(book);
+  const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
+
   const [addUserBook, { isLoading: isAddingBook }] =
     useAddUserBookMutation();
   const [deleteBook, { isLoading: isDeletingBook }] =
     useDeleteBookMutation();
   const [updateBook, { isLoading: isUpdatingBook }] =
     useUpdateBookMutation();
-  const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
-  const [updatedBookData, setUpdatedBookData] = useState(book);
+
+  useEffect(() => {
+    setUpdatedBookData(book);
+  }, [book]);
+
+  const handleUpdateClick = () => {
+    navigate(`/books/${bid}/edit`);
+  };
 
   const handleAddBook = async () => {
     try {
-      const userBook = await addUserBook({ bid, uid }).unwrap();
-      console.log('Book added successfully:', userBook.userBook.ubid);
-      onBookDeleted(true, 'Book added to your library successfully!');
+      await addUserBook({ bid, uid }).unwrap();
+      onBookAction(
+        true,
+        'Book added to your library successfully!',
+        'add'
+      );
     } catch (err) {
-      console.error('Failed to add book:', err);
-      onBookDeleted(false, err.data?.message || 'Failed to add book');
+      onBookAction(
+        false,
+        err.data?.message || 'Failed to add book',
+        'add'
+      );
     }
   };
 
   const handleDeleteBook = async () => {
     try {
+      onDeleteStart();
       await deleteBook(bid).unwrap();
-      onBookDeleted(true, 'Book deleted successfully!');
+      onBookAction(true, 'Book deleted successfully!', 'delete');
     } catch (err) {
-      console.error('Failed to delete book:', err);
-      onBookDeleted(false, err.data?.message || 'Failed to delete book');
+      onBookAction(
+        false,
+        err.data?.message || 'Failed to delete book',
+        'delete'
+      );
     }
   };
 
   const handleUpdateBook = async () => {
     try {
+      onUpdateStart();
       const { name, secondaryText, ...dataToUpdate } = updatedBookData;
-      await updateBook({ bid, ...dataToUpdate }).unwrap();
-      onBookDeleted(true, 'Book updated successfully!');
+      const result = await updateBook({ bid, ...dataToUpdate }).unwrap();
+      onBookAction(true, 'Book updated successfully!', 'update');
       setIsUpdateDialogOpen(false);
+      setUpdatedBookData(result);
     } catch (err) {
-      console.error('Failed to update book:', err);
-      onBookDeleted(false, err.data?.message || 'Failed to update book');
+      onBookAction(
+        false,
+        err.data?.message || 'Failed to update book',
+        'update'
+      );
     }
   };
 
@@ -77,7 +111,7 @@ const BookActions = ({ bid, book, onBookDeleted }) => {
     },
     {
       label: 'Update book',
-      onClick: () => setIsUpdateDialogOpen(true),
+      onClick: handleUpdateClick,
       icon: <EditIcon />,
       color: 'primary',
       disabled: isUpdatingBook,
@@ -103,11 +137,10 @@ const BookActions = ({ bid, book, onBookDeleted }) => {
       <Dialog
         open={isUpdateDialogOpen}
         onClose={() => setIsUpdateDialogOpen(false)}>
-        <DialogTitle
-          sx={{ backgroundColor: 'white', color: 'main.darkSlateBlue' }}>
+        <DialogTitle sx={{ color: theme.palette.main.slateBlue }}>
           Update Book
         </DialogTitle>
-        <DialogContent sx={{ backgroundColor: 'white' }}>
+        <DialogContent>
           <TextField
             autoFocus
             margin="dense"
@@ -121,7 +154,9 @@ const BookActions = ({ bid, book, onBookDeleted }) => {
                 title: e.target.value,
               })
             }
-            InputProps={{ sx: { color: 'main.darkSlateBlue' } }}
+            InputProps={{
+              style: { color: theme.palette.main.slateBlue },
+            }}
           />
           <TextField
             margin="dense"
@@ -135,11 +170,12 @@ const BookActions = ({ bid, book, onBookDeleted }) => {
                 author: e.target.value,
               })
             }
-            InputProps={{ sx: { color: 'main.darkSlateBlue' } }}
+            InputProps={{
+              style: { color: theme.palette.main.slateBlue },
+            }}
           />
         </DialogContent>
-        <DialogActions
-          sx={{ backgroundColor: 'white', color: 'main.darkSlateBlue' }}>
+        <DialogActions>
           <Button onClick={() => setIsUpdateDialogOpen(false)}>
             Cancel
           </Button>
@@ -156,7 +192,9 @@ BookActions.propTypes = {
     title: PropTypes.string.isRequired,
     author: PropTypes.string.isRequired,
   }).isRequired,
-  onBookDeleted: PropTypes.func.isRequired,
+  onBookAction: PropTypes.func.isRequired,
+  onDeleteStart: PropTypes.func.isRequired,
+  onUpdateStart: PropTypes.func.isRequired,
 };
 
 export default BookActions;

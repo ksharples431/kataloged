@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import {
   Box,
   Snackbar,
@@ -16,40 +16,70 @@ import { useGetBookByIdQuery } from '../../store/api/apiSlice.js';
 const BookDetailsPage = () => {
   const { bid } = useParams();
   const navigate = useNavigate();
-  const { data, isLoading, isError, error } = useGetBookByIdQuery(bid, {
-    skip: !bid,
-  });
+  const location = useLocation();
+
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
     severity: 'success',
   });
-  const [isDeleting, setIsDeleting] = useState(false);
+
+  const { data, isLoading, isError, error, refetch } = useGetBookByIdQuery(
+    bid,
+    {
+      skip: !bid,
+    }
+  );
 
   useEffect(() => {
-    if (isDeleting) {
-      const timer = setTimeout(() => {
-        navigate('/books');
-      }, 3000); // Navigate after 3 seconds
-      return () => clearTimeout(timer);
-    }
-  }, [isDeleting, navigate]);
+    refetch();
+  }, [refetch, bid]);
 
-  const handleBookDeleted = (success, message) => {
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const updateStatus = queryParams.get('update');
+
+    if (updateStatus === 'success') {
+      setSnackbar({
+        open: true,
+        message: 'Book updated successfully!',
+        severity: 'success',
+      });
+      // Remove the query parameter
+      navigate(location.pathname, { replace: true });
+    }
+
+    refetch();
+  }, [location, navigate, refetch]);
+
+
+  const handleDeleteStart = () => {
+    setIsDeleting(true);
+  };
+
+  const handleUpdateStart = () => {
+    setIsUpdating(true);
+  };
+
+  const handleBookAction = (success, message, action) => {
     setSnackbar({
       open: true,
-      message: message,
+      message,
       severity: success ? 'success' : 'error',
     });
     if (success) {
-      setIsDeleting(true);
+      if (action === 'delete') {
+        setTimeout(() => navigate('/books'), 3000);
+      }
     }
+    setIsDeleting(false);
+    setIsUpdating(false);
   };
 
   const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+    if (reason === 'clickaway') return;
     setSnackbar({ ...snackbar, open: false });
   };
 
@@ -65,7 +95,9 @@ const BookDetailsPage = () => {
     );
   }
 
-  const book = data?.items?.[0];
+  const transformedData = data?.transformed;
+  const book = transformedData?.items?.[0];
+  const originalBook = data?.original;
 
   return (
     <Box
@@ -78,13 +110,15 @@ const BookDetailsPage = () => {
         margin: 'auto',
         padding: 2,
       }}>
-      {book && !isDeleting ? (
+      {book && !isDeleting && !isUpdating ? (
         <>
-          <BookDetailsCard book={book} type={data.type} />
+          <BookDetailsCard book={book} type={transformedData.type} />
           <BookActions
             bid={book.id}
-            book={book}
-            onBookDeleted={handleBookDeleted}
+            book={originalBook}
+            onBookAction={handleBookAction}
+            onDeleteStart={handleDeleteStart}
+            onUpdateStart={handleUpdateStart}
           />
         </>
       ) : isDeleting ? (
@@ -98,6 +132,17 @@ const BookDetailsPage = () => {
           <CircularProgress />
           <Typography>Deleting book...</Typography>
         </Box>
+      ) : isUpdating ? (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 2,
+          }}>
+          <CircularProgress />
+          <Typography>Updating book...</Typography>
+        </Box>
       ) : (
         <div>Book not found.</div>
       )}
@@ -105,7 +150,7 @@ const BookDetailsPage = () => {
         open={snackbar.open}
         autoHideDuration={3000}
         onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}>
         <Alert
           onClose={handleSnackbarClose}
           severity={snackbar.severity}

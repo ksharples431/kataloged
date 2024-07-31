@@ -65,8 +65,10 @@ export const api = createApi({
           type: 'book',
           message: response.data.message,
         };
-        console.log(transformedData.message);
-        return transformedData;
+        return {
+          transformed: transformedData,
+          original: book,
+        };
       },
       providesTags: (result, error, bid) => [{ type: 'Book', id: bid }],
       options: {
@@ -82,7 +84,6 @@ export const api = createApi({
     }),
     updateBook: builder.mutation({
       query: ({ bid, ...updateData }) => {
-        console.log('Update Data:', updateData); // Log the updateData
         return {
           url: `/books/${bid}`,
           method: 'PUT',

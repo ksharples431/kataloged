@@ -22,7 +22,8 @@ import UserGenresPage from './componentsReplaced/UserGenresPage.jsx';
 import UserGenreBooksPage from './componentsReplaced/UserGenreBooksPage.jsx';
 import SearchResultsPage from './pages/Search/SearchResultsPage.jsx';
 import SearchDetailsPage from './pages/Search/SearchDetailsPage.jsx';
-import AboutPage from './pages/AboutPage/AboutPage.jsx';
+import AboutPage from './pages/About/AboutPage.jsx';
+import UpdateBookPage from './pages/Updates/UpdateBookPage';
 
 import auth from './config/firebaseConfig.jsx';
 import { setUser, clearUser } from './store/slices/authSlice.js';
@@ -73,6 +74,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/books/:bid/edit" element={<UpdateBookPage />} />
           <Route path="/auth/login" element={<ResponsiveLogin />} />
           <Route path="/auth/signup" element={<ResponsiveSignup />} />
           <Route path="/books" element={<BooksPage />} />
