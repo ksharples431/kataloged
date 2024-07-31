@@ -38,7 +38,11 @@ const MobileBookDetailsCard = ({ book, type }) => {
       </CardMedia>
       <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
         <CardContent>
-          <Typography variant="h5" component="div" gutterBottom>
+          <Typography
+            color="main.darkSlateBlue"
+            variant="h5"
+            component="div"
+            gutterBottom>
             {book.title}
           </Typography>
           <Typography
@@ -51,7 +55,11 @@ const MobileBookDetailsCard = ({ book, type }) => {
             <Chip
               label={book.genre}
               size="small"
-              sx={{ marginBottom: 2 }}
+              sx={{
+                marginBottom: 2,
+                backgroundColor: 'main.darkSlateBlue',
+                color: 'white',
+              }}
             />
           )}
           {book.seriesName && (

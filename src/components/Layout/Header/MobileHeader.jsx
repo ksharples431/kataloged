@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLogoutMutation } from '../../../store/api/authApiSlice';
 import { setIsSignup } from '../../../store/slices/uiSlice';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import {
@@ -14,8 +14,16 @@ import {
   List,
   ListItem,
   ListItemText,
+  ListItemIcon,
   useTheme,
 } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import LogoutIcon from '@mui/icons-material/Logout';
+import LoginIcon from '@mui/icons-material/Login';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import BookIcon from '@mui/icons-material/Book';
+import PersonIcon from '@mui/icons-material/Person';
+import CategoryIcon from '@mui/icons-material/Category';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
@@ -45,7 +53,9 @@ const StyledDrawer = styled(Drawer)(({ theme }) => ({
 
 const MobileHeader = () => {
   const theme = useTheme();
-  const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
+  const navigate = useNavigate();
+  // const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
+  const logout = useLogoutMutation();
   const isAuthenticated = useSelector(
     (state) => state.auth?.isAuthenticated ?? false
   );
@@ -60,7 +70,8 @@ const MobileHeader = () => {
   const handleLogout = async () => {
     try {
       await logout().unwrap();
-    setIsDrawerOpen(false);
+      setIsDrawerOpen(false);
+      navigate('/');
     } catch (error) {
       console.error('Failed to log out:', error);
     }
@@ -70,26 +81,51 @@ const MobileHeader = () => {
     dispatch(setIsSignup(!isSignup));
   };
 
+  const handleNavigation = (path) => {
+    navigate(path);
+    setIsDrawerOpen(false);
+  };
+
   const menuItems = [
-    // Add the "Search the catalog" button only for authenticated users
     ...(isAuthenticated
       ? [
           {
-            text: 'Search the catalog',
-            link: '/search',
+            text: 'Add a book',
+            icon: <SearchIcon />,
+            onClick: () => handleNavigation('/search'),
           },
+          {
+            text: 'My Books',
+            icon: <BookIcon />,
+            onClick: () => handleNavigation('/books'),
+          },
+          {
+            text: 'My Authors',
+            icon: <PersonIcon />,
+            onClick: () => handleNavigation('/authors'),
+          },
+          {
+            text: 'My Genres',
+            icon: <CategoryIcon />,
+            onClick: () => handleNavigation('/genres'),
+          },
+          { text: 'Log Out', icon: <LogoutIcon />, onClick: handleLogout },
         ]
-      : []),
-    // Then add the conditional auth items
-    ...(isAuthenticated
-      ? [{ text: 'Log Out', onClick: handleLogout }]
       : [
           {
             text: isSignup ? 'Sign Up' : 'Log In',
-            link: isSignup ? '/auth/signup' : '/auth/login',
-            onClick: toggleSignupMode,
+            icon: <LoginIcon />,
+            onClick: () => {
+              handleNavigation(isSignup ? '/auth/signup' : '/auth/login');
+              toggleSignupMode();
+            },
           },
         ]),
+    {
+      text: 'About Us',
+      icon: <InfoOutlinedIcon />,
+      onClick: () => handleNavigation('/about'),
+    },
   ];
 
   return (
@@ -117,16 +153,14 @@ const MobileHeader = () => {
         open={isDrawerOpen}
         onClose={handleDrawerToggle}
         ModalProps={{
-          keepMounted: true, // Better open performance on mobile
+          keepMounted: true,
         }}>
         <List>
           {menuItems.map((item) => (
-            <ListItem
-              button
-              key={item.text}
-              onClick={item.onClick || handleDrawerToggle}
-              component={item.link ? Link : 'li'}
-              to={item.link}>
+            <ListItem button key={item.text} onClick={item.onClick}>
+              <ListItemIcon sx={{ color: theme.palette.text.primary }}>
+                {item.icon}
+              </ListItemIcon>
               <ListItemText
                 primary={item.text}
                 primaryTypographyProps={{
