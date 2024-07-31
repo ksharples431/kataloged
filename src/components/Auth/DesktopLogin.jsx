@@ -15,8 +15,8 @@ import {
   Grid,
 } from '@mui/material';
 
-import { login, googleSignIn } from '../../store/slices/auth.slice';
-import { setIsSignup } from '../../store/slices/ui.slice';
+import { login, googleSignIn } from '../../store/slices/authSlice';
+import { setIsSignup } from '../../store/slices/uiSlice';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import ErrorMessage from '../UI/ErrorMessage';
 
@@ -37,6 +37,12 @@ const Form = styled('form')(({ theme }) => ({
 const SubmitButton = styled(Button)(({ theme }) => ({
   margin: theme.spacing(3, 0, 2),
 }));
+
+const CustomDivider = styled(Divider)(({ theme }) => ({
+  margin: theme.spacing(2, 0),
+  color: theme.palette.primary.main, // Adjust this to use your desired color
+}));
+
 
 const DesktopLogin = () => {
   const theme = useTheme();
@@ -79,7 +85,7 @@ const DesktopLogin = () => {
       <StyledPaper elevation={6}>
         <Typography
           variant="h4"
-          color={theme.palette.text.primary}
+          color={theme.palette.main.slateBlue}
           gutterBottom>
           Log In
         </Typography>
@@ -123,7 +129,7 @@ const DesktopLogin = () => {
             Log In
           </SubmitButton>
 
-          <Divider style={{ margin: theme.spacing(3, 0) }}>Or</Divider>
+          <CustomDivider>Or</CustomDivider>
           <SubmitButton
             fullWidth
             variant="outlined"

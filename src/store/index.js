@@ -1,10 +1,10 @@
 // src/store/index.js
 import { configureStore } from '@reduxjs/toolkit';
-import { api } from './api/api.slice';
-import { authApi } from './api/authApi.slice';
-import authReducer, { logout } from './slices/auth.slice';
-import uiReducer from './slices/ui.slice';
-import searchReducer from './slices/search.slice';
+import { api } from './api/apiSlice';
+import { authApi } from './api/authApiSlice';
+import authReducer, { logout } from './slices/authSlice';
+import uiReducer from './slices/uiSlice';
+import searchReducer from './slices/searchSlice';
 
 const store = configureStore({
   reducer: {

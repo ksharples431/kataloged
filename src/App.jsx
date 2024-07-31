@@ -1,29 +1,31 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import ResponsiveLayoutWrapper from './components/LayoutWrapper/ResponsiveLayoutWrapper.jsx';
+import ResponsiveLayoutWrapper from './components/Layout/Wrapper/ResponsiveLayoutWrapper.jsx';
 import ResponsiveLogin from './components/Auth/ResponsiveLogin.jsx';
 import ResponsiveSignup from './components/Auth/ResponsiveSignup.jsx';
-import HomePage from './pages/HomePage/HomePage.jsx';
-import BooksPage from './pages/BooksPage/BooksPage.jsx';
-import BookDetailsPage from './pages/BookDetailsPage/BookDetailsPage.jsx';
-import UserBooksPage from './pages/UserBooksPage/UserBooksPage.jsx';
-import UserBookDetailsPage from './pages/UserBookDetailsPage/UserBookDetailsPage.jsx';
-import AuthorsPage from './pages/AuthorsPage/AuthorsPage.jsx';
-import AuthorBooksPage from './pages/AuthorBooksPage/AuthorBooksPage.jsx';
-import UserAuthorsPage from './pages/UserAuthorsPage/UserAuthorsPage.jsx';
-import UserAuthorBooksPage from './pages/UserAuthorBooksPage/UserAuthorBooksPage.jsx';
-import GenresPage from './pages/GenresPage/GenresPage.jsx';
-import GenreBooksPage from './pages/GenreBooksPage/GenreBooksPage.jsx';
-import UserGenresPage from './pages/UserGenresPage/UserGenresPage.jsx';
-import UserGenreBooksPage from './pages/UserGenreBooksPage/UserGenreBooksPage.jsx';
-import SearchResultsPage from './pages/SearchResultsPage/SearchResultsPage.jsx';
-import SearchDetailsPage from './pages/SearchDetailsPage/SearchDetailsPage';
-import LoadingSpinner from './components/UI/LoadingSpinner.jsx';
+
+import HomePage from './pages/Home/HomePage.jsx';
+import BooksPage from './pages/Books/BooksPage.jsx';
+import BookDetailsPage from './pages/Books/BookDetailsPage.jsx';
+import AuthorsPage from './pages/Authors/AuthorsPage.jsx';
+import AuthorBooksPage from './pages/Authors/AuthorBooksPage.jsx';
+import GenresPage from './pages/Genres/GenresPage.jsx';
+import GenreBooksPage from './pages/Genres/GenreBooksPage.jsx';
+import UserBooksPage from './pages/Books/UserBooksPage.jsx';
+import UserBookDetailsPage from './componentsReplaced/UserBookDetailsPage.jsx';
+import UserAuthorsPage from './componentsReplaced/UserAuthorsPage.jsx';
+import UserAuthorBooksPage from './componentsReplaced/UserAuthorBooksPage.jsx';
+import UserGenresPage from './componentsReplaced/UserGenresPage.jsx';
+import UserGenreBooksPage from './componentsReplaced/UserGenreBooksPage.jsx';
+import SearchResultsPage from './pages/Search/SearchResultsPage.jsx';
+import SearchDetailsPage from './pages/Search/SearchDetailsPage.jsx';
+import AboutPage from './pages/AboutPage/AboutPage.jsx';
 
 import auth from './config/firebaseConfig.jsx';
-import { setUser, clearUser } from './store/slices/auth.slice.js';
+import { setUser, clearUser } from './store/slices/authSlice.js';
 
 import './App.css';
 
@@ -65,16 +67,12 @@ function App() {
     };
   }, [handleAuthStateChange]);
 
-  //figure out way to do this without loadingspinner
-  if (!authInitialized) {
-    return <LoadingSpinner />;
-  }
-
   return (
     <BrowserRouter>
       <ResponsiveLayoutWrapper>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="/auth/login" element={<ResponsiveLogin />} />
           <Route path="/auth/signup" element={<ResponsiveSignup />} />
           <Route path="/books" element={<BooksPage />} />

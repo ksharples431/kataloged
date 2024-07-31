@@ -27,29 +27,37 @@ const DesktopBookDetailsCard = ({ book, type }) => {
     <StyledCard>
       <CardMedia
         sx={{ width: '200px', height: '300px', overflow: 'hidden' }}
-        alt={book.title}>
+        alt={book.name}>
         <img
           src={book.imagePath || '/placeholder-book.jpg'}
-          alt={book.title}
+          alt={book.name}
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />
       </CardMedia>
       <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
         <CardContent>
-          <Typography variant="h5" component="div" gutterBottom>
-            {book.title}
+          <Typography
+            variant="h5"
+            color="main.darkSlateBlue"
+            component="div"
+            gutterBottom>
+            {book.name}
           </Typography>
           <Typography
             variant="subtitle1"
             color="text.secondary"
             gutterBottom>
-            By {book.author}
+            By {book.secondaryText}
           </Typography>
           {book.genre && (
             <Chip
               label={book.genre}
               size="small"
-              sx={{ marginBottom: 2 }}
+              sx={{
+                marginBottom: 2,
+                backgroundColor: 'main.darkSlateBlue',
+                color: 'white', 
+              }}
             />
           )}
           {book.seriesName && (
@@ -87,13 +95,12 @@ const DesktopBookDetailsCard = ({ book, type }) => {
 
 DesktopBookDetailsCard.propTypes = {
   book: PropTypes.shape({
-    bid: PropTypes.string,
-    ubid: PropTypes.string,
-    title: PropTypes.string.isRequired,
-    author: PropTypes.string.isRequired,
+    id: PropTypes.string,
+    name: PropTypes.string.isRequired,
+    secondaryText: PropTypes.string.isRequired,
+    imagePath: PropTypes.string,
     genre: PropTypes.string,
     description: PropTypes.string,
-    imagePath: PropTypes.string,
     owned: PropTypes.string,
     isbn: PropTypes.string,
     seriesName: PropTypes.string,
