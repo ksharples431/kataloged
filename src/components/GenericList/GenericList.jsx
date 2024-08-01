@@ -18,8 +18,8 @@ const GenericList = (props) => {
 GenericList.propTypes = {
   items: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
+      id: PropTypes.string,
+      name: PropTypes.string,
       imagePath: PropTypes.string,
       secondaryText: PropTypes.string,
     })
@@ -27,6 +27,7 @@ GenericList.propTypes = {
   type: PropTypes.oneOf([
     'book',
     'userBook',
+    'search',
     'author',
     'userAuthor',
     'genre',

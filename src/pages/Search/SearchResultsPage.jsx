@@ -1,29 +1,14 @@
-import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Box, Typography } from '@mui/material';
-import BookList from '../../components/GenericList/GenericList.jsx';
+import GenericList from '../../components/GenericList/GenericList.jsx';
 import BookSearchForm from '../../components/Forms/BookSearchForm.jsx';
-import { setSearchResults } from '../../store/slices/searchSlice.js';
 
 const SearchResultsPage = () => {
-  const dispatch = useDispatch();
   const {
-    results: searchResults,
+    transformedResults: searchResults,
     isSearching,
     error: searchError,
   } = useSelector((state) => state.search);
-
-  useEffect(() => {
-    // If there are no results in Redux, check localStorage
-    if (searchResults.length === 0) {
-      const storedResults = JSON.parse(
-        localStorage.getItem('lastSearchResults') || '[]'
-      );
-      if (storedResults.length > 0) {
-        dispatch(setSearchResults(storedResults));
-      }
-    }
-  }, [dispatch, searchResults.length]);
 
   return (
     <>
@@ -38,7 +23,11 @@ const SearchResultsPage = () => {
         {!isSearching && !searchError && (
           <>
             {searchResults.length > 0 ? (
-              <BookList books={searchResults} type="search" />
+              <GenericList
+                items={searchResults}
+                type="search"
+                title="Search Results"
+              />
             ) : (
               <Typography>No books found. Try another search.</Typography>
             )}

@@ -7,11 +7,11 @@ import {
   Typography,
   CircularProgress,
 } from '@mui/material';
-import LoadingSpinner from '../../components/UI/LoadingSpinner.jsx';
-import ErrorMessage from '../../components/UI/ErrorMessage.jsx';
-import BookDetailsCard from '../../components/BookDetails/BookDetailsCard.jsx';
-import BookActions from '../../components/Actions/BookActions.jsx';
-import { useGetBookByIdQuery } from '../../store/api/apiSlice.js';
+import LoadingSpinner from '../../components/UI/LoadingSpinner';
+import ErrorMessage from '../../components/UI/ErrorMessage';
+import BookDetailsCard from '../../components/BookDetails/BookDetailsCard';
+import BookActions from '../../components/Actions/BookActions';
+import { useGetBookByIdQuery } from '../../store/api/apiSlice';
 
 const BookDetailsPage = () => {
   const { bid } = useParams();
@@ -38,41 +38,32 @@ const BookDetailsPage = () => {
   }, [refetch, bid]);
 
   useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const updateStatus = queryParams.get('update');
-
-    if (updateStatus === 'success') {
-      setSnackbar({
-        open: true,
-        message: 'Book updated successfully!',
-        severity: 'success',
-      });
-      // Remove the query parameter
-      navigate(location.pathname, { replace: true });
+    if (location.state?.snackbar) {
+      setSnackbar(location.state.snackbar);
+      window.history.replaceState({}, document.title);
     }
+  }, [location]);
 
-    refetch();
-  }, [location, navigate, refetch]);
-
-
-  const handleDeleteStart = () => {
-    setIsDeleting(true);
-  };
-
-  const handleUpdateStart = () => {
-    setIsUpdating(true);
-  };
+  const handleDeleteStart = () => setIsDeleting(true);
+  const handleUpdateStart = () => setIsUpdating(true);
 
   const handleBookAction = (success, message, action) => {
-    setSnackbar({
-      open: true,
-      message,
-      severity: success ? 'success' : 'error',
-    });
-    if (success) {
-      if (action === 'delete') {
-        setTimeout(() => navigate('/books'), 3000);
-      }
+    if (success && action === 'delete') {
+      navigate('/books', {
+        state: {
+          snackbar: {
+            open: true,
+            message,
+            severity: 'success',
+          },
+        },
+      });
+    } else {
+      setSnackbar({
+        open: true,
+        message,
+        severity: success ? 'success' : 'error',
+      });
     }
     setIsDeleting(false);
     setIsUpdating(false);
@@ -80,14 +71,12 @@ const BookDetailsPage = () => {
 
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') return;
-    setSnackbar({ ...snackbar, open: false });
+    setSnackbar((prev) => ({ ...prev, open: false }));
   };
 
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
+  if (isLoading) return <LoadingSpinner />;
 
-  if (isError && !isDeleting) {
+  if (isError && !isDeleting && !isUpdating) {
     return (
       <ErrorMessage
         message={error?.data?.message || 'Failed to fetch book details'}
@@ -121,7 +110,7 @@ const BookDetailsPage = () => {
             onUpdateStart={handleUpdateStart}
           />
         </>
-      ) : isDeleting ? (
+      ) : isDeleting || isUpdating ? (
         <Box
           sx={{
             display: 'flex',
@@ -130,18 +119,9 @@ const BookDetailsPage = () => {
             gap: 2,
           }}>
           <CircularProgress />
-          <Typography>Deleting book...</Typography>
-        </Box>
-      ) : isUpdating ? (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: 2,
-          }}>
-          <CircularProgress />
-          <Typography>Updating book...</Typography>
+          <Typography>
+            {isDeleting ? 'Deleting' : 'Updating'} book...
+          </Typography>
         </Box>
       ) : (
         <div>Book not found.</div>

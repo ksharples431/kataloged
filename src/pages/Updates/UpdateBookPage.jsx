@@ -17,6 +17,7 @@ const UpdateBookPage = () => {
   const { bid } = useParams();
   const navigate = useNavigate();
   const theme = useTheme();
+
   const { data, isLoading, isError } = useGetBookByIdQuery(bid);
   const [updateBook, { isLoading: isUpdating }] = useUpdateBookMutation();
 
@@ -29,39 +30,38 @@ const UpdateBookPage = () => {
     isbn: '',
   });
 
-useEffect(() => {
-  if (data && data.original) {
-    const book = data.original;
-    setFormData({
-      title: book.title || '',
-      author: book.author || '',
-      genre: book.genre || '',
-      imagePath: book.imagePath || '',
-      description: book.description || '',
-      isbn: book.isbn || '',
-    });
-  }
-}, [data]);
-
+  useEffect(() => {
+    if (data && data.original) {
+      const { title, author, genre, imagePath, description, isbn } =
+        data.original;
+      setFormData({ title, author, genre, imagePath, description, isbn });
+    }
+  }, [data]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await updateBook({ bid, ...formData }).unwrap();
-      navigate(`/books/${bid}?update=success`);
+      navigate(`/books/${bid}`, {
+        state: {
+          snackbar: {
+            open: true,
+            message: 'Book updated successfully!',
+            severity: 'success',
+          },
+        },
+      });
     } catch (err) {
       console.error('Failed to update book:', err);
     }
   };
 
+  // todo: decide on spinner/error messages
   if (isLoading) return <CircularProgress />;
   if (isError)
     return <Typography color="error">Error loading book data</Typography>;
@@ -94,7 +94,6 @@ useEffect(() => {
       component="form"
       onSubmit={handleSubmit}
       sx={{ maxWidth: 600, margin: 'auto', mt: 4 }}>
-      {isLoading && <CircularProgress />}
       <Typography
         variant="h4"
         sx={{ mb: 3, color: theme.palette.main.lightSlateBlue }}>

@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useSearchBooksQuery } from '../../store/api/apiSlice.js';
+import { useSearchBooksQuery } from '../../store/api/apiSlice';
 import {
   setSearchResults,
   setIsSearching,
   setSearchError,
-} from '../../store/slices/searchSlice.js';
+  clearSearchResults,
+} from '../../store/slices/searchSlice';
 import {
   Container,
   Box,
@@ -50,23 +51,25 @@ const BookSearchForm = () => {
 
     setSearch(searchParams.toString());
     dispatch(setIsSearching(true));
+    dispatch(clearSearchResults()); // Clear previous results
   };
 
   useEffect(() => {
-    if (data && data.books) {
-      dispatch(setSearchResults(data.books));
-      localStorage.setItem(
-        'lastSearchResults',
-        JSON.stringify(data.books)
+    if (data) {
+      dispatch(
+        setSearchResults({
+          transformed: data.transformed.items,
+          original: data.original,
+        })
       );
     }
-  }, [data, dispatch]);
-
-  useEffect(() => {
+    dispatch(setIsSearching(isLoading));
     if (isError) {
       dispatch(setSearchError('An error occurred while searching'));
+    } else {
+      dispatch(setSearchError(null));
     }
-  }, [isError, dispatch]);
+  }, [data, isLoading, isError, dispatch]);
 
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>

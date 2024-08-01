@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import PropTypes from 'prop-types';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import {
@@ -12,10 +12,12 @@ import {
   TextField,
   useTheme,
 } from '@mui/material';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import EditIcon from '@mui/icons-material/Edit';
+import {
+  Favorite as FavoriteIcon,
+  Delete as DeleteIcon,
+  ArrowBack as ArrowBackIcon,
+  Edit as EditIcon,
+} from '@mui/icons-material';
 
 import ButtonSuite from '../UI/ButtonSuite';
 import {
@@ -33,8 +35,8 @@ const BookActions = ({
 }) => {
   const theme = useTheme();
   const navigate = useNavigate();
-
   const uid = useSelector((state) => state.auth.user?.uid);
+
   const [updatedBookData, setUpdatedBookData] = useState(book);
   const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
 
@@ -48,6 +50,17 @@ const BookActions = ({
   useEffect(() => {
     setUpdatedBookData(book);
   }, [book]);
+
+  const handleDialogClose = () => {
+    setIsUpdateDialogOpen(false);
+  };
+
+  const handleInputChange = (field) => (event) => {
+    setUpdatedBookData({
+      ...updatedBookData,
+      [field]: event.target.value,
+    });
+  };
 
   const handleUpdateClick = () => {
     navigate(`/books/${bid}/edit`);
@@ -87,8 +100,8 @@ const BookActions = ({
   const handleUpdateBook = async () => {
     try {
       onUpdateStart();
-      const { name, secondaryText, ...dataToUpdate } = updatedBookData;
-      const result = await updateBook({ bid, ...dataToUpdate }).unwrap();
+      const { title, author } = updatedBookData;
+      const result = await updateBook({ bid, title, author }).unwrap();
       onBookAction(true, 'Book updated successfully!', 'update');
       setIsUpdateDialogOpen(false);
       setUpdatedBookData(result);
@@ -134,9 +147,7 @@ const BookActions = ({
   return (
     <>
       <ButtonSuite buttons={buttons} />
-      <Dialog
-        open={isUpdateDialogOpen}
-        onClose={() => setIsUpdateDialogOpen(false)}>
+      <Dialog open={isUpdateDialogOpen} onClose={handleDialogClose}>
         <DialogTitle sx={{ color: theme.palette.main.slateBlue }}>
           Update Book
         </DialogTitle>
@@ -148,15 +159,8 @@ const BookActions = ({
             fullWidth
             variant="standard"
             value={updatedBookData.title}
-            onChange={(e) =>
-              setUpdatedBookData({
-                ...updatedBookData,
-                title: e.target.value,
-              })
-            }
-            InputProps={{
-              style: { color: theme.palette.main.slateBlue },
-            }}
+            onChange={handleInputChange('title')}
+            InputProps={{ style: { color: theme.palette.main.slateBlue } }}
           />
           <TextField
             margin="dense"
@@ -164,21 +168,12 @@ const BookActions = ({
             fullWidth
             variant="standard"
             value={updatedBookData.author}
-            onChange={(e) =>
-              setUpdatedBookData({
-                ...updatedBookData,
-                author: e.target.value,
-              })
-            }
-            InputProps={{
-              style: { color: theme.palette.main.slateBlue },
-            }}
+            onChange={handleInputChange('author')}
+            InputProps={{ style: { color: theme.palette.main.slateBlue } }}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setIsUpdateDialogOpen(false)}>
-            Cancel
-          </Button>
+          <Button onClick={handleDialogClose}>Cancel</Button>
           <Button onClick={handleUpdateBook}>Update</Button>
         </DialogActions>
       </Dialog>

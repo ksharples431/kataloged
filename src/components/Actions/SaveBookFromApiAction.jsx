@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ButtonSuite from '../UI/ButtonSuite';
 import {
   useAddUserBookMutation,
@@ -11,18 +11,27 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Snackbar, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-const SaveBookFromApiAction = ({ bid }) => {
+const SaveBookFromApiAction = ({ bookId }) => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
-
-  const uid = useSelector((state) => state.auth.user?.uid);
-  const book = useSelector((state) =>
-    state.search.results.find((b) => b.bid === bid)
-  );
-
+  const [book, setBook] = useState(null);
   const [addUserBook] = useAddUserBookMutation();
   const [addBook] = useAddBookMutation();
+
+  const uid = useSelector((state) => state.auth.user?.uid);
+  const originalResults = useSelector(
+    (state) => state.search?.originalResults
+  );
+
+  useEffect(() => {
+    if (originalResults && bookId) {
+      const foundBook = originalResults.find(
+        (b) => b.bid === bookId || b.id === bookId
+      );
+      setBook(foundBook || null);
+    }
+  }, [originalResults, bookId]);
 
   const handleAddBook = async () => {
     if (!book) {
@@ -31,16 +40,13 @@ const SaveBookFromApiAction = ({ bid }) => {
     }
 
     try {
-      // First, add the book to the database
-      const addedBook = await addBook(book).unwrap();
-      console.log('Book added to database:', addedBook.book.bid);
-      // Then, add the book to the user's library
+      await addBook(book).unwrap();
+      console.log('Book added to database:', book.bid);
       const userBook = await addUserBook({
-        bid: addedBook.book.bid,
+        bid: book.bid,
         uid,
       }).unwrap();
       console.log('Book added to user library:', userBook.ubid);
-
       setSuccess(true);
     } catch (err) {
       console.error('Failed to add book:', err);
@@ -94,7 +100,7 @@ const SaveBookFromApiAction = ({ bid }) => {
 };
 
 SaveBookFromApiAction.propTypes = {
-  bid: PropTypes.string.isRequired,
+  bookId: PropTypes.string.isRequired,
 };
 
 export default SaveBookFromApiAction;

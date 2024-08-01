@@ -17,10 +17,13 @@ const BookDetailsCard = ({ book, type }) => {
 
 BookDetailsCard.propTypes = {
   book: PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string,
     bid: PropTypes.string,
     ubid: PropTypes.string,
-    title: PropTypes.string.isRequired,
-    author: PropTypes.string.isRequired,
+    title: PropTypes.string,
+    author: PropTypes.string,
+    secondaryText: PropTypes.string,
     imagePath: PropTypes.string,
     isbn: PropTypes.string,
     seriesName: PropTypes.string,

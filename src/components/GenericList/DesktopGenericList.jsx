@@ -21,8 +21,14 @@ const DesktopGenericList = ({ items, type, title }) => {
         </Title>
       )}
       <Grid container spacing={3}>
-        {items.map((item) => (
-          <Grid item xs={12} sm={4} md={3} lg={2.4} key={item.id}>
+        {items.map((item, index) => (
+          <Grid
+            item
+            xs={12}
+            sm={4}
+            md={3}
+            lg={2.4}
+            key={item.bid || item.id || `item-${index}`}>
             <DesktopGenericListCard item={item} type={type} />
           </Grid>
         ))}
@@ -34,8 +40,8 @@ const DesktopGenericList = ({ items, type, title }) => {
 DesktopGenericList.propTypes = {
   items: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
+      id: PropTypes.string,
+      name: PropTypes.string,
       imagePath: PropTypes.string,
       secondaryText: PropTypes.string,
     })
@@ -43,6 +49,7 @@ DesktopGenericList.propTypes = {
   type: PropTypes.oneOf([
     'book',
     'userBook',
+    'search',
     'author',
     'userAuthor',
     'genre',

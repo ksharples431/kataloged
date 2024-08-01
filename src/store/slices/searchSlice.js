@@ -1,28 +1,38 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+const initialState = {
+  transformedResults: [],
+  originalResults: [],
+  isSearching: false,
+  error: null,
+};
+
 const searchSlice = createSlice({
   name: 'search',
-  initialState: {
-    results: [],
-    isSearching: false,
-    error: null,
-  },
+  initialState,
   reducers: {
     setSearchResults: (state, action) => {
-      state.results = action.payload;
-      state.isSearching = false;
-      state.error = null;
+      state.transformedResults = action.payload.transformed;
+      state.originalResults = action.payload.original;
     },
     setIsSearching: (state, action) => {
       state.isSearching = action.payload;
     },
     setSearchError: (state, action) => {
       state.error = action.payload;
-      state.isSearching = false;
+    },
+    clearSearchResults: (state) => {
+      state.transformedResults = [];
+      state.originalResults = [];
     },
   },
 });
 
-export const { setSearchResults, setIsSearching, setSearchError } =
-  searchSlice.actions;
+export const {
+  setSearchResults,
+  setIsSearching,
+  setSearchError,
+  clearSearchResults,
+} = searchSlice.actions;
+
 export default searchSlice.reducer;

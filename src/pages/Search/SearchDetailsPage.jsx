@@ -9,25 +9,17 @@ const SearchDetailsPage = () => {
   const { bid } = useParams();
   const [book, setBook] = useState(null);
 
-  // Try to get the book from Redux store
-  const storeBook = useSelector((state) =>
-    state.search.results.find((b) => b.bid === bid)
+  const originalResults = useSelector(
+    (state) => state.search.originalResults
   );
 
   useEffect(() => {
-    if (storeBook) {
-      setBook(storeBook);
-    } else {
-      // If not in Redux, try to get from localStorage
-      const lastSearchResults = JSON.parse(
-        localStorage.getItem('lastSearchResults') || '[]'
-      );
-      const storedBook = lastSearchResults.find((b) => b.bid === bid);
-      if (storedBook) {
-        setBook(storedBook);
-      }
-    }
-  }, [bid, storeBook]);
+    const foundBook = originalResults.find(
+      (b) => b.bid === bid || b.id === bid
+    );
+
+    setBook(foundBook || null);
+  }, [bid, originalResults]);
 
   if (!book) {
     return <Typography>Loading... (Book ID: {bid})</Typography>;
@@ -45,7 +37,7 @@ const SearchDetailsPage = () => {
         padding: 2,
       }}>
       <BookDetailsCard book={book} type="search" />
-      <SaveBookFromApiAction bid={bid} />
+      <SaveBookFromApiAction bookId={book.bid || book.id} />
     </Box>
   );
 };

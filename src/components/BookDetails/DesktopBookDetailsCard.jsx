@@ -23,14 +23,17 @@ const DesktopBookDetailsCard = ({ book, type }) => {
     return <div>Book not found</div>;
   }
 
+  const bookName = book.name || book.title;
+  const bookAuthor = book.secondaryText || book.author;
+
   return (
     <StyledCard>
       <CardMedia
         sx={{ width: '200px', height: '300px', overflow: 'hidden' }}
-        alt={book.name}>
+        alt={bookName}>
         <img
           src={book.imagePath || '/placeholder-book.jpg'}
-          alt={book.name}
+          alt={bookName}
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />
       </CardMedia>
@@ -41,13 +44,13 @@ const DesktopBookDetailsCard = ({ book, type }) => {
             color="main.darkSlateBlue"
             component="div"
             gutterBottom>
-            {book.name}
+            {bookName}
           </Typography>
           <Typography
             variant="subtitle1"
             color="text.secondary"
             gutterBottom>
-            By {book.secondaryText}
+            By {bookAuthor}
           </Typography>
           {book.genre && (
             <Chip
@@ -56,7 +59,7 @@ const DesktopBookDetailsCard = ({ book, type }) => {
               sx={{
                 marginBottom: 2,
                 backgroundColor: 'main.darkSlateBlue',
-                color: 'white', 
+                color: 'white',
               }}
             />
           )}
@@ -96,8 +99,10 @@ const DesktopBookDetailsCard = ({ book, type }) => {
 DesktopBookDetailsCard.propTypes = {
   book: PropTypes.shape({
     id: PropTypes.string,
-    name: PropTypes.string.isRequired,
-    secondaryText: PropTypes.string.isRequired,
+    title: PropTypes.string,
+    author: PropTypes.string,
+    name: PropTypes.string,
+    secondaryText: PropTypes.string,
     imagePath: PropTypes.string,
     genre: PropTypes.string,
     description: PropTypes.string,

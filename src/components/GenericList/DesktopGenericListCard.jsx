@@ -83,6 +83,8 @@ const DesktopGenericListCard = ({ item, type }) => {
         return `/books/${encodeURIComponent(item.id)}`;
       case 'userBook':
         return `/userBooks/${encodeURIComponent(item.id)}`;
+      case 'search':
+        return `/search/${encodeURIComponent(item.bid || item.id)}`;
       case 'author':
         return `/authors/${encodeURIComponent(item.name)}`;
       case 'userAuthor':
@@ -97,7 +99,7 @@ const DesktopGenericListCard = ({ item, type }) => {
   };
 
   const renderAvatar = () => {
-    if (type.includes('book')) {
+    if (type === 'book' || type === 'userBook' || type === 'search') {
       return (
         <ImageWrapper>
           <img
@@ -108,17 +110,18 @@ const DesktopGenericListCard = ({ item, type }) => {
         </ImageWrapper>
       );
     }
-    return (
-      <AvatarWrapper>
-        {type.includes('author')
-          ? item.name
-              .split(' ')
-              .map((n) => n[0])
-              .join('')
-              .toUpperCase()
-          : item.name}
-      </AvatarWrapper>
-    );
+    if (type.includes('author')) {
+      return (
+        <AvatarWrapper>
+          {item.name
+            .split(' ')
+            .map((n) => n[0])
+            .join('')
+            .toUpperCase()}
+        </AvatarWrapper>
+      );
+    }
+    return <AvatarWrapper>{item.name}</AvatarWrapper>;
   };
 
   return (
@@ -142,14 +145,16 @@ const DesktopGenericListCard = ({ item, type }) => {
 
 DesktopGenericListCard.propTypes = {
   item: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
+    id: PropTypes.string,
+    bid: PropTypes.string,
+    name: PropTypes.string,
     imagePath: PropTypes.string,
     secondaryText: PropTypes.string,
   }).isRequired,
   type: PropTypes.oneOf([
     'book',
     'userBook',
+    'search',
     'author',
     'userAuthor',
     'genre',
