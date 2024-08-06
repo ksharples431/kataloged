@@ -18,22 +18,19 @@ const StyledCard = styled(Card)(({ theme }) => ({
   },
 }));
 
-const DesktopBookDetailsCard = ({ book, type }) => {
+const BookDetailsCard = ({ book }) => {
   if (!book) {
     return <div>Book not found</div>;
   }
-
-  const bookName = book.name || book.title;
-  const bookAuthor = book.secondaryText || book.author;
 
   return (
     <StyledCard>
       <CardMedia
         sx={{ width: '200px', height: '300px', overflow: 'hidden' }}
-        alt={bookName}>
+        alt={book.title}>
         <img
           src={book.imagePath || '/placeholder-book.jpg'}
-          alt={bookName}
+          alt={book.title}
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />
       </CardMedia>
@@ -44,13 +41,13 @@ const DesktopBookDetailsCard = ({ book, type }) => {
             color="main.darkSlateBlue"
             component="div"
             gutterBottom>
-            {bookName}
+            {book.title}
           </Typography>
           <Typography
             variant="subtitle1"
             color="text.secondary"
             gutterBottom>
-            By {bookAuthor}
+            By {book.author}
           </Typography>
           {book.genre && (
             <Chip
@@ -82,36 +79,24 @@ const DesktopBookDetailsCard = ({ book, type }) => {
               ISBN: {book.isbn}
             </Typography>
           )}
-          {type === 'userBook' && book.owned && (
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{ marginTop: 2 }}>
-              Owned: {book.owned}
-            </Typography>
-          )}
         </CardContent>
       </Box>
     </StyledCard>
   );
 };
 
-DesktopBookDetailsCard.propTypes = {
+BookDetailsCard.propTypes = {
   book: PropTypes.shape({
-    id: PropTypes.string,
-    title: PropTypes.string,
-    author: PropTypes.string,
-    name: PropTypes.string,
-    secondaryText: PropTypes.string,
+    bid: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
     imagePath: PropTypes.string,
     genre: PropTypes.string,
     description: PropTypes.string,
-    owned: PropTypes.string,
     isbn: PropTypes.string,
     seriesName: PropTypes.string,
     seriesNumber: PropTypes.string,
   }).isRequired,
-  type: PropTypes.oneOf(['book', 'userBook', 'user', 'search']).isRequired,
 };
 
-export default DesktopBookDetailsCard;
+export default BookDetailsCard;

@@ -1,65 +1,101 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import ButtonSuite from '../UI/ButtonSuite';
+import { useNavigate } from 'react-router-dom';
 import {
-  useUpdateUserBookMutation,
-  useDeleteUserBookMutation,
-} from '../../store/api/apiSlice';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import {
-  Snackbar,
-  Alert,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   Button,
   TextField,
+  useTheme,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import {
+  Delete as DeleteIcon,
+  ArrowBack as ArrowBackIcon,
+  Edit as EditIcon,
+} from '@mui/icons-material';
 
-const UserBookActions = ({ ubid, userBook, onUserBookDeleted }) => {
+import ButtonSuite from '../UI/ButtonSuite';
+import {
+  useUpdateUserBookMutation,
+  useDeleteUserBookMutation,
+} from '../../store/api/apiSlice';
+
+const UserBookActions = ({
+  ubid,
+  userBook,
+  onUserBookAction,
+  onDeleteStart,
+  onUpdateStart,
+}) => {
+  const theme = useTheme();
   const navigate = useNavigate();
+
+  const [updatedUserBookData, setUpdatedUserBookData] = useState(userBook);
+  const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
+
   const [updateUserBook, { isLoading: isUpdatingUserBook }] =
     useUpdateUserBookMutation();
   const [deleteUserBook, { isLoading: isDeletingUserBook }] =
     useDeleteUserBookMutation();
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
-  const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
-  const [updatedUserBookData, setUpdatedUserBookData] = useState(userBook);
 
-  const handleUpdateUserBook = async () => {
-    try {
-      await updateUserBook({ ubid, ...updatedUserBookData }).unwrap();
-      setSuccess('User book updated successfully!');
-      setIsUpdateDialogOpen(false);
-    } catch (err) {
-      console.error('Failed to update user book:', err);
-      setError(err.data?.message || 'Failed to update user book');
-    }
+  const handleDialogClose = () => {
+    setIsUpdateDialogOpen(false);
+  };
+
+  const handleInputChange = (field) => (event) => {
+    setUpdatedUserBookData({
+      ...updatedUserBookData,
+      [field]: event.target.value,
+    });
+  };
+
+  const handleUpdateClick = () => {
+    setIsUpdateDialogOpen(true);
   };
 
   const handleDeleteUserBook = async () => {
     try {
-      let result = await deleteUserBook(ubid);
-      const unwrappedResult = result.unwrap
-        ? await result.unwrap()
-        : result;
-      setSuccess('User book deleted successfully!');
-      onUserBookDeleted();
+      onDeleteStart();
+      await deleteUserBook(ubid).unwrap();
+      onUserBookAction(
+        true,
+        'User book removed from library successfully!',
+        'delete'
+      );
     } catch (err) {
-      console.error('Failed to delete user book:', err);
-      setError(err.data?.message || 'Failed to delete user book');
+      onUserBookAction(
+        false,
+        err.data?.message || 'Failed to remove user book',
+        'delete'
+      );
+    }
+  };
+
+  const handleUpdateUserBook = async () => {
+    try {
+      onUpdateStart();
+      const result = await updateUserBook({
+        ubid,
+        ...updatedUserBookData,
+      }).unwrap();
+      onUserBookAction(true, 'User book updated successfully!', 'update');
+      setIsUpdateDialogOpen(false);
+      setUpdatedUserBookData(result);
+    } catch (err) {
+      onUserBookAction(
+        false,
+        err.data?.message || 'Failed to update user book',
+        'update'
+      );
     }
   };
 
   const buttons = [
     {
       label: 'Update user book',
-      onClick: () => setIsUpdateDialogOpen(true),
+      onClick: handleUpdateClick,
       icon: <EditIcon />,
       color: 'primary',
       disabled: isUpdatingUserBook,
@@ -73,7 +109,7 @@ const UserBookActions = ({ ubid, userBook, onUserBookDeleted }) => {
     },
     {
       label: 'Back to my library',
-      onClick: () => navigate('/userBooks'),
+      onClick: () => navigate('/my-books'),
       icon: <ArrowBackIcon />,
       color: 'primary',
     },
@@ -82,32 +118,10 @@ const UserBookActions = ({ ubid, userBook, onUserBookDeleted }) => {
   return (
     <>
       <ButtonSuite buttons={buttons} />
-      <Snackbar
-        open={error !== null}
-        autoHideDuration={6000}
-        onClose={() => setError(null)}>
-        <Alert
-          onClose={() => setError(null)}
-          severity="error"
-          sx={{ width: '100%' }}>
-          {error}
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        open={success !== false}
-        autoHideDuration={6000}
-        onClose={() => setSuccess(false)}>
-        <Alert
-          onClose={() => setSuccess(false)}
-          severity="success"
-          sx={{ width: '100%' }}>
-          {success}
-        </Alert>
-      </Snackbar>
-      <Dialog
-        open={isUpdateDialogOpen}
-        onClose={() => setIsUpdateDialogOpen(false)}>
-        <DialogTitle>Update User Book</DialogTitle>
+      <Dialog open={isUpdateDialogOpen} onClose={handleDialogClose}>
+        <DialogTitle sx={{ color: theme.palette.main.slateBlue }}>
+          Update User Book
+        </DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -116,12 +130,8 @@ const UserBookActions = ({ ubid, userBook, onUserBookDeleted }) => {
             fullWidth
             variant="standard"
             value={updatedUserBookData.title}
-            onChange={(e) =>
-              setUpdatedUserBookData({
-                ...updatedUserBookData,
-                title: e.target.value,
-              })
-            }
+            onChange={handleInputChange('title')}
+            InputProps={{ style: { color: theme.palette.main.slateBlue } }}
           />
           <TextField
             margin="dense"
@@ -129,19 +139,13 @@ const UserBookActions = ({ ubid, userBook, onUserBookDeleted }) => {
             fullWidth
             variant="standard"
             value={updatedUserBookData.author}
-            onChange={(e) =>
-              setUpdatedUserBookData({
-                ...updatedUserBookData,
-                author: e.target.value,
-              })
-            }
+            onChange={handleInputChange('author')}
+            InputProps={{ style: { color: theme.palette.main.slateBlue } }}
           />
           {/* Add more fields specific to user books as needed */}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setIsUpdateDialogOpen(false)}>
-            Cancel
-          </Button>
+          <Button onClick={handleDialogClose}>Cancel</Button>
           <Button onClick={handleUpdateUserBook}>Update</Button>
         </DialogActions>
       </Dialog>
@@ -152,9 +156,12 @@ const UserBookActions = ({ ubid, userBook, onUserBookDeleted }) => {
 UserBookActions.propTypes = {
   ubid: PropTypes.string.isRequired,
   userBook: PropTypes.shape({
-    ubid: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
   }).isRequired,
-  onUserBookDeleted: PropTypes.func.isRequired,
+  onUserBookAction: PropTypes.func.isRequired,
+  onDeleteStart: PropTypes.func.isRequired,
+  onUpdateStart: PropTypes.func.isRequired,
 };
 
 export default UserBookActions;

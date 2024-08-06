@@ -40,13 +40,14 @@ const SaveBookFromApiAction = ({ bookId }) => {
     }
 
     try {
-      await addBook(book).unwrap();
+      const addBookResult = await addBook(book).unwrap();
       console.log('Book added to database:', book.bid);
       const userBook = await addUserBook({
-        bid: book.bid,
+        bid: addBookResult.data.book.bid,
         uid,
+        kataloged: false,
       }).unwrap();
-      console.log('Book added to user library:', userBook.ubid);
+      console.log('Book added to user library:', userBook.bid);
       setSuccess(true);
     } catch (err) {
       console.error('Failed to add book:', err);

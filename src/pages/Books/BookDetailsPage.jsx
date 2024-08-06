@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useParams, useLocation } from 'react-router-dom';
 import {
   Box,
   Snackbar,
@@ -9,70 +9,34 @@ import {
 } from '@mui/material';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
-import BookDetailsCard from '../../components/BookDetails/BookDetailsCard';
+import BookDetailsCard from './components/BookDetailsCard';
 import BookActions from '../../components/Actions/BookActions';
-import { useGetBookByIdQuery } from '../../store/api/apiSlice';
+import { useBookDetails } from '../../hooks/useBookDetails';
+import { useBookActions } from '../../hooks/useBookActions';
+import { useSnackbar } from '../../hooks/useSnackbar';
 
 const BookDetailsPage = () => {
   const { bid } = useParams();
-  const navigate = useNavigate();
   const location = useLocation();
-
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success',
-  });
-
-  const { data, isLoading, isError, error, refetch } = useGetBookByIdQuery(
-    bid,
-    {
-      skip: !bid,
-    }
-  );
-
-  useEffect(() => {
-    refetch();
-  }, [refetch, bid]);
+  const { book, isLoading, isError, error } = useBookDetails(bid);
+  const {
+    isDeleting,
+    isUpdating,
+    handleDeleteStart,
+    handleUpdateStart,
+    handleBookAction,
+  } = useBookActions();
+  const { snackbar, showSnackbar, handleSnackbarClose } = useSnackbar();
 
   useEffect(() => {
     if (location.state?.snackbar) {
-      setSnackbar(location.state.snackbar);
+      showSnackbar(
+        location.state.snackbar.message,
+        location.state.snackbar.severity
+      );
       window.history.replaceState({}, document.title);
     }
-  }, [location]);
-
-  const handleDeleteStart = () => setIsDeleting(true);
-  const handleUpdateStart = () => setIsUpdating(true);
-
-  const handleBookAction = (success, message, action) => {
-    if (success && action === 'delete') {
-      navigate('/books', {
-        state: {
-          snackbar: {
-            open: true,
-            message,
-            severity: 'success',
-          },
-        },
-      });
-    } else {
-      setSnackbar({
-        open: true,
-        message,
-        severity: success ? 'success' : 'error',
-      });
-    }
-    setIsDeleting(false);
-    setIsUpdating(false);
-  };
-
-  const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') return;
-    setSnackbar((prev) => ({ ...prev, open: false }));
-  };
+  }, [location, showSnackbar]);
 
   if (isLoading) return <LoadingSpinner />;
 
@@ -83,10 +47,6 @@ const BookDetailsPage = () => {
       />
     );
   }
-
-  const transformedData = data?.transformed;
-  const book = transformedData?.items?.[0];
-  const originalBook = data?.original;
 
   return (
     <Box
@@ -101,10 +61,10 @@ const BookDetailsPage = () => {
       }}>
       {book && !isDeleting && !isUpdating ? (
         <>
-          <BookDetailsCard book={book} type={transformedData.type} />
+          <BookDetailsCard book={book} />
           <BookActions
-            bid={book.id}
-            book={originalBook}
+            bid={book.bid}
+            book={book}
             onBookAction={handleBookAction}
             onDeleteStart={handleDeleteStart}
             onUpdateStart={handleUpdateStart}

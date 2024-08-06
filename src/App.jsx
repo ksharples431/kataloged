@@ -14,7 +14,7 @@ import AuthorsPage from './pages/Authors/AuthorsPage.jsx';
 import AuthorBooksPage from './pages/Authors/AuthorBooksPage.jsx';
 import GenresPage from './pages/Genres/GenresPage.jsx';
 import GenreBooksPage from './pages/Genres/GenreBooksPage.jsx';
-import UserBooksPage from './pages/Books/UserBooksPage.jsx';
+import UserBooksPage from './pages/UserBooksPage/UserBooksPage.jsx';
 import UserBookDetailsPage from './componentsReplaced/UserBookDetailsPage.jsx';
 import UserAuthorsPage from './componentsReplaced/UserAuthorsPage.jsx';
 import UserAuthorBooksPage from './componentsReplaced/UserAuthorBooksPage.jsx';

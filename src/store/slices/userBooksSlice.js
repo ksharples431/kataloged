@@ -3,8 +3,8 @@ import {
   fetchUserBooks,
   fetchUserBookById,
   addUserBook,
-  // updateUserBook,
-  // deleteUserBook,
+  updateUserBook,
+  deleteUserBook,
 } from './userBooksSlice';
 
 const initialState = {
@@ -55,31 +55,31 @@ const userBooksSlice = createSlice({
       .addCase(addUserBook.fulfilled, (state, action) => {
         state.userBooks.push(action.payload);
       })
-      // .addCase(updateUserBook.fulfilled, (state, action) => {
-      //   const index = state.userBooks.findIndex(
-      //     (book) => book.id === action.payload.id
-      //   );
-      //   if (index !== -1) {
-      //     state.userBooks[index] = action.payload;
-      //   }
-      //   if (
-      //     state.selectedUserBook &&
-      //     state.selectedUserBook.id === action.payload.id
-      //   ) {
-      //     state.selectedUserBook = action.payload;
-      //   }
-      // })
-      // .addCase(deleteUserBook.fulfilled, (state, action) => {
-      //   state.userBooks = state.userBooks.filter(
-      //     (book) => book.id !== action.payload
-      //   );
-      //   if (
-      //     state.selectedUserBook &&
-      //     state.selectedUserBook.id === action.payload
-      //   ) {
-      //     state.selectedUserBook = null;
-      //   }
-      // });
+      .addCase(updateUserBook.fulfilled, (state, action) => {
+        const index = state.userBooks.findIndex(
+          (book) => book.id === action.payload.id
+        );
+        if (index !== -1) {
+          state.userBooks[index] = action.payload;
+        }
+        if (
+          state.selectedUserBook &&
+          state.selectedUserBook.id === action.payload.id
+        ) {
+          state.selectedUserBook = action.payload;
+        }
+      })
+      .addCase(deleteUserBook.fulfilled, (state, action) => {
+        state.userBooks = state.userBooks.filter(
+          (book) => book.id !== action.payload
+        );
+        if (
+          state.selectedUserBook &&
+          state.selectedUserBook.id === action.payload
+        ) {
+          state.selectedUserBook = null;
+        }
+      });
   },
 });
 

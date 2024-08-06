@@ -1,21 +1,27 @@
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Snackbar, Alert, Box, Typography } from '@mui/material';
+import { Snackbar, Alert, Box } from '@mui/material';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
-import BookList from './components/BookList';
-import { useBooks } from '../../hooks/useBooks';
+import GenericList from '../../components/GenericList/GenericList';
+import { useGetUserBooksQuery } from '../../store/api/apiSlice';
 
-const BooksPage = () => {
+const UserBooksPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { books, isLoading, isError, error } = useBooks();
+  const uid = useSelector((state) => state.auth.user?.uid);
 
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
     severity: 'success',
   });
+
+  const { data, isLoading, isError } = useGetUserBooksQuery(
+    { uid },
+    { refetchOnMountOrArgChange: true, skip: !uid }
+  );
 
   useEffect(() => {
     if (location.state?.snackbar) {
@@ -31,22 +37,11 @@ const BooksPage = () => {
 
   if (isLoading) return <LoadingSpinner />;
   if (isError)
-    return (
-      <ErrorMessage
-        message={error?.data?.message || 'Failed to fetch books'}
-      />
-    );
+    return <ErrorMessage message="Failed to fetch user's books" />;
 
   return (
     <Box>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Public Library
-      </Typography>
-      {books.length > 0 ? (
-        <BookList books={books} />
-      ) : (
-        <Typography>No books available.</Typography>
-      )}
+      <GenericList items={data.items} type={data.type} title="My Books" />
       <Snackbar
         open={snackbar.open}
         autoHideDuration={3000}
@@ -63,4 +58,4 @@ const BooksPage = () => {
   );
 };
 
-export default BooksPage;
+export default UserBooksPage;
