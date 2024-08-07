@@ -1,33 +1,27 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Snackbar, Alert, Box, Typography } from '@mui/material';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
-import BookList from './components/BookList';
-import { useBooks } from '../../hooks/useBooks';
+import BookList from './bookComponents/BookList';
+import { useBooks } from './bookHooks/useBooks';
+import { useSnackbar } from '../../hooks/useSnackbar';
 
 const BooksPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { books, isLoading, isError, error } = useBooks();
-
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success',
-  });
+  const { snackbar, showSnackbar, handleSnackbarClose } = useSnackbar();
 
   useEffect(() => {
     if (location.state?.snackbar) {
-      setSnackbar(location.state.snackbar);
+      showSnackbar(
+        location.state.snackbar.message,
+        location.state.snackbar.severity
+      );
       navigate(location.pathname, { replace: true });
     }
-  }, [location, navigate]);
-
-  const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') return;
-    setSnackbar((prev) => ({ ...prev, open: false }));
-  };
+  }, [location, navigate, showSnackbar]);
 
   if (isLoading) return <LoadingSpinner />;
   if (isError)

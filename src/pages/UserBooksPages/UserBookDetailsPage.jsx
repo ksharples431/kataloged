@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useParams, useLocation } from 'react-router-dom';
 import {
   Box,
   Snackbar,
@@ -9,68 +9,34 @@ import {
 } from '@mui/material';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
-import BookDetailsCard from '../../components/BookDetails/BookDetailsCard';
-import UserBookActions from '../../components/Actions/UserBookActions';
-import { useGetUserBookByIdQuery } from '../../store/api/apiSlice';
+import UserBookDetailsCard from './userBookComponents/UserBookDetailsCard';
+import UserBookActions from './userBookActions/UserBookActions';
+import { useUserBookDetails } from './userBookHooks/useUserBookDetails';
+import { useUserBookActions } from './userBookHooks/useUserBookActions';
+import { useSnackbar } from '../../hooks/useSnackbar';
 
 const UserBookDetailsPage = () => {
   const { ubid } = useParams();
-  const navigate = useNavigate();
   const location = useLocation();
-
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success',
-  });
-
-  const { data, isLoading, isError, error, refetch } =
-    useGetUserBookByIdQuery(ubid, {
-      skip: !ubid,
-    });
-
-  useEffect(() => {
-    refetch();
-  }, [refetch, ubid]);
+  const { userBook, isLoading, isError, error } = useUserBookDetails(ubid);
+  const {
+    isDeleting,
+    isUpdating,
+    handleDeleteStart,
+    handleUpdateStart,
+    handleUserBookAction,
+  } = useUserBookActions();
+  const { snackbar, showSnackbar, handleSnackbarClose } = useSnackbar();
 
   useEffect(() => {
     if (location.state?.snackbar) {
-      setSnackbar(location.state.snackbar);
+      showSnackbar(
+        location.state.snackbar.message,
+        location.state.snackbar.severity
+      );
       window.history.replaceState({}, document.title);
     }
-  }, [location]);
-
-  const handleDeleteStart = () => setIsDeleting(true);
-  const handleUpdateStart = () => setIsUpdating(true);
-
-  const handleUserBookAction = (success, message, action) => {
-    if (success && action === 'delete') {
-      navigate('/my-books', {
-        state: {
-          snackbar: {
-            open: true,
-            message,
-            severity: 'success',
-          },
-        },
-      });
-    } else {
-      setSnackbar({
-        open: true,
-        message,
-        severity: success ? 'success' : 'error',
-      });
-    }
-    setIsDeleting(false);
-    setIsUpdating(false);
-  };
-
-  const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') return;
-    setSnackbar((prev) => ({ ...prev, open: false }));
-  };
+  }, [location, showSnackbar]);
 
   if (isLoading) return <LoadingSpinner />;
 
@@ -84,8 +50,6 @@ const UserBookDetailsPage = () => {
     );
   }
 
-  const book = data?.items?.[0];
-
   return (
     <Box
       sx={{
@@ -97,12 +61,12 @@ const UserBookDetailsPage = () => {
         margin: 'auto',
         padding: 2,
       }}>
-      {book && !isDeleting && !isUpdating ? (
+      {userBook && !isDeleting && !isUpdating ? (
         <>
-          <BookDetailsCard book={book} type="userBook" />
+          <UserBookDetailsCard userBook={userBook} />
           <UserBookActions
-            ubid={book.id}
-            userBook={book}
+            ubid={userBook.ubid}
+            userBook={userBook}
             onUserBookAction={handleUserBookAction}
             onDeleteStart={handleDeleteStart}
             onUpdateStart={handleUpdateStart}

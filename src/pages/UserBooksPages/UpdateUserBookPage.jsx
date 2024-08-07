@@ -9,17 +9,22 @@ import {
   CircularProgress,
 } from '@mui/material';
 import {
-  useGetBookByIdQuery,
-  useUpdateBookMutation,
+  useGetUserBookByIdQuery,
+  useUpdateUserBookMutation,
 } from '../../store/api/apiSlice';
 
-const UpdateBookPage = () => {
-  const { bid } = useParams();
+const UpdateUserBookPage = () => {
+  const { ubid } = useParams();
   const navigate = useNavigate();
   const theme = useTheme();
 
-  const { data, isLoading, isError } = useGetBookByIdQuery(bid);
-  const [updateBook, { isLoading: isUpdating }] = useUpdateBookMutation();
+  const {
+    data: userBook,
+    isLoading,
+    isError,
+  } = useGetUserBookByIdQuery(ubid);
+  const [updateUserBook, { isLoading: isUpdating }] =
+    useUpdateUserBookMutation();
 
   const [formData, setFormData] = useState({
     title: '',
@@ -31,12 +36,12 @@ const UpdateBookPage = () => {
   });
 
   useEffect(() => {
-    if (data && data.original) {
+    if (userBook) {
       const { title, author, genre, imagePath, description, isbn } =
-        data.original;
+        userBook;
       setFormData({ title, author, genre, imagePath, description, isbn });
     }
-  }, [data]);
+  }, [userBook]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,25 +51,25 @@ const UpdateBookPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await updateBook({ bid, ...formData }).unwrap();
-      navigate(`/books/${bid}`, {
+      await updateUserBook({ ubid, ...formData }).unwrap();
+      navigate(`/userBooks/${ubid}`, {
         state: {
           snackbar: {
             open: true,
-            message: 'Book updated successfully!',
+            message: 'User book updated successfully!',
             severity: 'success',
           },
         },
       });
     } catch (err) {
-      console.error('Failed to update book:', err);
+      console.error('Failed to update user book:', err);
     }
   };
-
-  // todo: decide on spinner/error messages
   if (isLoading) return <CircularProgress />;
   if (isError)
-    return <Typography color="error">Error loading book data</Typography>;
+    return (
+      <Typography color="error">Error loading user book data</Typography>
+    );
 
   const textFieldStyle = {
     '& .MuiOutlinedInput-root': {
@@ -97,7 +102,7 @@ const UpdateBookPage = () => {
       <Typography
         variant="h4"
         sx={{ mb: 3, color: theme.palette.main.lightSlateBlue }}>
-        Update {formData.title || 'Book'}
+        Update {formData.title || 'User Book'}
       </Typography>
       {Object.entries(formData).map(([field, value]) => (
         <TextField
@@ -123,10 +128,10 @@ const UpdateBookPage = () => {
               bgcolor: theme.palette.main.darkSlateBlue,
             },
           }}>
-          Update Book
+          Update User Book
         </Button>
         <Button
-          onClick={() => navigate(`/books/${bid}`)}
+          onClick={() => navigate(`/userBooks/${ubid}`)}
           sx={{
             ml: 2,
             color: theme.palette.main.lightSlateBlue,
@@ -141,4 +146,4 @@ const UpdateBookPage = () => {
   );
 };
 
-export default UpdateBookPage;
+export default UpdateUserBookPage;

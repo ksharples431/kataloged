@@ -8,22 +8,24 @@ import ResponsiveLogin from './components/Auth/ResponsiveLogin.jsx';
 import ResponsiveSignup from './components/Auth/ResponsiveSignup.jsx';
 
 import HomePage from './pages/Home/HomePage.jsx';
-import BooksPage from './pages/Books/BooksPage.jsx';
-import BookDetailsPage from './pages/Books/BookDetailsPage.jsx';
+import AboutPage from './pages/About/AboutPage.jsx';
+import BooksPage from './pages/BooksPages/BooksPage.jsx';
+import BookDetailsPage from './pages/BooksPages/BookDetailsPage.jsx';
+import UpdateBookPage from './pages/BooksPages/UpdateBookPage.jsx';
+import UserBooksPage from './pages/UserBooksPages/UserBooksPage.jsx';
+import UserBookDetailsPage from './pages/UserBooksPages/UserBookDetailsPage.jsx';
+import UpdateUserBookPage from './pages/UserBooksPages/UpdateUserBookPage.jsx';
+
 import AuthorsPage from './pages/Authors/AuthorsPage.jsx';
 import AuthorBooksPage from './pages/Authors/AuthorBooksPage.jsx';
 import GenresPage from './pages/Genres/GenresPage.jsx';
 import GenreBooksPage from './pages/Genres/GenreBooksPage.jsx';
-import UserBooksPage from './pages/UserBooksPage/UserBooksPage.jsx';
-import UserBookDetailsPage from './componentsReplaced/UserBookDetailsPage.jsx';
 import UserAuthorsPage from './componentsReplaced/UserAuthorsPage.jsx';
 import UserAuthorBooksPage from './componentsReplaced/UserAuthorBooksPage.jsx';
 import UserGenresPage from './componentsReplaced/UserGenresPage.jsx';
 import UserGenreBooksPage from './componentsReplaced/UserGenreBooksPage.jsx';
 import SearchResultsPage from './pages/Search/SearchResultsPage.jsx';
 import SearchDetailsPage from './pages/Search/SearchDetailsPage.jsx';
-import AboutPage from './pages/About/AboutPage.jsx';
-import UpdateBookPage from './pages/Updates/UpdateBookPage';
 
 import auth from './config/firebaseConfig.jsx';
 import { setUser, clearUser } from './store/slices/authSlice.js';
@@ -75,6 +77,10 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/books/:bid/edit" element={<UpdateBookPage />} />
+          <Route
+            path="/userBooks/:ubid/edit"
+            element={<UpdateUserBookPage />}
+          />
           <Route path="/auth/login" element={<ResponsiveLogin />} />
           <Route path="/auth/signup" element={<ResponsiveSignup />} />
           <Route path="/books" element={<BooksPage />} />

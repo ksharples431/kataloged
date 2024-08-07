@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useEffect, useCallback } from 'react';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import {
   Box,
   Snackbar,
@@ -9,22 +9,23 @@ import {
 } from '@mui/material';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
-import BookDetailsCard from './components/BookDetailsCard';
-import BookActions from '../../components/Actions/BookActions';
-import { useBookDetails } from '../../hooks/useBookDetails';
-import { useBookActions } from '../../hooks/useBookActions';
+import BookDetailsCard from './bookComponents/BookDetailsCard';
+import BookActions from './bookActions/BookActions';
+import { useBookDetails } from './bookHooks/useBookDetails';
+import { useBookActions } from './bookHooks/useBookActions';
 import { useSnackbar } from '../../hooks/useSnackbar';
 
 const BookDetailsPage = () => {
   const { bid } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const { book, isLoading, isError, error } = useBookDetails(bid);
   const {
     isDeleting,
     isUpdating,
     handleDeleteStart,
     handleUpdateStart,
-    handleBookAction,
+    deleteBook,
   } = useBookActions();
   const { snackbar, showSnackbar, handleSnackbarClose } = useSnackbar();
 
@@ -34,9 +35,36 @@ const BookDetailsPage = () => {
         location.state.snackbar.message,
         location.state.snackbar.severity
       );
-      window.history.replaceState({}, document.title);
+      navigate(location.pathname, { replace: true, state: {} });
     }
-  }, [location, showSnackbar]);
+  }, [location, showSnackbar, navigate]);
+
+  const handleBookAction = useCallback(
+    async (success, message, action) => {
+      if (action === 'delete') {
+        handleDeleteStart();
+        try {
+          await deleteBook(bid).unwrap();
+          navigate('/books', {
+            state: {
+              snackbar: {
+                message: 'Book deleted successfully!',
+                severity: 'success',
+              },
+            },
+          });
+        } catch (err) {
+          showSnackbar(
+            err.data?.message || 'Failed to delete book',
+            'error'
+          );
+        }
+      } else {
+        showSnackbar(message, success ? 'success' : 'error');
+      }
+    },
+    [bid, deleteBook, handleDeleteStart, navigate, showSnackbar]
+  );
 
   if (isLoading) return <LoadingSpinner />;
 
@@ -64,7 +92,6 @@ const BookDetailsPage = () => {
           <BookDetailsCard book={book} />
           <BookActions
             bid={book.bid}
-            book={book}
             onBookAction={handleBookAction}
             onDeleteStart={handleDeleteStart}
             onUpdateStart={handleUpdateStart}
