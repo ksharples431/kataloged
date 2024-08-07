@@ -1,39 +1,20 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSnackbar } from '../../../hooks/useSnackbar';
+import { useDeleteUserBookMutation } from '../../../store/api/apiSlice';
 
 export const useUserBookActions = () => {
-  const navigate = useNavigate();
   const [isDeleting, setIsDeleting] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-  const { showSnackbar } = useSnackbar();
+  const [deleteUserBook] = useDeleteUserBookMutation();
 
   const handleDeleteStart = () => setIsDeleting(true);
   const handleUpdateStart = () => setIsUpdating(true);
-
-  const handleUserBookAction = (success, message, action) => {
-    if (success && action === 'delete') {
-      navigate('/userBooks', {
-        state: {
-          snackbar: {
-            open: true,
-            message,
-            severity: 'success',
-          },
-        },
-      });
-    } else {
-      showSnackbar(message, success ? 'success' : 'error');
-    }
-    setIsDeleting(false);
-    setIsUpdating(false);
-  };
 
   return {
     isDeleting,
     isUpdating,
     handleDeleteStart,
     handleUpdateStart,
-    handleUserBookAction,
+    deleteUserBook,
   };
 };
+

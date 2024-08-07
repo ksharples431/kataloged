@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Snackbar, Alert, Box, Typography } from '@mui/material';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
-import BookList from './userBookComponents/UserBookList';
+import UserBookList from './userBookComponents/UserBookList';
 import { useUserBooks } from './userBookHooks/useUserBooks';
 import { useSnackbar } from '../../hooks/useSnackbar';
 
@@ -37,7 +37,7 @@ const UserBooksPage = () => {
         My Books
       </Typography>
       {userBooks.length > 0 ? (
-        <BookList userBooks={userBooks} />
+        <UserBookList userBooks={userBooks} />
       ) : (
         <Typography>You haven&apos;t added any books yet.</Typography>
       )}

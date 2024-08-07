@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useEffect, useCallback } from 'react';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import {
   Box,
   Snackbar,
@@ -18,13 +18,14 @@ import { useSnackbar } from '../../hooks/useSnackbar';
 const UserBookDetailsPage = () => {
   const { ubid } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const { userBook, isLoading, isError, error } = useUserBookDetails(ubid);
   const {
     isDeleting,
     isUpdating,
     handleDeleteStart,
     handleUpdateStart,
-    handleUserBookAction,
+    deleteUserBook
   } = useUserBookActions();
   const { snackbar, showSnackbar, handleSnackbarClose } = useSnackbar();
 
@@ -34,9 +35,36 @@ const UserBookDetailsPage = () => {
         location.state.snackbar.message,
         location.state.snackbar.severity
       );
-      window.history.replaceState({}, document.title);
+      navigate(location.pathname, { replace: true, state: {} });
     }
-  }, [location, showSnackbar]);
+  }, [location, showSnackbar, navigate]);
+
+  const handleUserBookAction = useCallback(
+    async (success, message, action) => {
+      if (action === 'delete') {
+        handleDeleteStart();
+        try {
+          await deleteUserBook(ubid).unwrap();
+          navigate('/user-books', {
+            state: {
+              snackbar: {
+                message: 'User book deleted successfully!',
+                severity: 'success',
+              },
+            },
+          });
+        } catch (err) {
+          showSnackbar(
+            err.data?.message || 'Failed to delete user book',
+            'error'
+          );
+        }
+      } else {
+        showSnackbar(message, success ? 'success' : 'error');
+      }
+    },
+    [ubid, deleteUserBook, handleDeleteStart, navigate, showSnackbar]
+  );
 
   if (isLoading) return <LoadingSpinner />;
 
@@ -66,7 +94,6 @@ const UserBookDetailsPage = () => {
           <UserBookDetailsCard userBook={userBook} />
           <UserBookActions
             ubid={userBook.ubid}
-            userBook={userBook}
             onUserBookAction={handleUserBookAction}
             onDeleteStart={handleDeleteStart}
             onUpdateStart={handleUpdateStart}
