@@ -23,14 +23,14 @@ const searchSlice = createSlice({
       state.error = action.payload;
       state.isSearching = false;
     },
-    clearSearchResults: (state) => {
+    setLastSearchParams: (state, action) => {
+      state.lastSearchParams = action.payload;
+    },
+    clearSearch: (state) => {
       state.searchResults = [];
       state.isSearching = false;
       state.error = null;
       state.lastSearchParams = null;
-    },
-    setLastSearchParams: (state, action) => {
-      state.lastSearchParams = action.payload;
     },
   },
 });
@@ -39,8 +39,8 @@ export const {
   setSearchResults,
   setIsSearching,
   setSearchError,
-  clearSearchResults,
   setLastSearchParams,
+  clearSearch,
 } = searchSlice.actions;
 
 export default searchSlice.reducer;

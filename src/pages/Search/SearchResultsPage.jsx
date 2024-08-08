@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 import BookSearchForm from './searchComponents/BookSearchForm';
 import SearchList from './searchComponents/SearchList';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
@@ -11,62 +11,61 @@ import {
   setIsSearching,
   setSearchError,
   setLastSearchParams,
+  clearSearch,
 } from '../../store/slices/searchSlice';
 
 const SearchResultsPage = () => {
   const dispatch = useDispatch();
-  const { searchResults, lastSearchParams } = useSelector(
-    (state) => state.search
-  );
-  const [searchParams, setSearchParams] = useState(lastSearchParams || '');
+  const { searchResults, lastSearchParams, isSearching, error } =
+    useSelector((state) => state.search);
 
-  const { data, isLoading, isError, error } = useSearchBooksQuery(
-    searchParams,
+  const { data, isLoading, isError } = useSearchBooksQuery(
+    lastSearchParams,
     {
-      skip: !searchParams,
+      skip: !lastSearchParams,
     }
   );
 
   useEffect(() => {
-    if (data) {
+    if (data && !isLoading) {
       dispatch(setSearchResults(data.data.books));
     }
-  }, [data, dispatch]);
-
-  const handleSearch = (newSearchParams) => {
-    if (newSearchParams !== searchParams) {
-      setSearchParams(newSearchParams);
-      dispatch(setIsSearching(true));
-      dispatch(setLastSearchParams(newSearchParams));
-    }
-  };
+  }, [data, isLoading, dispatch]);
 
   useEffect(() => {
     if (isError) {
       dispatch(
         setSearchError(
-          error.message || 'An error occurred while searching'
+          error?.message || 'An error occurred while searching'
         )
       );
     }
     dispatch(setIsSearching(false));
   }, [isError, error, dispatch]);
 
+  const handleSearch = (newSearchParams) => {
+    if (newSearchParams !== lastSearchParams) {
+      dispatch(setIsSearching(true));
+      dispatch(setLastSearchParams(newSearchParams));
+    }
+  };
+
+  const handleClearSearch = () => {
+    dispatch(clearSearch());
+  };
+
   return (
     <Box>
       <BookSearchForm onSearch={handleSearch} />
-      {isLoading && <LoadingSpinner />}
-      {isError && (
-        <ErrorMessage
-          message={
-            error?.data?.message || 'An error occurred while searching'
-          }
-        />
-      )}
-      {!isLoading && !isError && (
+      {isSearching && <LoadingSpinner />}
+      {error && <ErrorMessage message={error} />}
+      {!isSearching && !error && (
         <>
           {searchResults.length > 0 ? (
-            <SearchList books={searchResults} title="Search Results" />
+            <>
+              <SearchList books={searchResults} title="Search Results" />
+              <Button onClick={handleClearSearch}>Clear Search</Button>
+            </>
           ) : (
             <Typography>No books found. Try another search.</Typography>
           )}
