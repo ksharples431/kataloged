@@ -44,7 +44,11 @@ const BookSearchForm = ({ onSearch }) => {
     <Container maxWidth="md" sx={{ mt: 4 }}>
       <Card>
         <CardContent>
-          <Typography component="h2" variant="h4" gutterBottom>
+          <Typography
+            component="h2"
+            color="primary"
+            variant="h4"
+            gutterBottom>
             Search for a Book
           </Typography>
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
@@ -57,6 +61,9 @@ const BookSearchForm = ({ onSearch }) => {
                   fullWidth
                   value={searchCriteria.title}
                   onChange={handleInputChange}
+                  InputProps={{
+                    sx: { color: 'primary.main' },
+                  }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -67,6 +74,9 @@ const BookSearchForm = ({ onSearch }) => {
                   fullWidth
                   value={searchCriteria.author}
                   onChange={handleInputChange}
+                  InputProps={{
+                    sx: { color: 'primary.main' },
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -77,6 +87,9 @@ const BookSearchForm = ({ onSearch }) => {
                   fullWidth
                   value={searchCriteria.isbn}
                   onChange={handleInputChange}
+                  InputProps={{
+                    sx: { color: 'primary.main' },
+                  }}
                 />
               </Grid>
             </Grid>

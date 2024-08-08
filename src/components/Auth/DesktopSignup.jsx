@@ -106,6 +106,9 @@ const DesktopSignup = () => {
                 autoFocus
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                InputProps={{
+                  sx: { color: 'primary.main' },
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -119,6 +122,9 @@ const DesktopSignup = () => {
                 autoComplete="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                InputProps={{
+                  sx: { color: 'primary.main' },
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -133,6 +139,9 @@ const DesktopSignup = () => {
                 autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                InputProps={{
+                  sx: { color: 'primary.main' },
+                }}
               />
             </Grid>
           </Grid>

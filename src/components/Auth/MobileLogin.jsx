@@ -98,6 +98,9 @@ const MobileLogin = () => {
             autoFocus
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            InputProps={{
+              sx: { color: 'primary.main' },
+            }}
           />
           <TextField
             variant="outlined"
@@ -111,6 +114,9 @@ const MobileLogin = () => {
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            InputProps={{
+              sx: { color: 'primary.main' },
+            }}
           />
           <SubmitButton
             type="submit"
