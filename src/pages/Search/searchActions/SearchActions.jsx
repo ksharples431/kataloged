@@ -1,17 +1,21 @@
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
-import ButtonSuite from '../UI/ButtonSuite';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { Snackbar, Alert } from '@mui/material';
+import {
+  Favorite as FavoriteIcon,
+  ArrowBack as ArrowBackIcon,
+} from '@mui/icons-material';
+
+import ButtonSuite from '../../../components/UI/ButtonSuite';
 import {
   useAddUserBookMutation,
   useAddBookMutation,
-} from '../../store/api/apiSlice';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Snackbar, Alert } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+} from '../../../store/api/apiSlice';
 
-const SaveBookFromApiAction = ({ bookId }) => {
+
+const SearchActions = ({ bid }) => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
@@ -20,18 +24,18 @@ const SaveBookFromApiAction = ({ bookId }) => {
   const [addBook] = useAddBookMutation();
 
   const uid = useSelector((state) => state.auth.user?.uid);
-  const originalResults = useSelector(
-    (state) => state.search?.originalResults
+  const searchResults = useSelector(
+    (state) => state.search?.searchResults
   );
 
   useEffect(() => {
-    if (originalResults && bookId) {
-      const foundBook = originalResults.find(
-        (b) => b.bid === bookId || b.id === bookId
+    if (searchResults && bid) {
+      const foundBook = searchResults.find(
+        (b) => b.bid === bid || b.id === bid
       );
       setBook(foundBook || null);
     }
-  }, [originalResults, bookId]);
+  }, [searchResults, bid]);
 
   const handleAddBook = async () => {
     if (!book) {
@@ -100,8 +104,8 @@ const SaveBookFromApiAction = ({ bookId }) => {
   );
 };
 
-SaveBookFromApiAction.propTypes = {
-  bookId: PropTypes.string.isRequired,
+SearchActions.propTypes = {
+  bid: PropTypes.string.isRequired,
 };
 
-export default SaveBookFromApiAction;
+export default SearchActions;

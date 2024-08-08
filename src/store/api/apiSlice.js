@@ -43,30 +43,14 @@ export const api = createApi({
       },
     }),
 
-    // searchBooks: builder.query({
-    //   query: (searchParams) => ({
-    //     url: '/books/search',
-    //     params: searchParams,
-    //   }),
-    //   transformResponse: (response) => {
-    //     const transformedData = {
-    //       items: response.data.books.map((book) => ({
-    //         id: book.bid,
-    //         bid: book.id,
-    //         name: book.title,
-    //         imagePath: book.imagePath,
-    //         secondaryText: book.author,
-    //       })),
-    //       type: 'book',
-    //       message: response.data.message,
-    //     };
-    //     console.log('Transformed Search Books:', transformedData);
-    //     return {
-    //       transformed: transformedData,
-    //       original: response.data.books,
-    //     };
-    //   },
-    // }),
+    searchBooks: builder.query({
+      query: (searchParams) => ({
+        url: '/books/search',
+        params: searchParams
+          ? Object.fromEntries(new URLSearchParams(searchParams))
+          : undefined,
+      }),
+    }),
 
     updateBook: builder.mutation({
       query: ({ bid, ...updateData }) => {

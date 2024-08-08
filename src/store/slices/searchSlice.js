@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  transformedResults: [],
-  originalResults: [],
+  searchResults: [],
   isSearching: false,
   error: null,
+  lastSearchParams: null,
 };
 
 const searchSlice = createSlice({
@@ -12,18 +12,25 @@ const searchSlice = createSlice({
   initialState,
   reducers: {
     setSearchResults: (state, action) => {
-      state.transformedResults = action.payload.transformed;
-      state.originalResults = action.payload.original;
+      state.searchResults = action.payload;
+      state.isSearching = false;
+      state.error = null;
     },
     setIsSearching: (state, action) => {
       state.isSearching = action.payload;
     },
     setSearchError: (state, action) => {
       state.error = action.payload;
+      state.isSearching = false;
     },
     clearSearchResults: (state) => {
-      state.transformedResults = [];
-      state.originalResults = [];
+      state.searchResults = [];
+      state.isSearching = false;
+      state.error = null;
+      state.lastSearchParams = null;
+    },
+    setLastSearchParams: (state, action) => {
+      state.lastSearchParams = action.payload;
     },
   },
 });
@@ -33,6 +40,7 @@ export const {
   setIsSearching,
   setSearchError,
   clearSearchResults,
+  setLastSearchParams,
 } = searchSlice.actions;
 
 export default searchSlice.reducer;
