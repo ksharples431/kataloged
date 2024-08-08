@@ -32,10 +32,6 @@ export const api = createApi({
         url: '/books',
         params: { sortBy: params?.sortBy, order: params?.order },
       }),
-      transformResponse: (response) => {
-        console.log('Books data structure:', response);
-        return response;
-      },
       providesTags: ['Books'],
     }),
 

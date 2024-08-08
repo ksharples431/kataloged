@@ -34,12 +34,22 @@ const UserBookActions = ({
         'User book removed from library successfully!',
         'delete'
       );
+      navigate('/userBooks', {
+        state: {
+          snackbar: {
+            message: 'User book removed from library!',
+            severity: 'success',
+          },
+        },
+      });
     } catch (err) {
       onUserBookAction(
         false,
         err.data?.message || 'Failed to remove user book',
         'delete'
       );
+    } finally {
+      onDeleteStart(false);
     }
   };
 

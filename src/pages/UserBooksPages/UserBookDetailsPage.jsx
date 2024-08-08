@@ -4,7 +4,7 @@ import {
   Box,
   Snackbar,
   Alert,
-  Typography,
+  Typography,  
   CircularProgress,
 } from '@mui/material';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
@@ -58,6 +58,8 @@ const UserBookDetailsPage = () => {
             err.data?.message || 'Failed to delete user book',
             'error'
           );
+        } finally {
+          handleDeleteStart(false);
         }
       } else {
         showSnackbar(message, success ? 'success' : 'error');
@@ -66,16 +68,18 @@ const UserBookDetailsPage = () => {
     [ubid, deleteUserBook, handleDeleteStart, navigate, showSnackbar]
   );
 
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading || isDeleting) return <LoadingSpinner />;
 
   if (isError && !isDeleting && !isUpdating) {
     return (
       <ErrorMessage
-        message={
-          error?.data?.message || 'Failed to fetch user book details'
-        }
+        message={error?.data?.message || 'Failed to fetch user book details'}
       />
     );
+  }
+
+  if (!userBook && !isDeleting && !isUpdating) {
+    return <div>User book not found.</div>;
   }
 
   return (

@@ -55,6 +55,14 @@ const BookActions = ({
       onDeleteStart();
       await deleteBook(bid).unwrap();
       onBookAction(true, 'Book deleted successfully!', 'delete');
+      navigate('/books', {
+        state: {
+          snackbar: {
+            message: 'Book deleted successfully!',
+            severity: 'success',
+          },
+        },
+      });
     } catch (err) {
       onBookAction(
         false,
@@ -63,7 +71,6 @@ const BookActions = ({
       );
     }
   };
-
   const buttons = [
     {
       label: 'Add to my library',

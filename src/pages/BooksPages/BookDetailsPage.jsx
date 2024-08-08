@@ -19,7 +19,9 @@ const BookDetailsPage = () => {
   const { bid } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const { book, isLoading, isError, error } = useBookDetails(bid);
+  const { book, isLoading, isError, error } = useBookDetails(
+    bid,
+  );
   const {
     isDeleting,
     isUpdating,
@@ -45,28 +47,22 @@ const BookDetailsPage = () => {
         handleDeleteStart();
         try {
           await deleteBook(bid).unwrap();
-          navigate('/books', {
-            state: {
-              snackbar: {
-                message: 'Book deleted successfully!',
-                severity: 'success',
-              },
-            },
-          });
         } catch (err) {
           showSnackbar(
             err.data?.message || 'Failed to delete book',
             'error'
           );
+        } finally {
+          handleDeleteStart(false);
         }
       } else {
         showSnackbar(message, success ? 'success' : 'error');
       }
     },
-    [bid, deleteBook, handleDeleteStart, navigate, showSnackbar]
+    [bid, deleteBook, handleDeleteStart, showSnackbar]
   );
 
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading || isDeleting) return <LoadingSpinner />;
 
   if (isError && !isDeleting && !isUpdating) {
     return (
@@ -74,6 +70,10 @@ const BookDetailsPage = () => {
         message={error?.data?.message || 'Failed to fetch book details'}
       />
     );
+  }
+
+  if (!book && !isDeleting && !isUpdating) {
+    return <Typography variant="h6">Book not found.</Typography>;
   }
 
   return (
@@ -110,9 +110,7 @@ const BookDetailsPage = () => {
             {isDeleting ? 'Deleting' : 'Updating'} book...
           </Typography>
         </Box>
-      ) : (
-        <div>Book not found.</div>
-      )}
+      ) : null}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={3000}

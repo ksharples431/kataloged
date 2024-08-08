@@ -6,8 +6,8 @@ export const useUserBookActions = () => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [deleteUserBook] = useDeleteUserBookMutation();
 
-  const handleDeleteStart = () => setIsDeleting(true);
-  const handleUpdateStart = () => setIsUpdating(true);
+  const handleDeleteStart = (value = true) => setIsDeleting(value);
+  const handleUpdateStart = (value = true) => setIsUpdating(value);
 
   return {
     isDeleting,
