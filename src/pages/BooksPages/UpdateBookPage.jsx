@@ -114,6 +114,7 @@ const UpdateBookPage = () => {
           value={value}
           onChange={handleChange}
           margin="normal"
+          disabled={isLoading}
           sx={textFieldStyle}
         />
       ))}

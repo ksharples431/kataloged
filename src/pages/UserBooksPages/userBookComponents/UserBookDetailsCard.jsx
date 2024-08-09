@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes from 'react';
 import {
   Card,
   CardContent,
@@ -50,15 +50,57 @@ const UserBookDetailsCard = ({ userBook }) => {
             By {userBook.author}
           </Typography>
           {userBook.genre && (
-            <Chip
-              label={userBook.genre}
-              size="small"
-              sx={{
-                marginBottom: 2,
-                backgroundColor: 'main.darkSlateBlue',
-                color: 'white',
-              }}
-            />
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              gutterBottom>
+              {userBook.genre}
+            </Typography>
+          )}
+          <Box
+            sx={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 1,
+              mb: 2,
+              justifyContent: 'center',
+            }}>
+            {userBook.favorite && (
+              <Chip label="Favorite" color="primary" size="small" />
+            )}
+            {userBook.kataloged && (
+              <Chip label="Kataloged" color="primary" size="small" />
+            )}
+            {userBook.owned && (
+              <Chip label="Owned" color="primary" size="small" />
+            )}
+            {userBook.wishlist && (
+              <Chip label="Wishlist" color="primary" size="small" />
+            )}
+          </Box>
+          {userBook.format && (
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              gutterBottom>
+              Format: {userBook.format}
+            </Typography>
+          )}
+          {userBook.progress && (
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              gutterBottom>
+              Progress: {userBook.progress}
+            </Typography>
+          )}
+          {userBook.whereToGet && (
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              gutterBottom>
+              Where to Get: {userBook.whereToGet}
+            </Typography>
           )}
           {userBook.seriesName && (
             <Typography
@@ -96,6 +138,13 @@ UserBookDetailsCard.propTypes = {
     isbn: PropTypes.string,
     seriesName: PropTypes.string,
     seriesNumber: PropTypes.string,
+    favorite: PropTypes.bool,
+    kataloged: PropTypes.bool,
+    owned: PropTypes.bool,
+    wishlist: PropTypes.bool,
+    format: PropTypes.string,
+    progress: PropTypes.string,
+    whereToGet: PropTypes.string,
   }).isRequired,
 };
 
