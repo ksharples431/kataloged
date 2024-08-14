@@ -1,7 +1,11 @@
 import { useGetBooksQuery } from '../../../store/api/apiSlice';
 
-export const useBooks = () => {
-  const { data, isLoading, isError, error } = useGetBooksQuery();
+export const useBooks = ({ sortBy = 'title', order = 'asc' } = {}) => {
+  const { data, isLoading, isError, error } = useGetBooksQuery({
+    sortBy,
+    order,
+  });
+
   return {
     books: data?.data?.books || [],
     isLoading,
