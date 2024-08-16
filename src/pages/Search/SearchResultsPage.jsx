@@ -5,66 +5,133 @@ import BookSearchForm from './searchComponents/BookSearchForm';
 import SearchList from './searchComponents/SearchList';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
-import { useSearchBooksQuery } from '../../store/api/apiSlice';
 import {
-  setSearchResults,
+  useSearchBooksQuery,
+  useSearchGoogleBooksQuery,
+} from '../../store/api/apiSlice';
+import {
+  setDbSearchResults,
+  setGoogleSearchResults,
   setIsSearching,
   setSearchError,
   setLastSearchParams,
+  setSearchType,
+  setSearchCriteria,
   clearSearch,
 } from '../../store/slices/searchSlice';
 
 const SearchResultsPage = () => {
   const dispatch = useDispatch();
-  const { searchResults, lastSearchParams, isSearching, error } =
-    useSelector((state) => state.search);
-
-  const { data, isLoading, isError } = useSearchBooksQuery(
+  const {
+    dbSearchResults,
+    googleSearchResults,
     lastSearchParams,
-    {
-      skip: !lastSearchParams,
-    }
-  );
+    searchType,
+    isSearching,
+    error,
+    searchCriteria,
+  } = useSelector((state) => state.search);
+
+  const {
+    data: dbData,
+    isFetching: dbIsFetching,
+    isError: dbIsError,
+    error: dbError,
+  } = useSearchBooksQuery(lastSearchParams, {
+    skip: !lastSearchParams || searchType !== 'db',
+  });
+
+  const {
+    data: googleData,
+    isFetching: googleIsFetching,
+    isError: googleIsError,
+    error: googleError,
+  } = useSearchGoogleBooksQuery(lastSearchParams, {
+    skip: !lastSearchParams || searchType !== 'google',
+  });
 
   useEffect(() => {
-    if (data && !isLoading) {
-      dispatch(setSearchResults(data.data.books));
+    if (dbData) {
+      dispatch(setDbSearchResults(dbData.data.books));
     }
-  }, [data, isLoading, dispatch]);
+  }, [dbData, dispatch]);
 
   useEffect(() => {
-    if (isError) {
+    if (googleData) {
+      dispatch(setGoogleSearchResults(googleData.data.books));
+    }
+  }, [googleData, dispatch]);
+
+  useEffect(() => {
+    dispatch(setIsSearching(dbIsFetching || googleIsFetching));
+  }, [dbIsFetching, googleIsFetching, dispatch]);
+
+  useEffect(() => {
+    if (dbIsError) {
       dispatch(
         setSearchError(
-          error?.message || 'An error occurred while searching'
+          dbError?.data?.message ||
+            'An error occurred while searching the database'
+        )
+      );
+    } else if (googleIsError) {
+      dispatch(
+        setSearchError(
+          googleError?.data?.message ||
+            'An error occurred while searching Google Books'
         )
       );
     }
-    dispatch(setIsSearching(false));
-  }, [isError, error, dispatch]);
+  }, [dbIsError, googleIsError, dbError, googleError, dispatch]);
 
-  const handleSearch = (newSearchParams) => {
-    if (newSearchParams !== lastSearchParams) {
-      dispatch(setIsSearching(true));
-      dispatch(setLastSearchParams(newSearchParams));
-    }
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    dispatch(setSearchCriteria({ ...searchCriteria, [name]: value }));
+  };
+
+  const handleDbSearch = (newSearchParams) => {
+    dispatch(setLastSearchParams(newSearchParams));
+    dispatch(setSearchType('db'));
+  };
+
+  const handleGoogleSearch = (newSearchParams) => {
+    dispatch(setLastSearchParams(newSearchParams));
+    dispatch(setSearchType('google'));
   };
 
   const handleClearSearch = () => {
     dispatch(clearSearch());
   };
 
+  const currentSearchResults =
+    searchType === 'db' ? dbSearchResults : googleSearchResults;
+
   return (
     <Box>
-      <BookSearchForm onSearch={handleSearch} />
+      <BookSearchForm
+        searchCriteria={searchCriteria}
+        onInputChange={handleInputChange}
+        onDbSearch={handleDbSearch}
+        onGoogleSearch={handleGoogleSearch}
+      />
       {isSearching && <LoadingSpinner />}
       {error && <ErrorMessage message={error} />}
       {!isSearching && !error && (
         <>
-          {searchResults.length > 0 ? (
+          {currentSearchResults.length > 0 ? (
             <>
-              <SearchList books={searchResults} title="Search Results" />
-              <Button onClick={handleClearSearch}>Clear Search</Button>
+              <SearchList
+                books={currentSearchResults}
+                title={`Search Results (${
+                  searchType === 'db' ? 'Database' : 'Google Books'
+                })`}
+              />
+              <Button
+                onClick={handleClearSearch}
+                variant="contained"
+                color="secondary">
+                Clear Search
+              </Button>
             </>
           ) : (
             <Typography>No books found. Try another search.</Typography>

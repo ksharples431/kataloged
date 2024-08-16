@@ -1,14 +1,27 @@
 import { useSelector } from 'react-redux';
+import { useGetBookByIdQuery } from '../../../store/api/apiSlice';
 
 export const useSearchDetails = (bid) => {
-  const searchResults = useSelector((state) => state.search.searchResults);
+  const { dbSearchResults, googleSearchResults } = useSelector(
+    (state) => state.search
+  );
+  const allSearchResults = [...dbSearchResults, ...googleSearchResults];
 
-  const book = searchResults.find((b) => b.bid === bid);
+  const bookFromResults = allSearchResults.find((b) => b.bid === bid);
+
+  const {
+    data: bookFromApi,
+    isLoading,
+    isError,
+    error,
+  } = useGetBookByIdQuery(bid, {
+    skip: !!bookFromResults,
+  });
 
   return {
-    book: book || null,
-    isLoading: false,
-    isError: !book,
-    error: !book ? 'Book not found' : null,
+    book: bookFromResults || bookFromApi?.data?.book,
+    isLoading,
+    isError,
+    error: error?.data?.message || error?.error,
   };
 };

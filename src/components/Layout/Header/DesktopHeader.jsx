@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { AppBar, Toolbar, Typography } from '@mui/material';
-import HeaderActions from '../../Actions/HeaderActions.jsx'
+import HeaderActions from '../../Actions/HeaderActions.jsx';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,

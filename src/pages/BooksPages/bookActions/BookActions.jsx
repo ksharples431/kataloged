@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import {
   Favorite as FavoriteIcon,
@@ -21,6 +21,8 @@ const BookActions = ({
   onUpdateStart,
 }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { pathname } = location
   const uid = useSelector((state) => state.auth.user?.uid);
 
   const [addUserBook, { isLoading: isAddingBook }] =
@@ -71,6 +73,18 @@ const BookActions = ({
       );
     }
   };
+
+  const handleBackClick = () => {
+    const pathSegments = pathname.split('/');
+    const lastSegment = pathSegments[pathSegments.length - 2];
+
+    if (lastSegment === 'books') {
+      navigate(-1); 
+    } else {
+      navigate('/books'); 
+    }
+  };
+  
   const buttons = [
     {
       label: 'Add to my library',
@@ -94,7 +108,7 @@ const BookActions = ({
     },
     {
       label: 'Back to book list',
-      onClick: () => navigate('/books'),
+      onClick: handleBackClick,
       icon: <ArrowBackIcon />,
       color: 'primary',
     },

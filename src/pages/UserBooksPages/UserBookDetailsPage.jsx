@@ -81,7 +81,7 @@ const UserBookDetailsPage = () => {
   }
 
   if (!userBook && !isDeleting && !isUpdating) {
-    return <div>User book not found.</div>;
+    return <Typography variant="h6">User book not found.</Typography>;
   }
 
   return (
@@ -118,9 +118,7 @@ const UserBookDetailsPage = () => {
             {isDeleting ? 'Deleting' : 'Updating'} user book...
           </Typography>
         </Box>
-      ) : (
-        <div>User book not found.</div>
-      )}
+      ) : null}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={3000}

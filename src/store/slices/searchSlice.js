@@ -1,18 +1,42 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  searchResults: [],
+  dbSearchResults: [],
+  googleSearchResults: [],
+  generalSearchResults: [],
+  userSearchResults: [],
   isSearching: false,
   error: null,
   lastSearchParams: null,
+  searchType: null,
+  searchCriteria: {
+    title: '',
+    author: '',
+    isbn: '',
+  },
 };
 
 const searchSlice = createSlice({
   name: 'search',
   initialState,
   reducers: {
-    setSearchResults: (state, action) => {
-      state.searchResults = action.payload;
+    setDbSearchResults: (state, action) => {
+      state.dbSearchResults = action.payload;
+      state.isSearching = false;
+      state.error = null;
+    },
+    setGoogleSearchResults: (state, action) => {
+      state.googleSearchResults = action.payload;
+      state.isSearching = false;
+      state.error = null;
+    },
+    setGeneralSearchResults: (state, action) => {
+      state.generalSearchResults = action.payload || [];
+      state.isSearching = false;
+      state.error = null;
+    },
+    setUserSearchResults: (state, action) => {
+      state.userSearchResults = action.payload || [];
       state.isSearching = false;
       state.error = null;
     },
@@ -26,20 +50,40 @@ const searchSlice = createSlice({
     setLastSearchParams: (state, action) => {
       state.lastSearchParams = action.payload;
     },
+    setSearchType: (state, action) => {
+      state.searchType = action.payload;
+    },
+    setSearchCriteria: (state, action) => {
+      state.searchCriteria = action.payload;
+    },
     clearSearch: (state) => {
-      state.searchResults = [];
+      state.dbSearchResults = [];
+      state.googleSearchResults = [];
+      state.generalSearchResults = [];
+      state.userSearchResults = [];
       state.isSearching = false;
       state.error = null;
       state.lastSearchParams = null;
+      state.searchType = null;
+      state.searchCriteria = {
+        title: '',
+        author: '',
+        isbn: '',
+      };
     },
   },
 });
 
 export const {
-  setSearchResults,
+  setDbSearchResults,
+  setGoogleSearchResults,
+  setGeneralSearchResults,
+  setUserSearchResults,
   setIsSearching,
   setSearchError,
   setLastSearchParams,
+  setSearchType,
+  setSearchCriteria,
   clearSearch,
 } = searchSlice.actions;
 

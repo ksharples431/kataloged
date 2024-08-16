@@ -18,14 +18,6 @@ export const api = createApi({
   ],
   endpoints: (builder) => ({
     // Books
-    addBook: builder.mutation({
-      query: (bookData) => ({
-        url: '/books',
-        method: 'POST',
-        body: bookData,
-      }),
-      invalidatesTags: ['Books'],
-    }),
 
     getBooks: builder.query({
       query: (params) => ({
@@ -43,13 +35,13 @@ export const api = createApi({
       },
     }),
 
-    searchBooks: builder.query({
-      query: (searchParams) => ({
-        url: '/books/search',
-        params: searchParams
-          ? Object.fromEntries(new URLSearchParams(searchParams))
-          : undefined,
+    addBook: builder.mutation({
+      query: (bookData) => ({
+        url: '/books',
+        method: 'POST',
+        body: bookData,
       }),
+      invalidatesTags: ['Books'],
     }),
 
     updateBook: builder.mutation({
@@ -75,6 +67,46 @@ export const api = createApi({
         { type: 'Book', id: bid },
         'Books',
       ],
+    }),
+
+    searchBooks: builder.query({
+      query: (searchParams) => ({
+        url: '/books/search',
+        params: searchParams
+          ? Object.fromEntries(new URLSearchParams(searchParams))
+          : undefined,
+      }),
+    }),
+
+    searchGoogleBooks: builder.query({
+      query: (searchParams) => ({
+        url: '/books/google-search',
+        params: searchParams
+          ? Object.fromEntries(new URLSearchParams(searchParams))
+          : undefined,
+      }),
+    }),
+
+    generalSearchBooks: builder.query({
+      query: (searchParams) => ({
+        url: '/books/general-search',
+        params: { query: searchParams.query, uid: searchParams.uid },
+      }),
+      transformResponse: (response) => {
+        console.log('Raw response:', response); // Log the raw response
+
+        return {
+          allBooks: response?.data?.allBooks || [],
+          userBooks: response?.data?.userBooks || [],
+        };
+      },
+    }),
+
+    checkBookExists: builder.mutation({
+      query: (bid) => ({
+        url: `books/check/${bid}`,
+        method: 'GET',
+      }),
     }),
 
     // getAuthors: builder.query({
@@ -353,10 +385,13 @@ export const api = createApi({
 export const {
   useGetBooksQuery,
   useGetBookByIdQuery,
-  useSearchBooksQuery,
   useAddBookMutation,
   useUpdateBookMutation,
   useDeleteBookMutation,
+  useSearchBooksQuery,
+  useGeneralSearchBooksQuery,
+  useSearchGoogleBooksQuery,
+  useCheckBookExistsMutation,
   useGetAuthorsQuery,
   useGetGenresQuery,
   useGetBooksByAuthorQuery,

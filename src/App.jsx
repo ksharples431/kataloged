@@ -25,6 +25,7 @@ import UserAuthorBooksPage from './componentsReplaced/UserAuthorBooksPage.jsx';
 import UserGenresPage from './componentsReplaced/UserGenresPage.jsx';
 import UserGenreBooksPage from './componentsReplaced/UserGenreBooksPage.jsx';
 import SearchResultsPage from './pages/Search/SearchResultsPage.jsx';
+import GeneralSearchResultsPage from './pages/Search/GeneralSearchResultsPage.jsx';
 import SearchDetailsPage from './pages/Search/SearchDetailsPage.jsx';
 
 import auth from './config/firebaseConfig.jsx';
@@ -107,7 +108,8 @@ function App() {
             path="/userBooks/:ubid"
             element={<UserBookDetailsPage />}
           />
-          <Route path="/search" element={<SearchResultsPage />} />
+          <Route path="/search" element={<GeneralSearchResultsPage />} />
+          <Route path="/books/add" element={<SearchResultsPage />} />
           <Route path="/search/:bid" element={<SearchDetailsPage />} />
         </Routes>
       </ResponsiveLayoutWrapper>

@@ -12,8 +12,8 @@ import ButtonSuite from '../../../components/UI/ButtonSuite';
 import {
   useAddUserBookMutation,
   useAddBookMutation,
+  useCheckBookExistsMutation,
 } from '../../../store/api/apiSlice';
-
 
 const SearchActions = ({ bid }) => {
   const navigate = useNavigate();
@@ -22,20 +22,33 @@ const SearchActions = ({ bid }) => {
   const [book, setBook] = useState(null);
   const [addUserBook] = useAddUserBookMutation();
   const [addBook] = useAddBookMutation();
+  const [checkBookExists] = useCheckBookExistsMutation();
 
   const uid = useSelector((state) => state.auth.user?.uid);
-  const searchResults = useSelector(
-    (state) => state.search?.searchResults
-  );
+  const {
+    dbSearchResults,
+    googleSearchResults,
+    generalSearchResults,
+    userSearchResults,
+  } = useSelector((state) => state.search);
 
   useEffect(() => {
-    if (searchResults && bid) {
-      const foundBook = searchResults.find(
-        (b) => b.bid === bid || b.id === bid
-      );
+    if (bid) {
+      const foundBook =
+        dbSearchResults.find((b) => b.bid === bid) ||
+        googleSearchResults.find((b) => b.bid === bid) ||
+        generalSearchResults.find((b) => b.bid === bid) ||
+        userSearchResults.find((b) => b.bid === bid);
+
       setBook(foundBook || null);
     }
-  }, [searchResults, bid]);
+  }, [
+    dbSearchResults,
+    googleSearchResults,
+    generalSearchResults,
+    userSearchResults,
+    bid,
+  ]);
 
   const handleAddBook = async () => {
     if (!book) {
@@ -44,14 +57,25 @@ const SearchActions = ({ bid }) => {
     }
 
     try {
-      const addBookResult = await addBook(book).unwrap();
-      console.log('Book added to database:', book.bid);
+      const { data: bookInDb } = await checkBookExists(book.bid).unwrap();
+      let finalBook;
+      if (bookInDb.exists === false) {
+        const addBookResult = await addBook(book).unwrap();
+        finalBook = addBookResult.data.book;
+      } else {
+        finalBook = bookInDb.book;
+      }
+
       const userBook = await addUserBook({
-        bid: addBookResult.data.book.bid,
+        bid: finalBook.bid,
         uid,
         kataloged: false,
       }).unwrap();
-      console.log('Book added to user library:', userBook.bid);
+
+      console.log(
+        'Book added to user library:',
+        userBook.data.userBook.ubid
+      );
       setSuccess(true);
     } catch (err) {
       console.error('Failed to add book:', err);
@@ -69,7 +93,7 @@ const SearchActions = ({ bid }) => {
     },
     {
       label: 'Back to search list',
-      onClick: () => navigate('/search'),
+      onClick: () => navigate('/books/add'),
       icon: <ArrowBackIcon />,
       color: 'primary',
     },

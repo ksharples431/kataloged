@@ -12,6 +12,7 @@ const ButtonContainer = styled(Box)(({ theme }) => ({
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
+  height: '48px', // Set a consistent height for all buttons
   [theme.breakpoints.down('sm')]: {
     fontSize: '0.8rem',
     padding: theme.spacing(1),

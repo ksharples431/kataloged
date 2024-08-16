@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
 import {
   Container,
   Box,
@@ -11,33 +10,20 @@ import {
   Grid,
 } from '@mui/material';
 
-const BookSearchForm = ({ onSearch }) => {
-  const [searchCriteria, setSearchCriteria] = useState({
-    title: '',
-    author: '',
-    isbn: '',
-  });
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setSearchCriteria((prev) => ({ ...prev, [name]: value }));
+const BookSearchForm = ({
+  searchCriteria,
+  onInputChange,
+  onDbSearch,
+  onGoogleSearch,
+}) => {
+  const handleDbSearch = (event) => {
+    event.preventDefault();
+    onDbSearch(searchCriteria);
   };
 
-  const handleSubmit = (event) => {
+  const handleGoogleSearch = (event) => {
     event.preventDefault();
-    const { title, author, isbn } = searchCriteria;
-
-    if (!title && !author && !isbn) {
-      // You might want to show an error message to the user here
-      return;
-    }
-
-    const searchParams = new URLSearchParams();
-    if (title) searchParams.append('title', title.trim());
-    if (author) searchParams.append('author', author.trim());
-    if (isbn) searchParams.append('isbn', isbn.trim());
-
-    onSearch(searchParams.toString());
+    onGoogleSearch(searchCriteria);
   };
 
   return (
@@ -51,7 +37,7 @@ const BookSearchForm = ({ onSearch }) => {
             gutterBottom>
             Search for a Book
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+          <Box component="form" sx={{ mt: 2 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -60,7 +46,7 @@ const BookSearchForm = ({ onSearch }) => {
                   variant="outlined"
                   fullWidth
                   value={searchCriteria.title}
-                  onChange={handleInputChange}
+                  onChange={onInputChange}
                   InputProps={{
                     sx: { color: 'primary.main' },
                   }}
@@ -73,7 +59,7 @@ const BookSearchForm = ({ onSearch }) => {
                   variant="outlined"
                   fullWidth
                   value={searchCriteria.author}
-                  onChange={handleInputChange}
+                  onChange={onInputChange}
                   InputProps={{
                     sx: { color: 'primary.main' },
                   }}
@@ -86,20 +72,32 @@ const BookSearchForm = ({ onSearch }) => {
                   variant="outlined"
                   fullWidth
                   value={searchCriteria.isbn}
-                  onChange={handleInputChange}
+                  onChange={onInputChange}
                   InputProps={{
                     sx: { color: 'primary.main' },
                   }}
                 />
               </Grid>
             </Grid>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              sx={{ mt: 2 }}>
-              Search
-            </Button>
+            <Box
+              sx={{
+                mt: 2,
+                display: 'flex',
+                justifyContent: 'space-between',
+              }}>
+              <Button
+                onClick={handleDbSearch}
+                variant="contained"
+                color="primary">
+                Search Database
+              </Button>
+              <Button
+                onClick={handleGoogleSearch}
+                variant="contained"
+                color="secondary">
+                Search Google Books
+              </Button>
+            </Box>
           </Box>
         </CardContent>
       </Card>
@@ -108,7 +106,14 @@ const BookSearchForm = ({ onSearch }) => {
 };
 
 BookSearchForm.propTypes = {
-  onSearch: PropTypes.func
+  searchCriteria: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+    isbn: PropTypes.string.isRequired,
+  }).isRequired,
+  onInputChange: PropTypes.func.isRequired,
+  onDbSearch: PropTypes.func.isRequired,
+  onGoogleSearch: PropTypes.func.isRequired,
 };
 
 export default BookSearchForm;
