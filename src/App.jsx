@@ -16,8 +16,8 @@ import UserBooksPage from './pages/UserBooksPages/UserBooksPage.jsx';
 import UserBookDetailsPage from './pages/UserBooksPages/UserBookDetailsPage.jsx';
 import UpdateUserBookPage from './pages/UserBooksPages/UpdateUserBookPage.jsx';
 
-import AuthorsPage from './pages/Authors/AuthorsPage.jsx';
-import AuthorBooksPage from './pages/Authors/AuthorBooksPage.jsx';
+import AuthorsPage from './pages/AuthorPages/AuthorsPage.jsx';
+import AuthorBooksPage from './pages/AuthorPages/AuthorBooksPage.jsx';
 import GenresPage from './pages/Genres/GenresPage.jsx';
 import GenreBooksPage from './pages/Genres/GenreBooksPage.jsx';
 import UserAuthorsPage from './componentsReplaced/UserAuthorsPage.jsx';

@@ -109,27 +109,23 @@ export const api = createApi({
       }),
     }),
 
-    // getAuthors: builder.query({
-    //   query: (params) => ({
-    //     url: '/authors',
-    //     params: { sortBy: params?.sortBy, order: params?.order },
-    //   }),
-    //   transformResponse: (response) => {
-    //     const transformedData = {
-    //       items: response.authors.map((author) => ({
-    //         id: author.author,
-    //         name: author.author,
-    //         secondaryText: `${author.bookCount} ${
-    //           author.bookCount === 1 ? 'book' : 'books'
-    //         }`,
-    //       })),
-    //       type: 'author',
-    //     };
-    //     console.log('Transformed Authors:', transformedData);
-    //     return transformedData;
-    //   },
-    //   providesTags: ['Authors'],
-    // }),
+    getAuthors: builder.query({
+      query: (params) => ({
+        url: '/authors',
+        params: { sortBy: params?.sortBy, order: params?.order },
+      }),
+      providesTags: ['Authors'],
+    }),
+
+    getBooksByAuthor: builder.query({
+      query: ({ author, sortBy, order }) => ({
+        url: `/authors/${encodeURIComponent(author)}/books`,
+        params: { sortBy, order },
+      }),
+      providesTags: (result, error, { author }) => [
+        { type: 'Author', id: author },
+      ],
+    }),
 
     // getGenres: builder.query({
     //   query: (params) => ({
@@ -151,28 +147,6 @@ export const api = createApi({
     //     return transformedData;
     //   },
     //   providesTags: ['Genres'],
-    // }),
-    // getBooksByAuthor: builder.query({
-    //   query: ({ author, sortBy, order }) => ({
-    //     url: `/authors/${encodeURIComponent(author)}/books`,
-    //     params: { sortBy, order },
-    //   }),
-    //   transformResponse: (response) => {
-    //     const transformedData = {
-    //       items: response.books.map((book) => ({
-    //         id: book.bid,
-    //         name: book.title,
-    //         imagePath: book.imagePath,
-    //         secondaryText: book.author,
-    //       })),
-    //       type: 'book',
-    //     };
-    //     console.log('Transformed Books by Author:', transformedData);
-    //     return transformedData;
-    //   },
-    //   providesTags: (result, error, { author }) => [
-    //     { type: 'Author', id: author },
-    //   ],
     // }),
 
     // getBooksByGenre: builder.query({

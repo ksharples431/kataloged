@@ -75,10 +75,10 @@ const DesktopLogin = () => {
   if (status === 'loading') {
     return <LoadingSpinner />;
   }
-
-  if (status === 'failed') {
-    return <ErrorMessage message={error} />;
-  }
+  // todo come back to this across the page. if the error is null then it will not show the error message it needs a string
+  // if (status === 'failed') {
+  //   return <ErrorMessage message={error} />;
+  // }
 
   return (
     <Container component="main" maxWidth="sm">
@@ -89,6 +89,7 @@ const DesktopLogin = () => {
           gutterBottom>
           Log In
         </Typography>
+        {error && <ErrorMessage message={error} />}
         <Form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12}>

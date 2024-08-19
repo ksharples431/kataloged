@@ -3,19 +3,22 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Snackbar, Alert, Box, Typography } from '@mui/material';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
-import BookList from './bookComponents/BookList';
-import { useBooks } from './bookHooks/useBooks';
+import AuthorList from './authorComponents/AuthorList';
+import { useAuthors } from './authorHooks/useAuthors';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import SortOption from '../../components/UI/SortOption';
 
-const BooksPage = () => {
+const AuthorsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [sortBy, setSortBy] = useState('title');
+  const [sortBy, setSortBy] = useState('name');
   const [order, setOrder] = useState('asc');
 
-  const { books, isLoading, isError, error } = useBooks({ sortBy, order });
+  const { authors, isLoading, isError, error } = useAuthors({
+    sortBy,
+    order,
+  });
   const { snackbar, showSnackbar, handleSnackbarClose } = useSnackbar();
 
   useEffect(() => {
@@ -33,8 +36,7 @@ const BooksPage = () => {
       setOrder(order === 'asc' ? 'desc' : 'asc');
     } else {
       setSortBy(newSortBy);
-      // Set default order based on the sort key
-      setOrder(newSortBy === 'updatedAt' ? 'desc' : 'asc');
+      setOrder(newSortBy === 'bookCount' ? 'desc' : 'asc');
     }
   };
 
@@ -42,14 +44,14 @@ const BooksPage = () => {
   if (isError)
     return (
       <ErrorMessage
-        message={error?.data?.message || 'Failed to fetch books'}
+        message={error?.data?.message || 'Failed to fetch authors'}
       />
     );
 
   return (
     <Box>
       <Typography variant="h4" component="h1" gutterBottom>
-        Public Library
+        Authors
       </Typography>
       <Box
         sx={{
@@ -62,31 +64,24 @@ const BooksPage = () => {
           ml: 3,
         }}>
         <SortOption
-          label="Title"
-          sortKey="title"
+          label="Name"
+          sortKey="name"
           currentSortBy={sortBy}
           currentOrder={order}
           onSort={handleSort}
         />
         <SortOption
-          label="Author"
-          sortKey="author"
-          currentSortBy={sortBy}
-          currentOrder={order}
-          onSort={handleSort}
-        />
-        <SortOption
-          label="Recent"
-          sortKey="updatedAt"
+          label="Book Count"
+          sortKey="bookCount"
           currentSortBy={sortBy}
           currentOrder={order}
           onSort={handleSort}
         />
       </Box>
-      {books && books.length > 0 ? (
-        <BookList books={books} />
+      {authors && authors.length > 0 ? (
+        <AuthorList authors={authors} />
       ) : (
-        <Typography>No books available.</Typography>
+        <Typography>No authors available.</Typography>
       )}
       <Snackbar
         open={snackbar.open}
@@ -104,4 +99,4 @@ const BooksPage = () => {
   );
 };
 
-export default BooksPage;
+export default AuthorsPage;
