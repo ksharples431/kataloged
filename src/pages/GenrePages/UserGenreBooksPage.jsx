@@ -3,22 +3,23 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Snackbar, Alert, Box, Typography } from '@mui/material';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
-import UserBookList from './userBookComponents/UserBookList';
-import { useUserBooks } from './userBookHooks/useUserBooks';
-import { useSnackbar } from '../../hooks/useSnackbar';
 import SortOption from '../../components/UI/SortOption';
+import BookList from '../BooksPages/bookComponents/BookList';
+import { useUserGenreBooks } from './userGenreHooks/useUserGenres';
+import { useSnackbar } from '../../hooks/useSnackbar';
 
-const UserBooksPage = () => {
+const UserGenreBooksPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const [sortBy, setSortBy] = useState('title');
   const [order, setOrder] = useState('asc');
 
-  const { userBooks, isLoading, isError, error } = useUserBooks({
-    sortBy,
-    order,
-  });
+  const { books, genreName, isLoading, isError, error } =
+    useUserGenreBooks({
+      sortBy,
+      order,
+    });
   const { snackbar, showSnackbar, handleSnackbarClose } = useSnackbar();
 
   useEffect(() => {
@@ -44,14 +45,14 @@ const UserBooksPage = () => {
   if (isError)
     return (
       <ErrorMessage
-        message={error?.data?.message || "Failed to fetch user's books"}
+        message={error?.data?.message || 'Failed to fetch books'}
       />
     );
 
   return (
     <Box>
       <Typography variant="h4" component="h1" gutterBottom>
-        My Books
+        My Books in {genreName}
       </Typography>
       <Box
         sx={{
@@ -71,13 +72,6 @@ const UserBooksPage = () => {
           onSort={handleSort}
         />
         <SortOption
-          label="Author"
-          sortKey="author"
-          currentSortBy={sortBy}
-          currentOrder={order}
-          onSort={handleSort}
-        />
-        <SortOption
           label="Recent"
           sortKey="updatedAt"
           currentSortBy={sortBy}
@@ -85,10 +79,12 @@ const UserBooksPage = () => {
           onSort={handleSort}
         />
       </Box>
-      {userBooks.length > 0 ? (
-        <UserBookList userBooks={userBooks} />
+      {books && books.length > 0 ? (
+        <BookList books={books} />
       ) : (
-        <Typography>You haven&apos;t added any books yet.</Typography>
+        <Typography>
+          No books available for this genre in your collection.
+        </Typography>
       )}
       <Snackbar
         open={snackbar.open}
@@ -106,4 +102,4 @@ const UserBooksPage = () => {
   );
 };
 
-export default UserBooksPage;
+export default UserGenreBooksPage;

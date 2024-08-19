@@ -3,19 +3,19 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Snackbar, Alert, Box, Typography } from '@mui/material';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
-import UserBookList from './userBookComponents/UserBookList';
-import { useUserBooks } from './userBookHooks/useUserBooks';
+import UserGenreList from './userGenreComponents/UserGenreList';
+import { useUserGenres } from './userGenreHooks/useUserGenres';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import SortOption from '../../components/UI/SortOption';
 
-const UserBooksPage = () => {
+const UserGenresPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [sortBy, setSortBy] = useState('title');
+  const [sortBy, setSortBy] = useState('name');
   const [order, setOrder] = useState('asc');
 
-  const { userBooks, isLoading, isError, error } = useUserBooks({
+  const { userGenres, isLoading, isError, error } = useUserGenres({
     sortBy,
     order,
   });
@@ -36,7 +36,7 @@ const UserBooksPage = () => {
       setOrder(order === 'asc' ? 'desc' : 'asc');
     } else {
       setSortBy(newSortBy);
-      setOrder(newSortBy === 'updatedAt' ? 'desc' : 'asc');
+      setOrder(newSortBy === 'bookCount' ? 'desc' : 'asc');
     }
   };
 
@@ -44,14 +44,14 @@ const UserBooksPage = () => {
   if (isError)
     return (
       <ErrorMessage
-        message={error?.data?.message || "Failed to fetch user's books"}
+        message={error?.data?.message || 'Failed to fetch user genres'}
       />
     );
 
   return (
     <Box>
       <Typography variant="h4" component="h1" gutterBottom>
-        My Books
+        My Genres
       </Typography>
       <Box
         sx={{
@@ -64,31 +64,24 @@ const UserBooksPage = () => {
           ml: 3,
         }}>
         <SortOption
-          label="Title"
-          sortKey="title"
+          label="Name"
+          sortKey="name"
           currentSortBy={sortBy}
           currentOrder={order}
           onSort={handleSort}
         />
         <SortOption
-          label="Author"
-          sortKey="author"
-          currentSortBy={sortBy}
-          currentOrder={order}
-          onSort={handleSort}
-        />
-        <SortOption
-          label="Recent"
-          sortKey="updatedAt"
+          label="Book Count"
+          sortKey="bookCount"
           currentSortBy={sortBy}
           currentOrder={order}
           onSort={handleSort}
         />
       </Box>
-      {userBooks.length > 0 ? (
-        <UserBookList userBooks={userBooks} />
+      {userGenres && userGenres.length > 0 ? (
+        <UserGenreList userGenres={userGenres} />
       ) : (
-        <Typography>You haven&apos;t added any books yet.</Typography>
+        <Typography>No genres available in your collection.</Typography>
       )}
       <Snackbar
         open={snackbar.open}
@@ -106,4 +99,4 @@ const UserBooksPage = () => {
   );
 };
 
-export default UserBooksPage;
+export default UserGenresPage;

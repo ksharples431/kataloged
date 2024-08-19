@@ -58,30 +58,29 @@ const getInitials = (name) => {
     .toUpperCase();
 };
 
-const AuthorCard = ({ author }) => (
+const UserGenreCard = ({ genre }) => (
   <CardWrapper>
-    <LinkWrapper to={`/authors/${author.name}/books`}>
-      <AvatarWrapper>{getInitials(author.name)}</AvatarWrapper>
+    <LinkWrapper to={`/my-genres/${genre.name}/books`}>
+      <AvatarWrapper>{getInitials(genre.name)}</AvatarWrapper>
     </LinkWrapper>
     <CardContentWrapper>
-      <LinkWrapper to={`/authors/${author.name}/books`}>
+      <LinkWrapper to={`/my-genres/${genre.name}/books`}>
         <PrimaryText variant="h6" component="h2">
-          {author.name}
+          {genre.name}
         </PrimaryText>
       </LinkWrapper>
       <SecondaryText variant="body2">
-        {author.bookCount} books
+        {genre.bookCount} books
       </SecondaryText>
     </CardContentWrapper>
   </CardWrapper>
 );
 
-AuthorCard.propTypes = {
-  author: PropTypes.shape({
-    aid: PropTypes.string.isRequired,
+UserGenreCard.propTypes = {
+  genre: PropTypes.shape({
     name: PropTypes.string.isRequired,
     bookCount: PropTypes.number.isRequired,
   }).isRequired,
 };
 
-export default AuthorCard;
+export default UserGenreCard;

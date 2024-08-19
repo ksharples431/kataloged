@@ -58,13 +58,13 @@ const getInitials = (name) => {
     .toUpperCase();
 };
 
-const AuthorCard = ({ author }) => (
+const UserAuthorCard = ({ author }) => (
   <CardWrapper>
-    <LinkWrapper to={`/authors/${author.name}/books`}>
+    <LinkWrapper to={`/my-authors/${author.name}/books`}>
       <AvatarWrapper>{getInitials(author.name)}</AvatarWrapper>
     </LinkWrapper>
     <CardContentWrapper>
-      <LinkWrapper to={`/authors/${author.name}/books`}>
+      <LinkWrapper to={`/my-authors/${author.name}/books`}>
         <PrimaryText variant="h6" component="h2">
           {author.name}
         </PrimaryText>
@@ -76,12 +76,11 @@ const AuthorCard = ({ author }) => (
   </CardWrapper>
 );
 
-AuthorCard.propTypes = {
+UserAuthorCard.propTypes = {
   author: PropTypes.shape({
-    aid: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     bookCount: PropTypes.number.isRequired,
   }).isRequired,
 };
 
-export default AuthorCard;
+export default UserAuthorCard;

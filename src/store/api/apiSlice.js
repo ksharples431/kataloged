@@ -127,50 +127,23 @@ export const api = createApi({
       ],
     }),
 
-    // getGenres: builder.query({
-    //   query: (params) => ({
-    //     url: '/genres',
-    //     params: { sortBy: params?.sortBy, order: params?.order },
-    //   }),
-    //   transformResponse: (response) => {
-    //     const transformedData = {
-    //       items: response.genres.map((genre) => ({
-    //         id: genre.genre,
-    //         name: genre.genre,
-    //         secondaryText: `${genre.bookCount} ${
-    //           genre.bookCount === 1 ? 'book' : 'books'
-    //         }`,
-    //       })),
-    //       type: 'genre',
-    //     };
-    //     console.log('Transformed Genres:', transformedData);
-    //     return transformedData;
-    //   },
-    //   providesTags: ['Genres'],
-    // }),
+    getGenres: builder.query({
+      query: (params) => ({
+        url: '/genres',
+        params: { sortBy: params?.sortBy, order: params?.order },
+      }),
+      providesTags: ['Genres'],
+    }),
 
-    // getBooksByGenre: builder.query({
-    //   query: ({ genre, sortBy, order }) => ({
-    //     url: `/genres/${encodeURIComponent(genre)}/books`,
-    //     params: { sortBy, order },
-    //   }),
-    //   transformResponse: (response) => {
-    //     const transformedData = {
-    //       items: response.books.map((book) => ({
-    //         id: book.bid,
-    //         name: book.title,
-    //         imagePath: book.imagePath,
-    //         secondaryText: book.author,
-    //       })),
-    //       type: 'book',
-    //     };
-    //     console.log('Transformed Books by Genre:', transformedData);
-    //     return transformedData;
-    //   },
-    //   providesTags: (result, error, { genre }) => [
-    //     { type: 'Genre', id: genre },
-    //   ],
-    // }),
+    getBooksByGenre: builder.query({
+      query: ({ genre, sortBy, order }) => ({
+        url: `/genres/${encodeURIComponent(genre)}/books`,
+        params: { sortBy, order },
+      }),
+      providesTags: (result, error, { genre }) => [
+        { type: 'Genre', id: genre },
+      ],
+    }),
 
     // UserBooks
     getUserBooks: builder.query({
@@ -229,97 +202,43 @@ export const api = createApi({
       ],
     }),
 
-    // getUserAuthors: builder.query({
-    //   query: ({ uid, ...params }) => ({
-    //     url: `/userBooks/${uid}/authors`,
-    //     params: params,
-    //   }),
-    //   transformResponse: (response) => {
-    //     const transformedData = {
-    //       items: response.authors.map((author) => ({
-    //         id: author.author,
-    //         name: author.author,
-    //         secondaryText: `${author.bookCount} ${
-    //           author.bookCount === 1 ? 'book' : 'books'
-    //         }`,
-    //       })),
-    //       type: 'author',
-    //     };
-    //     console.log('Transformed User Authors:', transformedData);
-    //     return transformedData;
-    //   },
-    //   providesTags: ['UserAuthors'],
-    // }),
+    getUserAuthors: builder.query({
+      query: ({ uid, ...params }) => ({
+        url: `/userBooks/${uid}/authors`,
+        params: params,
+      }),
+      providesTags: ['UserAuthors'],
+    }),
 
-    // getUserGenres: builder.query({
-    //   query: ({ uid, ...params }) => ({
-    //     url: `/userBooks/${uid}/genres`,
-    //     params: params,
-    //   }),
-    //   transformResponse: (response) => {
-    //     const transformedData = {
-    //       items: response.genres.map((genre) => ({
-    //         id: genre.genre,
-    //         name: genre.genre,
-    //         secondaryText: `${genre.bookCount} ${
-    //           genre.bookCount === 1 ? 'book' : 'books'
-    //         }`,
-    //       })),
-    //       type: 'genre',
-    //     };
-    //     console.log('Transformed User Genres:', transformedData);
-    //     return transformedData;
-    //   },
-    //   providesTags: ['UserGenres'],
-    // }),
+    getUserGenres: builder.query({
+      query: ({ uid, ...params }) => ({
+        url: `/userBooks/${uid}/genres`,
+        params: params,
+      }),
+      providesTags: ['UserGenres'],
+    }),
 
-    // getUserBooksByAuthor: builder.query({
-    //   query: ({ uid, author, ...params }) => ({
-    //     url: `/userBooks/${uid}/authors/${encodeURIComponent(
-    //       author
-    //     )}/books`,
-    //     params: params,
-    //   }),
-    //   transformResponse: (response) => {
-    //     const transformedData = {
-    //       items: response.books.map((book) => ({
-    //         id: book.ubid,
-    //         name: book.title,
-    //         imagePath: book.imagePath,
-    //         secondaryText: book.author,
-    //       })),
-    //       type: 'book',
-    //     };
-    //     console.log('Transformed User Books by Author:', transformedData);
-    //     return transformedData;
-    //   },
-    //   providesTags: (result, error, { uid, author }) => [
-    //     { type: 'UserAuthor', id: `${uid}-${author}` },
-    //   ],
-    // }),
+    getUserBooksByAuthor: builder.query({
+      query: ({ uid, author, ...params }) => ({
+        url: `/userBooks/${uid}/authors/${encodeURIComponent(
+          author
+        )}/books`,
+        params: params,
+      }),
+      providesTags: (result, error, { uid, author }) => [
+        { type: 'UserAuthor', id: `${uid}-${author}` },
+      ],
+    }),
 
-    // getUserBooksByGenre: builder.query({
-    //   query: ({ uid, genre, ...params }) => ({
-    //     url: `/userBooks/${uid}/genres/${encodeURIComponent(genre)}/books`,
-    //     params: params,
-    //   }),
-    //   transformResponse: (response) => {
-    //     const transformedData = {
-    //       items: response.books.map((book) => ({
-    //         id: book.ubid,
-    //         name: book.title,
-    //         imagePath: book.imagePath,
-    //         secondaryText: book.author,
-    //       })),
-    //       type: 'book',
-    //     };
-    //     console.log('Transformed User Books by Genre:', transformedData);
-    //     return transformedData;
-    //   },
-    //   providesTags: (result, error, { uid, genre }) => [
-    //     { type: 'UserGenre', id: `${uid}-${genre}` },
-    //   ],
-    // }),
+    getUserBooksByGenre: builder.query({
+      query: ({ uid, genre, ...params }) => ({
+        url: `/userBooks/${uid}/genres/${encodeURIComponent(genre)}/books`,
+        params: params,
+      }),
+      providesTags: (result, error, { uid, genre }) => [
+        { type: 'UserGenre', id: `${uid}-${genre}` },
+      ],
+    }),
 
     // Users
     // getAllUsers: builder.query({

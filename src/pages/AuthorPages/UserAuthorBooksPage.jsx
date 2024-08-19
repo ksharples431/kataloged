@@ -1,42 +1,103 @@
-import { useParams } from 'react-router-dom';
-import { Box } from '@mui/material';
-import LoadingSpinner from '../../components/UI/LoadingSpinner.jsx';
-import ErrorMessage from '../../components/UI/ErrorMessage.jsx';
-import GenericList from '../../components/GenericList/GenericList.jsx';
-import { useGetUserBooksByAuthorQuery } from '../../store/api/apiSlice.js';
-import { useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Snackbar, Alert, Box, Typography } from '@mui/material';
+import LoadingSpinner from '../../components/UI/LoadingSpinner';
+import ErrorMessage from '../../components/UI/ErrorMessage';
+import SortOption from '../../components/UI/SortOption';
+import BookList from '../BooksPages/bookComponents/BookList';
+import { useUserAuthorBooks } from './userAuthorHooks/useUserAuthors';
+import { useSnackbar } from '../../hooks/useSnackbar';
 
 const UserAuthorBooksPage = () => {
-  const { authorName } = useParams();
-  const decodedAuthorName = decodeURIComponent(authorName);
-  const uid = useSelector((state) => state.auth.user.uid);
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const { data, isLoading, isError } = useGetUserBooksByAuthorQuery({
-    uid,
-    author: decodedAuthorName,
-  });
+  const [sortBy, setSortBy] = useState('title');
+  const [order, setOrder] = useState('asc');
 
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
+  const { books, authorName, isLoading, isError, error } =
+    useUserAuthorBooks({
+      sortBy,
+      order,
+    });
+  const { snackbar, showSnackbar, handleSnackbarClose } = useSnackbar();
 
-  if (isError) {
+  useEffect(() => {
+    if (location.state?.snackbar) {
+      showSnackbar(
+        location.state.snackbar.message,
+        location.state.snackbar.severity
+      );
+      navigate(location.pathname, { replace: true });
+    }
+  }, [location, navigate, showSnackbar]);
+
+  const handleSort = (newSortBy) => {
+    if (newSortBy === sortBy) {
+      setOrder(order === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(newSortBy);
+      setOrder(newSortBy === 'updatedAt' ? 'desc' : 'asc');
+    }
+  };
+
+  if (isLoading) return <LoadingSpinner />;
+  if (isError)
     return (
-      <ErrorMessage message="Failed to fetch user's books by author" />
+      <ErrorMessage
+        message={error?.data?.message || 'Failed to fetch books'}
+      />
     );
-  }
 
   return (
     <Box>
-      {data && data.items && data.items.length > 0 ? (
-        <GenericList
-          items={data.items}
-          type={data.type}
-          title={`My Books by ${decodedAuthorName}`}
+      <Typography variant="h4" component="h1" gutterBottom>
+        My Books by {authorName}
+      </Typography>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          mt: 3,
+          mb: 1,
+          pb: 1,
+          mr: 3,
+          ml: 3,
+        }}>
+        <SortOption
+          label="Title"
+          sortKey="title"
+          currentSortBy={sortBy}
+          currentOrder={order}
+          onSort={handleSort}
         />
+        <SortOption
+          label="Recent"
+          sortKey="updatedAt"
+          currentSortBy={sortBy}
+          currentOrder={order}
+          onSort={handleSort}
+        />
+      </Box>
+      {books && books.length > 0 ? (
+        <BookList books={books} />
       ) : (
-        <p>No books found for this author in your library.</p>
+        <Typography>
+          No books available for this author in your collection.
+        </Typography>
       )}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}>
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

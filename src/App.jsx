@@ -18,8 +18,8 @@ import UpdateUserBookPage from './pages/UserBooksPages/UpdateUserBookPage.jsx';
 
 import AuthorsPage from './pages/AuthorPages/AuthorsPage.jsx';
 import AuthorBooksPage from './pages/AuthorPages/AuthorBooksPage.jsx';
-import GenresPage from './pages/Genres/GenresPage.jsx';
-import GenreBooksPage from './pages/Genres/GenreBooksPage.jsx';
+import GenresPage from './pages/GenrePages/GenresPage.jsx';
+import GenreBooksPage from './pages/GenrePages/GenreBooksPage.jsx';
 import UserAuthorsPage from './componentsReplaced/UserAuthorsPage.jsx';
 import UserAuthorBooksPage from './componentsReplaced/UserAuthorBooksPage.jsx';
 import UserGenresPage from './componentsReplaced/UserGenresPage.jsx';
@@ -87,16 +87,17 @@ function App() {
           <Route path="/books" element={<BooksPage />} />
           <Route path="/authors" element={<AuthorsPage />} />
           <Route
-            path="/authors/:authorName"
+            path="/authors/:author/books"
             element={<AuthorBooksPage />}
           />
+          <Route path="/genres" element={<GenresPage />} />
+          <Route path="/genres/:genre/books" element={<GenreBooksPage />} />
           <Route path="/myAuthors" element={<UserAuthorsPage />} />
           <Route
             path="/myAuthors/:authorName"
             element={<UserAuthorBooksPage />}
           />
-          <Route path="/genres" element={<GenresPage />} />
-          <Route path="/genres/:genreName" element={<GenreBooksPage />} />
+
           <Route path="/myGenres" element={<UserGenresPage />} />
           <Route
             path="/myGenres/:genreName"
