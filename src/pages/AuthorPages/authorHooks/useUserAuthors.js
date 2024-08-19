@@ -9,18 +9,17 @@ export const useUserAuthors = ({
   sortBy = 'name',
   order = 'asc',
 } = {}) => {
-  const { uid } = useSelector((state) => state.auth);
-  const { data, isLoading, isError, error } = useGetUserAuthorsQuery({
-    uid,
-    sortBy,
-    order,
-  });
+  const uid = useSelector((state) => state.auth.user?.uid);
+  const { data, isLoading, isError, error } = useGetUserAuthorsQuery(
+    { uid, sortBy, order },
+    { skip: !uid }
+  );
 
   return {
     userAuthors: data?.data?.authors || [],
     isLoading,
     isError,
-    error,
+    error
   };
 };
 
@@ -28,18 +27,11 @@ export const useUserAuthorBooks = ({
   sortBy = 'title',
   order = 'asc',
 } = {}) => {
-  const { uid } = useSelector((state) => state.auth);
+  const uid = useSelector((state) => state.auth.user?.uid);
   const { author } = useParams();
   const { data, isLoading, isError, error } = useGetUserBooksByAuthorQuery(
-    {
-      uid,
-      author,
-      sortBy,
-      order,
-    },
-    {
-      skip: !author || !uid,
-    }
+    { uid, author, sortBy, order },
+    { skip: !author || !uid }
   );
 
   return {
@@ -47,6 +39,6 @@ export const useUserAuthorBooks = ({
     authorName: author,
     isLoading,
     isError,
-    error,
+    error
   };
 };

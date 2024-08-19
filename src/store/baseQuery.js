@@ -7,6 +7,10 @@ export const baseQuery = fetchBaseQuery({
   prepareHeaders: async (headers) => {
     if (auth.currentUser) {
       const token = await auth.currentUser.getIdToken();
+      console.log(
+        'Setting token for request:',
+        token.substring(0, 10) + '...'
+      );
       headers.set('authorization', `Bearer ${token}`);
     } else {
       console.log('No user logged in');

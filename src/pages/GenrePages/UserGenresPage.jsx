@@ -3,8 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Snackbar, Alert, Box, Typography } from '@mui/material';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
-import UserGenreList from './userGenreComponents/UserGenreList';
-import { useUserGenres } from './userGenreHooks/useUserGenres';
+import UserGenreList from './genreComponents/UserGenreList';
+import { useUserGenres } from './genreHooks/useUserGenres';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import SortOption from '../../components/UI/SortOption';
 

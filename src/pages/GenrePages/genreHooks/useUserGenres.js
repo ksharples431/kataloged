@@ -6,12 +6,15 @@ import {
 import { useSelector } from 'react-redux';
 
 export const useUserGenres = ({ sortBy = 'name', order = 'asc' } = {}) => {
-  const { uid } = useSelector((state) => state.auth);
-  const { data, isLoading, isError, error } = useGetUserGenresQuery({
-    uid,
-    sortBy,
-    order,
-  });
+  const uid = useSelector((state) => state.auth.user?.uid);
+  const { data, isLoading, isError, error } = useGetUserGenresQuery(
+    {
+      uid,
+      sortBy,
+      order,
+    },
+    { skip: !uid }
+  );
 
   return {
     userGenres: data?.data?.genres || [],
@@ -25,7 +28,7 @@ export const useUserGenreBooks = ({
   sortBy = 'title',
   order = 'asc',
 } = {}) => {
-  const { uid } = useSelector((state) => state.auth);
+  const uid = useSelector((state) => state.auth.user?.uid);
   const { genre } = useParams();
   const { data, isLoading, isError, error } = useGetUserBooksByGenreQuery(
     {

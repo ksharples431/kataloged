@@ -78,7 +78,7 @@ const GenreCard = ({ genre }) => (
 
 GenreCard.propTypes = {
   genre: PropTypes.shape({
-    aid: PropTypes.string.isRequired,
+    gid: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     bookCount: PropTypes.number.isRequired,
   }).isRequired,

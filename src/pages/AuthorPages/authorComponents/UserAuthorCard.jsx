@@ -60,11 +60,11 @@ const getInitials = (name) => {
 
 const UserAuthorCard = ({ author }) => (
   <CardWrapper>
-    <LinkWrapper to={`/my-authors/${author.name}/books`}>
+    <LinkWrapper to={`/myAuthors/${author.name}`}>
       <AvatarWrapper>{getInitials(author.name)}</AvatarWrapper>
     </LinkWrapper>
     <CardContentWrapper>
-      <LinkWrapper to={`/my-authors/${author.name}/books`}>
+      <LinkWrapper to={`/myAuthors/${author.name}`}>
         <PrimaryText variant="h6" component="h2">
           {author.name}
         </PrimaryText>

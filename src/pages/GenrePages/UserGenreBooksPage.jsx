@@ -5,7 +5,7 @@ import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
 import SortOption from '../../components/UI/SortOption';
 import BookList from '../BooksPages/bookComponents/BookList';
-import { useUserGenreBooks } from './userGenreHooks/useUserGenres';
+import { useUserGenreBooks } from './genreHooks/useUserGenres';
 import { useSnackbar } from '../../hooks/useSnackbar';
 
 const UserGenreBooksPage = () => {

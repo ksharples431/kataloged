@@ -3,8 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Snackbar, Alert, Box, Typography } from '@mui/material';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import ErrorMessage from '../../components/UI/ErrorMessage';
-import UserAuthorList from './userAuthorComponents/UserAuthorList';
-import { useUserAuthors } from './userAuthorHooks/useUserAuthors';
+import UserAuthorList from './authorComponents/UserAuthorList';
+import { useUserAuthors } from './authorHooks/useUserAuthors';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import SortOption from '../../components/UI/SortOption';
 
@@ -19,6 +19,7 @@ const UserAuthorsPage = () => {
     sortBy,
     order,
   });
+  console.log(userAuthors);
   const { snackbar, showSnackbar, handleSnackbarClose } = useSnackbar();
 
   useEffect(() => {
@@ -41,12 +42,19 @@ const UserAuthorsPage = () => {
   };
 
   if (isLoading) return <LoadingSpinner />;
-  if (isError)
+  if (isError) {
+    console.error('Error fetching user authors:', error);
     return (
       <ErrorMessage
-        message={error?.data?.message || 'Failed to fetch user authors'}
+        message={
+          error?.data?.message ||
+          `Failed to fetch user authors. ${
+            error?.status === 401 ? 'Authentication error.' : ''
+          }`
+        }
       />
     );
+  }
 
   return (
     <Box>
