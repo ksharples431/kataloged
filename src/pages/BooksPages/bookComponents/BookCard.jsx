@@ -85,7 +85,8 @@ const BookCard = ({ book }) => (
 
 BookCard.propTypes = {
   book: PropTypes.shape({
-    bid: PropTypes.string.isRequired,
+    bid: PropTypes.string,
+    ubid: PropTypes.string,
     title: PropTypes.string.isRequired,
     author: PropTypes.string.isRequired,
     imagePath: PropTypes.string,

@@ -62,6 +62,7 @@ const CardContentWrapper = styled(CardContent)(() => ({
 }));
 
 const UserBookCard = ({ userBook }) => (
+   console.log('User Book ID:', userBook.ubid),
   <CardWrapper>
     <LinkWrapper to={`/userBooks/${userBook.ubid}`}>
       <ImageWrapper>

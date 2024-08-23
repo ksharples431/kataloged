@@ -1,6 +1,11 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../baseQuery';
 
+const logResponse = (endpoint) => (response) => {
+  console.log(`Response from ${endpoint}:`, response);
+  return response;
+};
+
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: baseQueryWithReauth,
@@ -25,6 +30,7 @@ export const api = createApi({
         params: { sortBy: params?.sortBy, order: params?.order },
       }),
       providesTags: ['Books'],
+      transformResponse: logResponse('getBooks'),
     }),
 
     getBookById: builder.query({
@@ -33,6 +39,7 @@ export const api = createApi({
       options: {
         ignoreIfFailResponse: ({ status }) => status === 404,
       },
+      transformResponse: logResponse('getBookById'),
     }),
 
     addBook: builder.mutation({
@@ -42,6 +49,7 @@ export const api = createApi({
         body: bookData,
       }),
       invalidatesTags: ['Books'],
+      transformResponse: logResponse('addBook'),
     }),
 
     updateBook: builder.mutation({
@@ -56,6 +64,7 @@ export const api = createApi({
         { type: 'Book', id: bid },
         'Books',
       ],
+      transformResponse: logResponse('updateBook'),
     }),
 
     deleteBook: builder.mutation({
@@ -67,6 +76,7 @@ export const api = createApi({
         { type: 'Book', id: bid },
         'Books',
       ],
+      transformResponse: logResponse('deleteBook'),
     }),
 
     searchBooks: builder.query({
@@ -76,6 +86,7 @@ export const api = createApi({
           ? Object.fromEntries(new URLSearchParams(searchParams))
           : undefined,
       }),
+      transformResponse: logResponse('searchBooks'),
     }),
 
     searchGoogleBooks: builder.query({
@@ -85,6 +96,7 @@ export const api = createApi({
           ? Object.fromEntries(new URLSearchParams(searchParams))
           : undefined,
       }),
+      transformResponse: logResponse('searchGoogleBooks'),
     }),
 
     generalSearchBooks: builder.query({
@@ -107,6 +119,7 @@ export const api = createApi({
         url: `books/check/${bid}`,
         method: 'GET',
       }),
+      transformResponse: logResponse('checkBookExists'),
     }),
 
     getAuthors: builder.query({
@@ -115,6 +128,7 @@ export const api = createApi({
         params: { sortBy: params?.sortBy, order: params?.order },
       }),
       providesTags: ['Authors'],
+      transformResponse: logResponse('getAuthors'),
     }),
 
     getBooksByAuthor: builder.query({
@@ -125,6 +139,7 @@ export const api = createApi({
       providesTags: (result, error, { author }) => [
         { type: 'Author', id: author },
       ],
+      transformResponse: logResponse('getBooksByAuthor'),
     }),
 
     getGenres: builder.query({
@@ -133,6 +148,7 @@ export const api = createApi({
         params: { sortBy: params?.sortBy, order: params?.order },
       }),
       providesTags: ['Genres'],
+      transformResponse: logResponse('getGenres'),
     }),
 
     getBooksByGenre: builder.query({
@@ -143,6 +159,7 @@ export const api = createApi({
       providesTags: (result, error, { genre }) => [
         { type: 'Genre', id: genre },
       ],
+      transformResponse: logResponse('getBooksByGenre'),
     }),
 
     // UserBooks
@@ -156,6 +173,7 @@ export const api = createApi({
         },
       }),
       providesTags: ['UserBooks'],
+      transformResponse: logResponse('getUserBooks'),
     }),
 
     getUserBookById: builder.query({
@@ -166,6 +184,7 @@ export const api = createApi({
       options: {
         ignoreIfFailResponse: ({ status }) => status === 404,
       },
+      transformResponse: logResponse('getUserBookById'),
     }),
 
     addUserBook: builder.mutation({
@@ -175,6 +194,7 @@ export const api = createApi({
         body: userBookData,
       }),
       invalidatesTags: ['UserBooks'],
+      transformResponse: logResponse('addUserBook'),
     }),
 
     updateUserBook: builder.mutation({
@@ -189,6 +209,7 @@ export const api = createApi({
         { type: 'UserBook', id: ubid },
         'UserBooks',
       ],
+      transformResponse: logResponse('updateUserBook'),
     }),
 
     deleteUserBook: builder.mutation({
@@ -200,6 +221,7 @@ export const api = createApi({
         { type: 'UserBook', id: ubid },
         'UserBooks',
       ],
+      transformResponse: logResponse('deleteUserBook'),
     }),
 
     getUserAuthors: builder.query({
@@ -208,6 +230,7 @@ export const api = createApi({
         params: params,
       }),
       providesTags: ['UserAuthors'],
+      transformResponse: logResponse('getUserAuthors'),
     }),
 
     getUserGenres: builder.query({
@@ -216,6 +239,7 @@ export const api = createApi({
         params: params,
       }),
       providesTags: ['UserGenres'],
+      transformResponse: logResponse('getUserGenres'),
     }),
 
     getUserBooksByAuthor: builder.query({
@@ -228,6 +252,7 @@ export const api = createApi({
       providesTags: (result, error, { uid, author }) => [
         { type: 'UserAuthor', id: `${uid}-${author}` },
       ],
+      transformResponse: logResponse('getUserBooksByAuthor'),
     }),
 
     getUserBooksByGenre: builder.query({
@@ -238,6 +263,25 @@ export const api = createApi({
       providesTags: (result, error, { uid, genre }) => [
         { type: 'UserGenre', id: `${uid}-${genre}` },
       ],
+      transformResponse: logResponse('getUserBooksByGenre'),
+    }),
+
+    logFrontendError: builder.mutation({
+      query: (errorData) => ({
+        url: '/log-frontend-error',
+        method: 'POST',
+        body: errorData,
+      }),
+      // Optionally, you can add a custom error handler
+      // This will run if the API call itself fails
+      onError: (error) => {
+        console.error('Failed to log frontend error:', error);
+      },
+      // Optionally, you can transform the response
+      transformResponse: (response) => {
+        console.log('Frontend error logged:', response);
+        return response;
+      },
     }),
 
     // Users
@@ -302,4 +346,5 @@ export const {
   useGetUserByIdQuery,
   useUpdateUserMutation,
   useDeleteUserMutation,
+  useLogFrontendErrorMutation,
 } = api;

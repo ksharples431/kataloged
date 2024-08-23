@@ -22,7 +22,13 @@ const BookList = ({ books, title }) => {
       )}
       <Grid container spacing={3}>
         {books.map((book) => (
-          <Grid item xs={12} sm={4} md={3} lg={2.4} key={book.bid}>
+          <Grid
+            item
+            xs={12}
+            sm={4}
+            md={3}
+            lg={2.4}
+            key={book.bid || book.ubid}>
             <BookCard book={book} />
           </Grid>
         ))}
@@ -34,7 +40,8 @@ const BookList = ({ books, title }) => {
 BookList.propTypes = {
   books: PropTypes.arrayOf(
     PropTypes.shape({
-      bid: PropTypes.string.isRequired,
+      bid: PropTypes.string, 
+      ubid: PropTypes.string,
       title: PropTypes.string.isRequired,
       author: PropTypes.string.isRequired,
       imagePath: PropTypes.string,

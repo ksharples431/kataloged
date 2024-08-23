@@ -22,7 +22,7 @@ const GenreList = ({ genres, title }) => {
       )}
       <Grid container spacing={3}>
         {genres.map((genre) => (
-          <Grid item xs={12} sm={4} md={3} lg={2.4} key={genre.aid}>
+          <Grid item xs={12} sm={4} md={3} lg={2.4} key={genre.gid}>
             <GenreCard genre={genre} />
           </Grid>
         ))}
