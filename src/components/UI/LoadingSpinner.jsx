@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import {
   Box,
   CircularProgress,
@@ -6,7 +7,7 @@ import {
   useTheme,
 } from '@mui/material';
 
-const LoadingSpinner = () => {
+const LoadingSpinner = ({message}) => {
   const theme = useTheme();
 
   return (
@@ -24,12 +25,16 @@ const LoadingSpinner = () => {
           <Typography
             variant="h6"
             sx={{ color: theme.palette.text.primary }}>
-            Searching the shelves...
+            {message || 'Searching the shelves...'}
           </Typography>
         </Grid>
       </Grid>
     </Box>
   );
+};
+
+LoadingSpinner.propTypes = {
+  message: PropTypes.string,
 };
 
 export default LoadingSpinner;

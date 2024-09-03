@@ -3,6 +3,8 @@ import { baseQueryWithReauth } from '../baseQuery';
 import { handleApiError } from '../../utils/apiErrorHandling';
 import { setError } from '../slices/errorSlice';
 
+// Todo: see if error and loading should be handled in the errorSlice and uiSlice only
+
 const logResponse = (endpoint) => (response) => {
   console.log(`Response from ${endpoint}:`, response);
   return response;

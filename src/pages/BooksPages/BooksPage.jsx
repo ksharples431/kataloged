@@ -1,23 +1,34 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Snackbar, Alert, Box, Typography } from '@mui/material';
-import LoadingSpinner from '../../components/UI/LoadingSpinner';
+import { useDispatch } from 'react-redux';
+import { Box, Typography } from '@mui/material';
 import BookList from './bookComponents/BookList';
 import { useBooks } from './bookHooks/useBooks';
 import { useSnackbar } from '../../hooks/useSnackbar';
-import SortOption from '../../components/UI/SortOption';
 // import useErrorManager from '../../hooks/useErrorManager';
+import SortOption from '../../components/UI/SortOption';
+import { setLoading } from '../../store/slices/uiSlice';
 
 const BooksPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [sortBy, setSortBy] = useState('title');
   const [order, setOrder] = useState('asc');
 
   const { books, isLoading } = useBooks({ sortBy, order });
-  const { snackbar, showSnackbar, handleSnackbarClose } = useSnackbar();
+  const { showSnackbar } = useSnackbar();
   // const { handleError } = useErrorManager();
+
+  useEffect(() => {
+    dispatch(
+      setLoading({
+        isLoading,
+        message: isLoading ? 'Fetching books from our library...' : '',
+      })
+    );
+  }, [isLoading, dispatch]);
 
   useEffect(() => {
     if (location.state?.snackbar) {
@@ -37,8 +48,6 @@ const BooksPage = () => {
       setOrder(newSortBy === 'updatedAt' ? 'desc' : 'asc');
     }
   };
-
-  if (isLoading) return <LoadingSpinner />;
 
   return (
     <Box>
@@ -82,18 +91,6 @@ const BooksPage = () => {
       ) : (
         <Typography>No books available.</Typography>
       )}
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={3000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}>
-        <Alert
-          onClose={handleSnackbarClose}
-          severity={snackbar.severity}
-          sx={{ width: '100%' }}>
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };
