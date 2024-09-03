@@ -28,6 +28,8 @@ import SearchResultsPage from './pages/Search/SearchResultsPage.jsx';
 import GeneralSearchResultsPage from './pages/Search/GeneralSearchResultsPage.jsx';
 import SearchDetailsPage from './pages/Search/SearchDetailsPage.jsx';
 
+import ErrorDisplay from './components/ErrorBoundaries/ErrorDisplay';
+
 import auth from './config/firebaseConfig.jsx';
 import { setUser, clearUser } from './store/slices/authSlice.js';
 
@@ -74,6 +76,7 @@ function App() {
   return (
     <BrowserRouter>
       <ResponsiveLayoutWrapper>
+        <ErrorDisplay />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />

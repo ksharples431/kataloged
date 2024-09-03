@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import ErrorBoundaryInner from './ErrorBoundaryInner';
-import useErrorHandler from '../../hooks/useErrorHandler';
+import useErrorManager from '../../hooks/useErrorManager';
 
 // Custom fallback UI for errors
 export const ErrorFallback = ({ error, resetErrorBoundary }) => (
@@ -21,7 +21,7 @@ ErrorFallback.propTypes = {
 };
 
 const ErrorBoundary = ({ children, fallback }) => {
-  const { error, handleError, clearError } = useErrorHandler();
+  const { error, handleError, clearError } = useErrorManager();
 
   return (
     <ErrorBoundaryInner

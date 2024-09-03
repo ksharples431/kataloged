@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Snackbar, Alert, Box, Typography } from '@mui/material';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
-import ErrorMessage from '../../components/UI/ErrorMessage';
 import BookList from './bookComponents/BookList';
 import { useBooks } from './bookHooks/useBooks';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import SortOption from '../../components/UI/SortOption';
+// import useErrorManager from '../../hooks/useErrorManager';
 
 const BooksPage = () => {
   const location = useLocation();
@@ -15,8 +15,9 @@ const BooksPage = () => {
   const [sortBy, setSortBy] = useState('title');
   const [order, setOrder] = useState('asc');
 
-  const { books, isLoading, isError, error } = useBooks({ sortBy, order });
+  const { books, isLoading } = useBooks({ sortBy, order });
   const { snackbar, showSnackbar, handleSnackbarClose } = useSnackbar();
+  // const { handleError } = useErrorManager();
 
   useEffect(() => {
     if (location.state?.snackbar) {
@@ -33,18 +34,11 @@ const BooksPage = () => {
       setOrder(order === 'asc' ? 'desc' : 'asc');
     } else {
       setSortBy(newSortBy);
-      // Set default order based on the sort key
       setOrder(newSortBy === 'updatedAt' ? 'desc' : 'asc');
     }
   };
 
   if (isLoading) return <LoadingSpinner />;
-  if (isError)
-    return (
-      <ErrorMessage
-        message={error?.data?.message || 'Failed to fetch books'}
-      />
-    );
 
   return (
     <Box>

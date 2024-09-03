@@ -1,5 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from '../baseQuery';
+import { handleApiError } from '../../utils/apiErrorHandling';
+import { setError } from '../slices/errorSlice';
 
 const logResponse = (endpoint) => (response) => {
   console.log(`Response from ${endpoint}:`, response);
@@ -319,6 +321,24 @@ export const api = createApi({
   }),
 });
 
+export const enhancedApi = api.enhanceEndpoints({
+  endpoints: {
+    ...Object.keys(api.endpoints).reduce((acc, endpointName) => {
+      acc[endpointName] = {
+        async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+          try {
+            await queryFulfilled;
+          } catch (error) {
+            const handledError = handleApiError(error.error);
+            dispatch(setError(handledError));
+          }
+        },
+      };
+      return acc;
+    }, {}),
+  },
+});
+
 export const {
   useGetBooksQuery,
   useGetBookByIdQuery,
@@ -342,9 +362,5 @@ export const {
   useGetUserGenresQuery,
   useGetUserBooksByAuthorQuery,
   useGetUserBooksByGenreQuery,
-  useGetAllUsersQuery,
-  useGetUserByIdQuery,
-  useUpdateUserMutation,
-  useDeleteUserMutation,
   useLogFrontendErrorMutation,
-} = api;
+} = enhancedApi;

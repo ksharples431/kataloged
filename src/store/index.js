@@ -5,6 +5,7 @@ import { authApi } from './api/authApiSlice';
 import authReducer, { logout } from './slices/authSlice';
 import uiReducer from './slices/uiSlice';
 import searchReducer from './slices/searchSlice';
+import errorReducer from './slices/errorSlice';
 
 const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ const store = configureStore({
     auth: authReducer,
     ui: uiReducer,
     search: searchReducer,
+    error: errorReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
